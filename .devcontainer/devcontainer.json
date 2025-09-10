@@ -1,0 +1,16 @@
+{
+  "name": "Node.js & JavaScript",
+  "image": "mcr.microsoft.com/devcontainers/javascript-node",
+  "features": {
+    "ghcr.io/devcontainers/features/git-lfs": "none",
+    "ghcr.io/devcontainers/features/node": "lts"
+  },
+  "postCreateCommand": "sh .devcontainer/init.sh",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "-dbaeumer.vscode-eslint"
+      ]
+    }
+  }
+}

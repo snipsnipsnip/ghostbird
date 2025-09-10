@@ -1,0 +1,33 @@
+{
+  "extends": "../tsconfig-base",
+  "include": [
+    "**/*.ts",
+    "../../manifest_template.json"
+  ],
+  "references": [
+    {
+      "path": "../app-background"
+    },
+    {
+      "path": "../app-compose"
+    },
+    {
+      "path": "../app-options"
+    },
+    {
+      "path": "../ghosttext-session"
+    },
+    {
+      "path": "../ghosttext-adaptor"
+    },
+    {
+      "path": "../root"
+    },
+    {
+      "path": "../thunderbird"
+    },
+    {
+      "path": "../util"
+    }
+  ]
+}

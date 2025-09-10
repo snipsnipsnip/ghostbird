@@ -1,0 +1,19 @@
+{
+  "extends": "../src/tsconfig-base",
+  "include": [
+    "*.ts",
+    "../src/background/types.ts",
+    "../*.json"
+  ],
+  "compilerOptions": {
+    "module": "preserve",
+    "emitDeclarationOnly": true,
+    "resolveJsonModule": true,
+    "types": [
+      "node"
+    ],
+    "lib": [
+      "ES2024"
+    ]
+  }
+}

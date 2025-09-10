@@ -1,0 +1,70 @@
+import type { IMessagePort } from "../ghosttext-runner"
+import type { EditorChangeResponse, IEditorState } from "../ghosttext-session"
+
+/** Wrapper for `fetch` and `WebSocket` */
+export interface IWebClient {
+  /**
+   * Does fetch and parse json
+   * @param serverUrl The base URL of the GhostText server
+   * @returns resolves to the JSON response
+   */
+  getJson(serverUrl: URL): PromiseLike<object>
+  /**
+   * Open WebSocket connection
+   * @param wsUrl The WebSocket URL
+   * @returns resolves to a wrapper of WebSocket
+   */
+  openWebSocket(wsUrl: URL): PromiseLike<IMessagePort<string, string>>
+}
+
+/** content of a mail compose window */
+export type ComposeDetails = {
+  /** Whether the compose window is in plain text mode. */
+  isPlainText: boolean
+  /** The subject line of the email. */
+  subject: string
+  /** The body content of the email. */
+  body: string
+  // TODO add addresses
+}
+
+/** Updatable fields of a compose window */
+export type SettableComposeDetails =
+  | { subject: string; body?: string | undefined }
+  | { subject?: string | undefined; body: string }
+
+/** an utility to interact with a mail compose window */
+export interface IComposeWindow {
+  /** Practically ID of the compose window */
+  readonly tabId: number
+
+  /**
+   * Injects `compose.js` if it hasn't been injected yet
+   * @returns resolves to `true` if the script was injected, or `false` if it was already present
+   */
+  prepareContentScript(): PromiseLike<boolean>
+
+  /** @returns Values of input fields */
+  getDetails(): PromiseLike<ComposeDetails>
+
+  /**
+   * Updates the input fields
+   * @param details The new details to set
+   * @returns resolves after the update
+   */
+  setDetails(details: SettableComposeDetails): PromiseLike<void>
+
+  /**
+   * @returns a connected port from the background script to the content script
+   */
+  openPort(): IGhostServerPort
+
+  /**
+   * Updates the toolbar icon
+   * @param imageFilePath The path to the icon file relative to `manifest.json`
+   * @returns resolves when the icon has been set
+   */
+  setIcon(imageFilePath: string): Promise<void>
+}
+
+export type IGhostServerPort = IMessagePort<EditorChangeResponse, Partial<IEditorState>>

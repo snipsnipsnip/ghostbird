@@ -1,0 +1,53 @@
+name: Documentation
+
+on:
+  push:
+    branches-ignore: [ 'wip/*' ]
+    paths:
+      - 'README.md'
+      - 'doc/**/*'
+      - '.github/workflows/doc.yml'
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Enable corepack
+        run: corepack enable
+
+      - name: Install Yarn
+        run: corepack install
+
+      - name: Get Yarn cache folder
+        id: yarn-cache-dir
+        run: echo "cache-dir=$(corepack yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+      - name: Restore Yarn cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ steps.yarn-cache-dir.outputs.cache-dir }}
+          key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+      - name: Install dependencies
+        run: corepack yarn install --immutable
+
+      - name: Generate docs
+        run: corepack yarn run doc:md
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: build/doc
+          destination_dir: ${{ github.ref_name }}
+          enable_jekyll: true

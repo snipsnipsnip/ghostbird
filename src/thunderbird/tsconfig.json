@@ -1,0 +1,32 @@
+{
+  "extends": "../tsconfig-base",
+  "include": [
+    "**/*.ts"
+  ],
+  "compilerOptions": {
+    "types": [
+      "vitest/importMeta",
+      "thunderbird-webext-browser"
+    ]
+  },
+  "references": [
+    {
+      "path": "../app-background"
+    },
+    {
+      "path": "../app-compose"
+    },
+    {
+      "path": "../app-options"
+    },
+    {
+      "path": "../ghosttext-runner"
+    },
+    {
+      "path": "../ghosttext-adaptor"
+    },
+    {
+      "path": "../util"
+    }
+  ]
+}

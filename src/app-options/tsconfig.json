@@ -1,0 +1,17 @@
+{
+  "extends": "../tsconfig-base",
+  "include": [
+    "*.ts"
+  ],
+  "references": [
+    {
+      "path": "../util"
+    },
+    {
+      "path": "../app-background"
+    },
+    {
+      "path": "../ghosttext-session"
+    }
+  ]
+}

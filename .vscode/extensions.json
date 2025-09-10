@@ -1,0 +1,11 @@
+{
+  "recommendations": [
+    "arcanis.vscode-zipfs",
+    "bierner.markdown-mermaid",
+    "biomejs.biome",
+    "EditorConfig.EditorConfig",
+    "firefox-devtools.vscode-firefox-debug",
+    "gamunu.vscode-yarn",
+    "vitest.explorer"
+  ]
+}

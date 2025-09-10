@@ -1,0 +1,60 @@
+{
+  "manifest_version": 3,
+  "name": "Ghostbird - GhostText for Thunderbird",
+  "short_name": "Ghostbird",
+  "description": "Use your favorite text editor to compose emails in Thunderbird",
+  "version": "$version$",
+  "homepage_url": "$homepage_url$",
+  "default_locale": "en",
+  "author": "snipsnipsnip",
+  "permissions": [
+    "alarms",
+    "storage",
+    "scripting",
+    "compose"
+  ],
+  "host_permissions": [
+    "http://localhost/*",
+    "ws://localhost/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "connect-src 'self' http://localhost:* ws:; script-src 'self';"
+  },
+  "icons": {
+    "96": "blue.svg"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@ghostbird.exteditor.github.io",
+      "strict_min_version": "128.0"
+    }
+  },
+  "commands": {
+    "start-ghostbird": {
+      "description": "Start Ghostbird and connect to the GhostText server",
+      "suggested_key": {
+        "default": "Ctrl+E"
+      }
+    },
+    "stop-ghostbird": {
+      "description": "Disconnect from the GhostText server and Stop Ghostbird. (Set the same shortcut as 'Start Ghostbird' to toggle)",
+      "suggested_key": {
+        "default": "Ctrl+E"
+      }
+    }
+  },
+  "background": {
+    "type": "module",
+    "scripts": [
+      "background.js"
+    ]
+  },
+  "options_ui": {
+    "page": "options.html"
+  },
+  "compose_action": {
+    "default_title": "Ghostbird",
+    "default_label": "",
+    "default_icon": "gray.svg"
+  }
+}

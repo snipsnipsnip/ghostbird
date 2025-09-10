@@ -1,0 +1,46 @@
+{
+  "include": [],
+  "files": [],
+  "references": [
+    {
+      "path": "src/root"
+    },
+    {
+      "path": "src/test"
+    },
+    {
+      "path": "tools"
+    }
+  ],
+  "barrelsby": {
+    "name": "index.ts",
+    "delete": true,
+    "location": "all",
+    "noSemicolon": true,
+    "noHeader": true,
+    "directory": "src",
+    "include": [
+      "/[^./]+[.]ts$"
+    ],
+    "exclude": [
+      "[/.]test[/.]"
+    ]
+  },
+  "typedocOptions": {
+    "out": "build/doc",
+    "entryPoints": [
+      "./src/*/index.ts"
+    ],
+    "exclude": [
+      "./src/test/**/*"
+    ],
+    "projectDocuments": [
+      "doc/*.md",
+      "ext/*.md",
+      "CONTRIBUTING.md"
+    ],
+    "plugin": [
+      "typedoc-plugin-mermaid"
+    ]
+  }
+}
