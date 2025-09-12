@@ -8,7 +8,7 @@
 
 > **ResolveQuery**\<`TCatalog`, `T`\> = \[`"createOne"`, `Readonly`\<[`IClassInfo`](../interfaces/IClassInfo.md)\<`TCatalog`, `T`\>\>\] \| \[`"resolveOne"`, keyof `TCatalog` & `string`\] \| \[`"resolveAll"`, `Iterable`\<keyof `TCatalog` & `string`\>\] \| \[`"const"`, `T`\]
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:112](https://github.com/snipsnipsnip/ghostbird/blob/b703071944b7986f5570c5038dec9b8475e122bb/src/root/util/wire.ts#L112)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:112](https://github.com/snipsnipsnip/ghostbird/blob/914f0e9a11eabbef8f24af2447b75f82c9453220/src/root/util/wire.ts#L112)
 
 An entry in the registry. It contains a query to the `IResolver` paired with a key.
 

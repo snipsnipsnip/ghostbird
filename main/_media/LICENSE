@@ -2,10 +2,8 @@ SPDX-License-Identifier: MPL-2.0 OR GPL-3.0-or-later
 
 Copyright (C) Satoshi Kodama (snipsnipsnip) and contributors
 
-This project is dual-licensed under the Mozilla Public License 2.0
-OR the GNU General Public License v3.0 or later.
-
-You may choose to use this software under the terms of either:
+This software is dual-licensed.
+You can redistribute it and/or modify it under the terms of either:
 - Mozilla Public License 2.0 (see the file LICENSE.mpl)
 - GNU General Public License v3.0 or later (see the file LICENSE.gpl)
 
