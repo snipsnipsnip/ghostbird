@@ -45,7 +45,7 @@ This add-on is not yet available on [addons.thunderbird.net](https://addons.thun
 
 ### Build from source
 
-See [CONTRIBUTING.md](documents/CONTRIBUTING.md) to get started. Basically `yarn && yarn build`.
+Basically `yarn && yarn build`. See [CONTRIBUTING.md](documents/CONTRIBUTING.md) to get started.
 
 ## Usage
 
@@ -227,8 +227,9 @@ If you've looked at the options above and still want to motivate the maintainer 
 
 ## License
 
-[![License: GPLv3](https://img.shields.io/badge/license-GPLv3-bd0000?logo=gplv3&logoSize=auto)](./LICENSE)<br>
-Ghostbird is licensed under [GPLv3](_media/LICENSE) by @snipsnipsnip and contributors. See also [NOTICE](documents/ext/NOTICE.md).
+[![License: MPL-2.0](https://img.shields.io/badge/license-MPL--2.0-00d230?logo=mozilla)](./LICENSE.mpl)
+[![License: GPLv3](https://img.shields.io/badge/license-GPLv3-bd0000?logo=gplv3&logoSize=auto)](./LICENSE.gpl)<br>
+Ghostbird is [dual-licensed under (MPL-2.0 OR GPL-3.0-or-later)](_media/LICENSE). See also [NOTICE](documents/ext/NOTICE.md).
 
 [proj]: https://github.com/exteditor/ghostbird/projects
 [tb]: https://thunderbird.net/

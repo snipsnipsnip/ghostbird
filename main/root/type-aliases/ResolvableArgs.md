@@ -8,7 +8,7 @@
 
 > **ResolvableArgs**\<`TCatalog`, `T`, `TArgs`\> = `TArgs` *extends* \[infer TArg, `...(infer TRest)`\] ? `TArg` *extends* `TCatalog`\[keyof `TCatalog`\] ? `ResolvableArgs`\<`TCatalog`, `T`, `TRest`\> : \[`"An argument is not listed in TCatalog"`, `never`, `TArg`\] : `TArgs` *extends* \[\] ? `T` : \[`"Failed to unpack arguments. Is it a constructor?"`, `never`, `TArgs`\]
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:81](https://github.com/snipsnipsnip/ghostbird/blob/1cfddc916d770db744ab791a46d6dd79cee93938/src/root/util/wire.ts#L81)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:81](https://github.com/snipsnipsnip/ghostbird/blob/b703071944b7986f5570c5038dec9b8475e122bb/src/root/util/wire.ts#L81)
 
 Resolves to `T` if all of the `TArgs` are listed in `TCatalog`. Resolves to an error otherwise.
 

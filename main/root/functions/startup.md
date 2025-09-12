@@ -8,7 +8,7 @@
 
 > **startup**\<`TCatalog`\>(`modules`, `registry`): \<`TCtor`\>(`ctor`, `deps?`) => [`Resolved`](../type-aliases/Resolved.md)\<`TCatalog`, `TCtor`\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/startup.ts:33](https://github.com/snipsnipsnip/ghostbird/blob/1cfddc916d770db744ab791a46d6dd79cee93938/src/root/startup.ts#L33)
+Defined in: [work/ghostbird/ghostbird/src/root/startup.ts:33](https://github.com/snipsnipsnip/ghostbird/blob/b703071944b7986f5570c5038dec9b8475e122bb/src/root/startup.ts#L33)
 
 Collects available classes from given module objects to make a factory.
 
