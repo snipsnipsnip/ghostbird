@@ -20,7 +20,9 @@ export class EmailEditor implements IClientEditor, IStatusIndicator {
     // TODO Add an option to strip HTML tags on edit
     // TODO pass a better url that identify the email
 
-    return { selections: [{ start: 0, end: 0 }], subject, text: body, url: import.meta.url }
+    let { host } = new URL(import.meta.url)
+
+    return { selections: [{ start: 0, end: 0 }], subject, text: body, url: host }
   }
 
   async applyChange(change: EditorChangeResponse): Promise<void> {
