@@ -11,6 +11,8 @@ jobs:
       contents: write
     steps:
     - uses: actions/checkout@v5
+      with:
+        fetch-depth: 0
 
     - name: Setup Node.js
       uses: actions/setup-node@v5
@@ -40,8 +42,6 @@ jobs:
     - name: Build
       run: corepack yarn build
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: dist/*.xpi
-        generate_release_notes: true
+    - run: npx changelogithub@13.16.0 --assets 'dist/*.xpi'
+      env:
+        GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
