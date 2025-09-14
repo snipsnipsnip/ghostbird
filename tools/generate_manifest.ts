@@ -56,7 +56,7 @@ async function getVersionInfo(envInfo: undefined | Record<string, string>): Prom
   if (refName && sha && refType) {
     if (refType === "tag" && refName.startsWith("v")) {
       // this is a release build
-      let version = refName.slice(1)
+      let version = appendSha(refName.slice(1), sha)
       return { version }
     } else {
       // this is a nightly build
@@ -65,13 +65,17 @@ async function getVersionInfo(envInfo: undefined | Record<string, string>): Prom
   }
 
   // Query git for local build
-  let { semverString } = await gitDescribe({
+  let { semverString, hash, distance } = await gitDescribe({
     customArguments: ["--abbrev=16"],
   })
   if (!semverString) {
     throw Error("couldn't get the version from git")
   }
-  let version = semverString
+  let version = distance === 0 ? appendSha(semverString, hash.slice(1)) : semverString
 
   return { version }
+}
+
+function appendSha(version: string, sha: string): string {
+  return `${version}.${parseInt(sha.slice(0, 7), 16)}`
 }
