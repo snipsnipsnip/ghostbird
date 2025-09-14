@@ -1,6 +1,6 @@
 import type { IMessagePort } from "../../ghosttext-runner"
+import { PromisifyingQueue } from "../../util/promisifying_queue"
 import type { Port } from "../messenger"
-import { PromisifyingQueue } from "./promisifying_queue"
 
 /**
  * A port wrapped in a Promise-based API.
