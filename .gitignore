@@ -3,6 +3,7 @@ build/
 .vscode/
 .zed/
 .web-ext-config.mjs
+manifest.json
 
 # Logs
 logs

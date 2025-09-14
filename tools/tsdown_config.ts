@@ -18,7 +18,7 @@
  */
 
 import { existsSync } from "node:fs"
-import { dirname, resolve } from "node:path"
+import { dirname, join, resolve } from "node:path"
 import { env } from "node:process"
 import type { Options, UserConfig } from "tsdown"
 import { barrelsby } from "./barrelsby"
@@ -33,7 +33,7 @@ export default (): UserConfig => {
   ]
 }
 
-const isRelease = env.CI === "true"
+const isRelease = env.CI === "true" || existsSync(join(__dirname, "..", "ext", "manifest.json"))
 
 const commonConfig = {
   outDir: "dist/ext/",
