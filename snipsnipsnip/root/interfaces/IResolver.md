@@ -6,7 +6,7 @@
 
 # Interface: IResolver\<TCatalog\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:89](https://github.com/snipsnipsnip/ghostbird/blob/49bff41503691f5212e6a4ebfbd3df734c251a2c/src/root/util/wire.ts#L89)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:89](https://github.com/snipsnipsnip/ghostbird/blob/4b2a85ea99f359f3f275199658c76f546166164a/src/root/util/wire.ts#L89)
 
 ## Type Parameters
 
@@ -20,7 +20,7 @@ Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:89](https://github.c
 
 > **createOne**\<`T`\>(`info`): `T`
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:97](https://github.com/snipsnipsnip/ghostbird/blob/49bff41503691f5212e6a4ebfbd3df734c251a2c/src/root/util/wire.ts#L97)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:97](https://github.com/snipsnipsnip/ghostbird/blob/4b2a85ea99f359f3f275199658c76f546166164a/src/root/util/wire.ts#L97)
 
 Instantiate the class, or get the cached instance if one is available.
 
@@ -46,7 +46,7 @@ Instantiate the class, or get the cached instance if one is available.
 
 > **resolveAll**\<`Name`\>(`v`): `TCatalog`\[`Name`\][]
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:101](https://github.com/snipsnipsnip/ghostbird/blob/49bff41503691f5212e6a4ebfbd3df734c251a2c/src/root/util/wire.ts#L101)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:101](https://github.com/snipsnipsnip/ghostbird/blob/4b2a85ea99f359f3f275199658c76f546166164a/src/root/util/wire.ts#L101)
 
 Prepare instances of registered classes.
 
@@ -72,7 +72,7 @@ Prepare instances of registered classes.
 
 > **resolveOne**\<`Name`\>(`name`): `TCatalog`\[`Name`\]
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:93](https://github.com/snipsnipsnip/ghostbird/blob/49bff41503691f5212e6a4ebfbd3df734c251a2c/src/root/util/wire.ts#L93)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:93](https://github.com/snipsnipsnip/ghostbird/blob/4b2a85ea99f359f3f275199658c76f546166164a/src/root/util/wire.ts#L93)
 
 Creates or retrieves an instance of the named class.
 
