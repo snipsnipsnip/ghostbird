@@ -10,7 +10,7 @@ export class ComposeActionNotifier {
 
   async start(tab: IComposeWindow): Promise<void> {
     if (this.findOpenPort(tab)) {
-      console.log("Port is open; skipping")
+      console.info("Port is already open; skipping")
       return
     }
     await tab.prepareContentScript()
@@ -19,11 +19,11 @@ export class ComposeActionNotifier {
     this.runners.set(tab.tabId, port)
 
     try {
-      console.log("starting session")
+      console.info("starting session")
       let editor = new EmailEditor(tab, port)
       await this.ghostTextRunner.run(editor, editor)
     } finally {
-      console.log("session closed")
+      console.info("session closed")
       this.close(tab, port)
     }
   }
@@ -35,10 +35,10 @@ export class ComposeActionNotifier {
   async toggle(tab: IComposeWindow): Promise<void> {
     let port = this.findOpenPort(tab)
     if (port) {
-      console.log("toggle: closing")
+      console.info("toggle: closing")
       this.close(tab, port)
     } else {
-      console.log("toggle: starting")
+      console.info("toggle: starting")
       await this.start(tab)
     }
   }
