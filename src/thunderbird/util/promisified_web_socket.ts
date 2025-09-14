@@ -39,8 +39,7 @@ export class PromisifiedWebSocket implements IMessagePort<string, string> {
     )
     this.socket.addEventListener(
       "close",
-      (e) => {
-        let { code, reason, wasClean } = e
+      ({ code, reason, wasClean }) => {
         let info = { code, reason, wasClean }
         let err = Error(JSON.stringify(info))
 

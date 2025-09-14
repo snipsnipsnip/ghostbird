@@ -33,7 +33,8 @@ export class PromisifiedPort<TRequest extends object, TResponse extends object |
     })
 
     this.port.onDisconnect.addListener(() => {
-      this.q.notifyClosed(this.port.error ?? Error("Port disconnected"))
+      console.info("port closed from the other side")
+      this.handleClose()
     })
   }
 
@@ -54,6 +55,13 @@ export class PromisifiedPort<TRequest extends object, TResponse extends object |
   }
 
   close(): void {
+    console.info("closing port", this.port)
     this.port.disconnect()
+    // we have to call this ourself
+    this.handleClose()
+  }
+
+  private handleClose() {
+    this.q.notifyClosed(this.port.error ?? Error("Port disconnected"))
   }
 }

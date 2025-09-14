@@ -29,9 +29,7 @@ export type ComposeDetails = {
 }
 
 /** Updatable fields of a compose window */
-export type SettableComposeDetails =
-  | { subject: string; body?: string | undefined }
-  | { subject?: string | undefined; body: string }
+export type SettableComposeDetails = { subject: string }
 
 /** an utility to interact with a mail compose window */
 export interface IComposeWindow {
