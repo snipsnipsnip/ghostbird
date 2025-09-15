@@ -8,7 +8,7 @@
 
 > **SettableComposeDetails** = `object`
 
-Defined in: work/ghostbird/ghostbird/build/src/ghosttext-adaptor/api.d.ts:28
+Defined in: work/ghostbird/ghostbird/build/src/ghosttext-adaptor/api.d.ts:27
 
 Updatable fields of a compose window
 
@@ -18,4 +18,4 @@ Updatable fields of a compose window
 
 > **subject**: `string`
 
-Defined in: work/ghostbird/ghostbird/build/src/ghosttext-adaptor/api.d.ts:29
+Defined in: work/ghostbird/ghostbird/build/src/ghosttext-adaptor/api.d.ts:28

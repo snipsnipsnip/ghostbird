@@ -8,7 +8,7 @@
 
 > **prepareBackgroundRouter**(): [`BackgroundEventRouter`](../../app-background/classes/BackgroundEventRouter.md)
 
-Defined in: [work/ghostbird/ghostbird/src/root/background\_wire.ts:27](https://github.com/snipsnipsnip/ghostbird/blob/0a5d2e9a0b4d17e1fff1110e721fe8e702187e55/src/root/background_wire.ts#L27)
+Defined in: [work/ghostbird/ghostbird/src/root/background\_wire.ts:27](https://github.com/snipsnipsnip/ghostbird/blob/b99fe991c2421e326430d052fb6e5577b4eb8215/src/root/background_wire.ts#L27)
 
 ## Returns
 
