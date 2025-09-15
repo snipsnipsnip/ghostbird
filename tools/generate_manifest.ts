@@ -3,7 +3,7 @@ import type { EmittedAsset, Plugin } from "rolldown"
 import manifest from "../manifest_template.json" with { type: "json" }
 import pkg from "../package.json" with { type: "json" }
 
-type VersionInfo = { version: string; envInfo: Record<string, string> | undefined }
+type VersionInfo = { version: string }
 
 export type Options = { env?: undefined | Record<string, string> }
 
@@ -11,10 +11,20 @@ export type Options = { env?: undefined | Record<string, string> }
 export const generateManifest = ({ env }: Options = {}): Plugin => ({
   name: "generate_manifest",
   async generateBundle(): Promise<void> {
+    // manifest.json can be reused for reproducibility
+    let existing = await this.resolve("./ext/manifest.json")
+    if (existing) {
+      this.info(`manifest.json already exists; skipping generation`)
+      return
+    }
+
     this.info("Generating manifest.json")
-    let { version, envInfo } = await getVersionInfo(env ?? {}).catch((e) => {
+    let { version } = await getVersionInfo(env).catch((e) => {
       this.warn(e)
-      return { version: "unknown", envInfo: undefined }
+      this.warn(
+        "Generating dummy version; Build from a Git clone or place your ext/manifest.json to use the real one instead",
+      )
+      return { version: `unknown-${Date.now()}-try-placing-your-manifest-json-in-ext-directory-before-build` }
     })
     let manifest = makeManifestJson(version)
 
@@ -24,14 +34,6 @@ export const generateManifest = ({ env }: Options = {}): Plugin => ({
       originalFileName: "manifest_template.json",
       source: manifest,
     } satisfies EmittedAsset)
-
-    if (envInfo) {
-      this.emitFile({
-        type: "asset",
-        fileName: "env.yarn",
-        source: listEnv(envInfo),
-      } satisfies EmittedAsset)
-    }
   },
 })
 
@@ -47,43 +49,33 @@ function makeManifestJson(version: string): string {
   return JSON.stringify(contents, undefined, 2)
 }
 
-async function getVersionInfo(envInfo: Record<string, string>): Promise<VersionInfo> {
-  let { GITHUB_REF_NAME: refName, GITHUB_SHA: sha, GITHUB_REF_TYPE: refType } = envInfo
+async function getVersionInfo(envInfo: undefined | Record<string, string>): Promise<VersionInfo> {
+  let { GITHUB_REF_NAME: refName, GITHUB_SHA: sha, GITHUB_REF_TYPE: refType } = envInfo ?? {}
 
   // Use version info from env if available
   if (refName && sha && refType) {
     if (refType === "tag" && refName.startsWith("v")) {
       // this is a release build
-      return { version: refName.slice(1), envInfo }
+      let version = appendSha(refName.slice(1), sha)
+      return { version }
     } else {
       // this is a nightly build
-      return { version: `nightly-${refName}-${sha}`, envInfo }
+      return { version: `nightly-${refName}-${sha}` }
     }
   }
 
   // Query git for local build
-  let { semverString } = await gitDescribe({
+  let { semverString, hash, distance } = await gitDescribe({
     customArguments: ["--abbrev=16"],
   })
   if (!semverString) {
     throw Error("couldn't get the version from git")
   }
-  return { version: semverString, envInfo: undefined }
+  let version = distance === 0 ? appendSha(semverString, hash.slice(1)) : semverString
+
+  return { version }
 }
 
-function listEnv(envInfo: Record<string, string>): string {
-  let keys = new Set([
-    "CI",
-    "GITHUB_REF_NAME",
-    "GITHUB_SHA",
-    "GITHUB_REF_TYPE",
-    "GITHUB_SERVER_URL",
-    "GITHUB_REPOSITORY",
-    "GITHUB_RUN_ID",
-  ])
-  return Object.entries(envInfo)
-    .filter((pair) => keys.has(pair[0]))
-    .sort()
-    .map((pair) => pair.join("="))
-    .join("\n")
+function appendSha(version: string, sha: string): string {
+  return `${version}.${parseInt(sha.slice(0, 7), 16)}`
 }
