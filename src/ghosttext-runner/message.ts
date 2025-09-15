@@ -2,9 +2,7 @@
 
 export interface MessagesFromBackground {
   ping: "pong"
-  start: "ok"
-  stop: "ok"
-  toggle: "ok"
+  other: "ok"
 }
 
 /**

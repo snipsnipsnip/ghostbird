@@ -1,5 +1,5 @@
-import type { ClientStatus, IClientEditor, IStatusIndicator } from "../ghosttext-runner"
-import type { EditorChangeResponse, IEditorState } from "../ghosttext-session"
+import type { ClientStatus, ExternalEdit, IClientEditor, InternalEdit, IStatusIndicator } from "../ghosttext-runner"
+import type { EmailState } from "../ghosttext-session"
 import type { IComposeWindow, IGhostServerPort } from "./api"
 
 export class EmailEditor implements IClientEditor, IStatusIndicator {
@@ -12,32 +12,38 @@ export class EmailEditor implements IClientEditor, IStatusIndicator {
     return this.composeWindow.setIcon(imageForStatus(status))
   }
 
-  async getState(): Promise<IEditorState> {
-    this.port.clearReceived()
+  async getState(): Promise<EmailState> {
+    let { body, subject, isPlainText } = await this.composeWindow.getDetails()
 
-    let { body, subject } = await this.composeWindow.getDetails()
+    // Expect body from the compose window
+    await this.waitEdit()
+    let r = this.port.clearReceived()
+    if (isPlainText && r && "plainText" in r && r.plainText != null) {
+      body = r.plainText
+    } else if (!isPlainText && r && "html" in r && r.html != null) {
+      body = r.html
+    }
 
     // TODO Add an option to strip HTML tags on edit
     // TODO pass a better url that identify the email
 
     let { host } = new URL(import.meta.url)
 
-    return { selections: [{ start: 0, end: 0 }], subject, text: body, url: host }
+    return { selections: [{ start: 0, end: 0 }], subject, isPlainText, body, url: host }
   }
 
-  async applyChange(change: EditorChangeResponse): Promise<void> {
+  async applyChange(change: ExternalEdit): Promise<void> {
     // TODO Should re-add HTML tags like `<p></p>` if stripped
-    if (change.text) {
-      this.port.send(change)
-    }
+    this.port.send(change)
   }
 
   waitEdit(): Promise<void> {
     return this.port.waitReady()
   }
 
-  popLastEdit(): Partial<IEditorState> | undefined {
-    return this.port.clearReceived()
+  popLastEdit(): InternalEdit | undefined {
+    let edits = this.port.clearReceived()
+    return edits
   }
 }
 

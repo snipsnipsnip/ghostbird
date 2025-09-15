@@ -1,5 +1,4 @@
-import type { IMessagePort } from "../ghosttext-runner"
-import type { EditorChangeResponse, IEditorState } from "../ghosttext-session"
+import type { ExternalEdit, IMessagePort, InternalEdit } from "../ghosttext-runner"
 
 /** Wrapper for `fetch` and `WebSocket` */
 export interface IWebClient {
@@ -65,4 +64,7 @@ export interface IComposeWindow {
   setIcon(imageFilePath: string): Promise<void>
 }
 
-export type IGhostServerPort = IMessagePort<EditorChangeResponse, Partial<IEditorState>>
+/** Connection to the background script, and the GhostText server behind it */
+export type IGhostClientPort = IMessagePort<InternalEdit, ExternalEdit>
+/** Connection to the content script */
+export type IGhostServerPort = IMessagePort<ExternalEdit, InternalEdit>

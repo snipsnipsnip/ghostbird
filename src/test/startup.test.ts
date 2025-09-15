@@ -36,7 +36,10 @@ const modules = {
 
 describe(startup, () => {
   test("All collected classes must be resolvable", () => {
-    const registry = new TestRegistry([["messenger", ["const", makeDummyMessenger()]]])
+    const registry = new TestRegistry([
+      ["messenger", ["const", makeDummyMessenger()]],
+      ["body", ["const", Symbol("body")]],
+    ])
     const wire = startup(Object.values(modules), registry)
 
     // TODO test handling of name clash across modules

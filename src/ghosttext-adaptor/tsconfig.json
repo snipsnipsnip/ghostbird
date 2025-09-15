@@ -8,9 +8,6 @@
       "path": "../util"
     },
     {
-      "path": "../ghosttext-session"
-    },
-    {
       "path": "../ghosttext-runner"
     }
   ]
