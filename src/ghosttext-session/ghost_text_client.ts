@@ -1,4 +1,11 @@
-import type { EditorChangeResponse, IEditorState, ServerInitialResponse, UpdateRequest } from "./types"
+import type {
+  EditorChangeResponse,
+  EmailState,
+  ExternalEdit,
+  InternalEdit,
+  ServerInitialResponse,
+  UpdateRequest,
+} from "./types"
 
 export type SessionStatus = "unconnected" | "connecting" | "running" | "error" | "finished"
 
@@ -6,15 +13,15 @@ export type Command =
   | { type: "connect" }
   | { type: "queryEditor" }
   | { type: "requestUpdate"; update: UpdateRequest }
-  | { type: "applyChange"; change: EditorChangeResponse }
+  | { type: "applyChange"; change: ExternalEdit | undefined }
   | { type: "notifyStatus"; status: SessionStatus }
 
 export type CommandResult =
   | { type: "connected"; init: ServerInitialResponse }
   | { type: "statusUpdated" }
   | { type: "serverChanged"; change: EditorChangeResponse }
-  | { type: "editorState"; state: IEditorState }
-  | { type: "partialEditorState"; state: Partial<IEditorState> }
+  | { type: "clientState"; state: EmailState }
+  | { type: "clientEdited"; edit: InternalEdit }
   | { type: "disconnected"; error?: Error | undefined }
   | { type: "editorClosed" }
 
@@ -29,7 +36,6 @@ export class GhostTextClient {
 
     res = yield { type: "connect" }
     if (res?.type !== "connected") {
-      yield { type: "notifyStatus", status: "error" }
       return "error"
     }
 
@@ -39,24 +45,21 @@ export class GhostTextClient {
     }
 
     res = yield { type: "queryEditor" }
-    if (res?.type !== "editorState" || !res.state) {
+    if (res?.type !== "clientState" || !res.state) {
       return "error"
     }
-    let initialEditorState = res.state
-
-    res = yield {
-      type: "requestUpdate",
-      update: makeInitialUpdate(initialEditorState),
-    }
+    let { isPlainText } = res.state
 
     while (res) {
       switch (res.type) {
         case "serverChanged":
-          res = yield { type: "applyChange", change: res.change }
+          res = yield { type: "applyChange", change: makeChange(isPlainText, res.change) }
           continue
-        case "partialEditorState":
-        case "editorState":
-          res = yield { type: "requestUpdate", update: makeUpdate(res.state) }
+        case "clientEdited":
+          res = yield { type: "requestUpdate", update: makePartialUpdate(res.edit) }
+          continue
+        case "clientState":
+          res = yield { type: "requestUpdate", update: makeFullUpdate(res.state) }
           continue
       }
       return "finished"
@@ -65,9 +68,9 @@ export class GhostTextClient {
   }
 }
 
-function makeInitialUpdate({ text, subject, selections, url }: IEditorState): UpdateRequest {
+function makeFullUpdate({ body, subject, selections, url }: EmailState): UpdateRequest {
   return {
-    text,
+    text: body,
     title: subject,
     url,
     selections,
@@ -75,14 +78,18 @@ function makeInitialUpdate({ text, subject, selections, url }: IEditorState): Up
   }
 }
 
-function makeUpdate({ text, selections }: Partial<IEditorState>): UpdateRequest {
+function makePartialUpdate(edit: InternalEdit): UpdateRequest {
   return {
-    text: text ?? "",
+    text: "body" in edit ? edit.body : (edit.plainText ?? edit.html ?? ""),
     title: "",
     url: "",
-    selections: selections ?? [],
+    selections: [],
     syntax: "",
   }
+}
+
+function makeChange(isPlainText: boolean, res: EditorChangeResponse): ExternalEdit | undefined {
+  return res?.text == null ? undefined : isPlainText ? { plainText: res.text } : { html: res.text }
 }
 
 if (import.meta.vitest) {
@@ -96,8 +103,7 @@ if (import.meta.vitest) {
       g.next() // notifyStatus connecting
       g.next({ type: "statusUpdated" }) // connect
 
-      expect(g.next({ type: "disconnected" }).value).to.deep.equal({ type: "notifyStatus", status: "error" })
-      expect(g.next().done).to.be.true
+      expect(g.next({ type: "disconnected" })).to.deep.equal({ done: true, value: "error" })
     })
 
     it("should terminate if the initial editor state is not received", () => {
@@ -107,7 +113,7 @@ if (import.meta.vitest) {
       g.next() // notifyStatus connecting
       g.next({ type: "statusUpdated" }) // connect
       g.next({ type: "connected", init: initResponse }) // notifyStatus running
-      expect(g.next({ type: "statusUpdated" }).value).to.deep.equal({ type: "queryEditor" })
+      expect(g.next({ type: "statusUpdated" }).value).to.deep.equal({ type: "queryEditor" } satisfies Command)
 
       expect(g.next({ type: "disconnected" }).done).to.be.true
     })
@@ -148,21 +154,20 @@ if (import.meta.vitest) {
 
       // Server changes text, expect applyChange command
       const serverChange: EditorChangeResponse = { text: "Server changed text" }
-      expect(g.next({ type: "serverChanged", change: serverChange }).value).to.deep.equal({
-        type: "applyChange",
-        change: serverChange,
-      })
+      expect(g.next({ type: "serverChanged" as const, change: serverChange }).value).to.deep.equal({
+        type: "applyChange" as const,
+        change: { plainText: "Server changed text" },
+      } satisfies Command)
 
       // After applying change, the client will wait for the next event.
       // Let's simulate a local editor content change, expect update request.
-      const editorState: IEditorState = {
-        ...initialState,
-        text: "Editor changed text",
+      const edit: InternalEdit = {
+        body: "Editor changed text",
       }
-      expect(g.next({ type: "partialEditorState", state: editorState }).value).to.deep.equal({
+      expect(g.next({ type: "clientEdited", edit }).value).to.deep.equal({
         type: "requestUpdate",
-        update: makeUpdate(editorState),
-      })
+        update: makePartialUpdate(edit),
+      } satisfies Command)
 
       // Disconnected, expect termination
       expect(g.next({ type: "disconnected" }).done).to.be.true
@@ -172,10 +177,11 @@ if (import.meta.vitest) {
   // biome-ignore lint/style/useNamingConvention: required by the protocol
   const initResponse: ServerInitialResponse = { ProtocolVersion: 1, WebSocketPort: 1234 }
 
-  const initialState: IEditorState = {
+  const initialState: EmailState = {
     subject: "Test Subject",
     url: "http://example.com",
-    text: "Initial text",
+    isPlainText: true,
+    body: "Initial text",
     selections: [],
   }
 
@@ -185,21 +191,21 @@ if (import.meta.vitest) {
    */
   function runHandshake(g: Generator<Command, SessionStatus, CommandResult>) {
     // 1. notifyStatus connecting
-    expect(g.next().value).to.deep.equal({ type: "notifyStatus", status: "connecting" })
+    expect(g.next().value).to.deep.equal({ type: "notifyStatus", status: "connecting" } satisfies Command)
     // 2. connect
-    expect(g.next({ type: "statusUpdated" }).value).to.deep.equal({ type: "connect" })
+    expect(g.next({ type: "statusUpdated" }).value).to.deep.equal({ type: "connect" } satisfies Command)
     // 3. notifyStatus running
     expect(g.next({ type: "connected", init: initResponse }).value).to.deep.equal({
       type: "notifyStatus",
       status: "running",
-    })
+    } satisfies Command)
     // 4. queryEditor
-    expect(g.next({ type: "statusUpdated" }).value).to.deep.equal({ type: "queryEditor" })
+    expect(g.next({ type: "statusUpdated" }).value).to.deep.equal({ type: "queryEditor" } satisfies Command)
     // 5. requestUpdate
-    const initialUpdate = makeInitialUpdate(initialState)
-    expect(g.next({ type: "editorState", state: initialState }).value).to.deep.equal({
+    const initialUpdate = makeFullUpdate(initialState)
+    expect(g.next({ type: "clientState", state: initialState }).value).to.deep.equal({
       type: "requestUpdate",
       update: initialUpdate,
-    })
+    } satisfies Command)
   }
 }

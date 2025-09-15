@@ -9,7 +9,7 @@ import * as compose from "../app-compose"
 import * as thunderbird from "../thunderbird/compose_util"
 import { PromisifiedPort } from "../thunderbird/util/promisified_port"
 import { startup } from "./startup"
-import { makeRegistry } from "./util/registry"
+import { makeRegistryWithBody } from "./util/registry"
 
 class Root {
   constructor(readonly composeEventRouter: compose.ComposeEventRouter) {}
@@ -22,7 +22,7 @@ class Root {
 console.info("starting compose.js")
 console.debug({ document })
 
-const wire = startup([thunderbird, compose], makeRegistry<Root>())
+const wire = startup([thunderbird, compose], makeRegistryWithBody<Root>())
 const root = wire(Root)
 const composeEventRouter = root.init()
 

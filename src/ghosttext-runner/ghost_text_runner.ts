@@ -86,12 +86,14 @@ export class GhostTextRunner {
   ): Promise<CommandResult> {
     switch (command.type) {
       case "queryEditor":
-        return { type: "editorState", state: await editor.getState() }
+        return { type: "clientState", state: await editor.getState() }
       case "requestUpdate":
         session.sendUpdate(command.update)
         return receiveChange(editor, session)
       case "applyChange":
-        await editor.applyChange(command.change)
+        if (command.change) {
+          await editor.applyChange(command.change)
+        }
         return receiveChange(editor, session)
       case "notifyStatus":
         await indicator.update(translateStatus(command.status))
@@ -116,7 +118,7 @@ async function receiveChange(editor: IClientEditor, session: ISession): Promise<
 async function receiveChangeOnce(editor: IClientEditor, session: ISession): Promise<CommandResult | undefined> {
   let type = await Promise.race([
     editor.waitEdit().then(
-      () => "partialEditorState" as const,
+      () => "clientEdited" as const,
       () => "editorClosed" as const,
     ),
     session.waitServerChange().then(
@@ -125,9 +127,9 @@ async function receiveChangeOnce(editor: IClientEditor, session: ISession): Prom
     ),
   ])
 
-  if (type === "partialEditorState") {
+  if (type === "clientEdited") {
     let state = editor.popLastEdit()
-    return state && { type, state }
+    return state && { type, edit: state }
   } else if (type === "serverChanged") {
     let change = session.popServerChange()
     return change && { type, change }

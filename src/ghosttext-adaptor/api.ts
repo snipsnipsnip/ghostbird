@@ -1,5 +1,4 @@
-import type { IMessagePort } from "../ghosttext-runner"
-import type { EditorChangeResponse, IEditorState } from "../ghosttext-session"
+import type { ExternalEdit, IMessagePort, InternalEdit } from "../ghosttext-runner"
 
 /** Wrapper for `fetch` and `WebSocket` */
 export interface IWebClient {
@@ -29,9 +28,7 @@ export type ComposeDetails = {
 }
 
 /** Updatable fields of a compose window */
-export type SettableComposeDetails =
-  | { subject: string; body?: string | undefined }
-  | { subject?: string | undefined; body: string }
+export type SettableComposeDetails = { subject: string }
 
 /** an utility to interact with a mail compose window */
 export interface IComposeWindow {
@@ -67,4 +64,7 @@ export interface IComposeWindow {
   setIcon(imageFilePath: string): Promise<void>
 }
 
-export type IGhostServerPort = IMessagePort<EditorChangeResponse, Partial<IEditorState>>
+/** Connection to the background script, and the GhostText server behind it */
+export type IGhostClientPort = IMessagePort<InternalEdit, ExternalEdit>
+/** Connection to the content script */
+export type IGhostServerPort = IMessagePort<ExternalEdit, InternalEdit>

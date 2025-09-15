@@ -1,6 +1,8 @@
 import type {
   EditorChangeResponse,
-  IEditorState,
+  EmailState,
+  ExternalEdit,
+  InternalEdit,
   ServerInitialResponse,
   UpdateRequest,
 } from "../ghosttext-session/types"
@@ -60,14 +62,14 @@ export interface ISession {
  */
 export interface IClientEditor {
   /** @returns complete current state of the editor */
-  getState(): Promise<IEditorState>
+  getState(): Promise<EmailState>
 
   /**
    * Applies changes received from the GhostText server to the compose window
    * @param change The change from the server
    * @returns resolves when updated, or rejects if the editor has been closed
    */
-  applyChange(change: EditorChangeResponse): Promise<void>
+  applyChange(change: ExternalEdit): Promise<void>
 
   /**
    * Waits for an edit to occur in the local compose window.
@@ -79,8 +81,10 @@ export interface IClientEditor {
    * Get the most recent edit and drop the rest
    * @returns recent edit or `undefined` if no new edits have occurred
    */
-  popLastEdit(): Partial<IEditorState> | undefined
+  popLastEdit(): InternalEdit | undefined
 }
+
+export type { InternalEdit, ExternalEdit }
 
 /**
  * Status of the connection

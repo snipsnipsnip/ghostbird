@@ -42,10 +42,10 @@ export class ComposeTab implements IComposeWindow {
     return { isPlainText, subject, body } as ComposeDetails
   }
 
-  setDetails({ subject, body }: SettableComposeDetails): Promise<void> {
+  setDetails({ subject }: SettableComposeDetails): Promise<void> {
     // TODO edit subject
     // TODO edit address lines
-    let details: messenger.compose.ComposeDetails = { subject, body, plainTextBody: body }
+    let details: messenger.compose.ComposeDetails = { subject }
 
     return this.compose.setComposeDetails(this.tabId, details)
   }

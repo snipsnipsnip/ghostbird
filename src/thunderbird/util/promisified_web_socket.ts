@@ -1,5 +1,5 @@
 import type { IMessagePort } from "../../ghosttext-runner/message"
-import { PromisifyingQueue } from "./promisifying_queue"
+import { PromisifyingQueue } from "../../util/promisifying_queue"
 
 export class PromisifiedWebSocket implements IMessagePort<string, string> {
   private readonly q = new PromisifyingQueue<string>()
@@ -39,8 +39,7 @@ export class PromisifiedWebSocket implements IMessagePort<string, string> {
     )
     this.socket.addEventListener(
       "close",
-      (e) => {
-        let { code, reason, wasClean } = e
+      ({ code, reason, wasClean }) => {
         let info = { code, reason, wasClean }
         let err = Error(JSON.stringify(info))
 

@@ -48,7 +48,7 @@ export class BackgroundEventRouter {
       return Promise.reject(Error("Event dropped"))
     }
 
-    return this.composeActionNotifier.toggle(composeTab)
+    return this.composeActionNotifier.start(composeTab)
   }
 
   /** handles one-off messages from content scripts */
