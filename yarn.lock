@@ -510,6 +510,7 @@ __metadata:
   dependencies:
     "@biomejs/biome": "npm:2.2.0"
     "@std/text": "jsr:^1.0.16"
+    "@std/toml": "jsr:^1.0.10"
     "@types/node": "npm:^24.3.0"
     "@types/thunderbird-webext-browser": "npm:^127.0.0"
     barrelsby: "npm:^2.8.1"
@@ -638,6 +639,13 @@ __metadata:
     "@jridgewell/resolve-uri": "npm:^3.1.0"
     "@jridgewell/sourcemap-codec": "npm:^1.4.14"
   checksum: 10c0/4b30ec8cd56c5fd9a661f088230af01e0c1a3888d11ffb6b47639700f71225be21d1f7e168048d6d4f9449207b978a235c07c8f15c07705685d16dc06280e9d9
+  languageName: node
+  linkType: hard
+
+"@jsr/std__collections@npm:^1.1.3":
+  version: 1.1.3
+  resolution: "@jsr/std__collections@npm:1.1.3::__archiveUrl=https%3A%2F%2Fnpm.jsr.io%2F~%2F11%2F%40jsr%2Fstd__collections%2F1.1.3.tgz"
+  checksum: 10c0/38053fc2082b6a644efee8594c7c6bf46a7265aacce075ba31759ece817623c6b325f2663c72cf3232a159a3f6d5efa6adcefaa04159422f719bc8089c0e8160
   languageName: node
   linkType: hard
 
@@ -1079,6 +1087,24 @@ __metadata:
   dependencies:
     "@jsr/std__regexp": "npm:^1.0.1"
   checksum: 10c0/2e3efa826b4701b61dbd4731225aaf8928ce583b483cd98d792d51c55651b219dbf31b130bc7b9d63ee108d40eb5353233ee870de53c833a33d1c1d4b028838a
+  languageName: node
+  linkType: hard
+
+"@std/toml@jsr:^1.0.10":
+  version: 1.0.10
+  resolution: "@std/toml@jsr:1.0.10::__archiveUrl=https%3A%2F%2Fnpm.jsr.io%2F~%2F11%2F%40jsr%2Fstd__toml%2F1.0.10.tgz"
+  dependencies:
+    "@jsr/std__collections": "npm:^1.1.3"
+  checksum: 10c0/81f81e1ea12cbe40e0235ab6754d07f042834d9d681db9ec48d13e4c2fe50051fe457c5814ee0ce27bed3d95388f479d7b585a2d6216d505401c114cfccff216
+  languageName: node
+  linkType: hard
+
+"@std/toml@npm:@jsr/std__toml@^1.0.10":
+  version: 1.0.10
+  resolution: "@jsr/std__toml@npm:1.0.10::__archiveUrl=https%3A%2F%2Fnpm.jsr.io%2F~%2F11%2F%40jsr%2Fstd__toml%2F1.0.10.tgz"
+  dependencies:
+    "@jsr/std__collections": "npm:^1.1.3"
+  checksum: 10c0/81f81e1ea12cbe40e0235ab6754d07f042834d9d681db9ec48d13e4c2fe50051fe457c5814ee0ce27bed3d95388f479d7b585a2d6216d505401c114cfccff216
   languageName: node
   linkType: hard
 
