@@ -8,7 +8,7 @@
 
 > **IRegistry**\<`TCatalog`\> = `Pick`\<`Map`\<`string`, [`ResolveQuery`](ResolveQuery.md)\<`TCatalog`, `unknown`\>\>, `"get"` \| `"set"`\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:107](https://github.com/snipsnipsnip/ghostbird/blob/c414d5a391fb16cf032c98875899122e966a3eea/src/root/util/wire.ts#L107)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:107](https://github.com/snipsnipsnip/ghostbird/blob/ed6238c5d74dfacaab726d53a88eb816ce71bd8e/src/root/util/wire.ts#L107)
 
 Stores registered classes for lookup.
 
