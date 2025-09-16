@@ -1,0 +1,47 @@
+name: Check PR
+
+on:
+  pull_request:
+  merge_group:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+    - uses: actions/checkout@v5
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v5
+      with:
+        node-version: 22
+        cache: npm
+
+    - name: Enable corepack
+      run: corepack enable
+
+    - name: Install Yarn
+      run: corepack install
+
+    - name: Get Yarn cache folder
+      id: yarn-cache-dir
+      run: echo "cache-dir=$(corepack yarn config get cacheFolder)" >> $GITHUB_OUTPUT
+
+    - name: Restore Yarn cache
+      uses: actions/cache@v4
+      with:
+        path: ${{ steps.yarn-cache-dir.outputs.cache-dir }}
+        key: yarn-${{ runner.os }}-${{ hashFiles('yarn.lock') }}
+
+    - name: Install dependencies
+      run: YARN_ENABLE_HARDENED_MODE=0 corepack yarn install --immutable
+
+    - name: Lint
+      run: corepack yarn exec biome ci
+
+    - name: Check Type
+      run: corepack yarn run check-type
+
+    - name: Test
+      run: corepack yarn run test --reporter=github-actions
