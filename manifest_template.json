@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Ghostbird - GhostText for Thunderbird",
+  "name": "__MSG_manifest_name__",
   "short_name": "Ghostbird",
   "description": "__MSG_manifest_description__",
   "version": "$version$",
