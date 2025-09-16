@@ -2,7 +2,7 @@
   "manifest_version": 3,
   "name": "Ghostbird - GhostText for Thunderbird",
   "short_name": "Ghostbird",
-  "description": "Use your favorite text editor to compose emails in Thunderbird",
+  "description": "__MSG_manifest_description__",
   "version": "$version$",
   "homepage_url": "$homepage_url$",
   "default_locale": "en",
@@ -30,14 +30,14 @@
     }
   },
   "commands": {
-    "start-ghostbird": {
-      "description": "Start Ghostbird and connect to the GhostText server",
+    "start_ghostbird": {
+      "description": "__MSG_manifest_commands_start_ghostbird_description__",
       "suggested_key": {
         "default": "Ctrl+E"
       }
     },
-    "stop-ghostbird": {
-      "description": "Disconnect from the GhostText server and Stop Ghostbird. (Set the same shortcut as 'Start Ghostbird' to toggle)",
+    "stop_ghostbird": {
+      "description": "__MSG_manifest_commands_stop_ghostbird_description__",
       "suggested_key": {
         "default": "Ctrl+E"
       }

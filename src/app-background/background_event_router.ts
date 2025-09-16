@@ -25,9 +25,9 @@ export class BackgroundEventRouter {
     }
 
     switch (command as CommandId) {
-      case "start-ghostbird":
+      case "start_ghostbird":
         return this.composeActionNotifier.start(composeTab)
-      case "stop-ghostbird":
+      case "stop_ghostbird":
         return this.composeActionNotifier.stop(composeTab)
     }
     // We don't handle default here so that tsc checks for exhaustiveness

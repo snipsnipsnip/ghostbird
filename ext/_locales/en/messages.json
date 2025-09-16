@@ -1,1 +1,14 @@
-{}
+{
+  "manifest_description": {
+    "description": "Description of the extension",
+    "message": "Use your favorite text editor to compose emails in Thunderbird"
+  },
+  "manifest_commands_start_ghostbird_description": {
+    "description": "Description of the shortcut key to start ghostbird",
+    "message": "Start Ghostbird and connect to the GhostText server"
+  },
+  "manifest_commands_stop_ghostbird_description": {
+    "description": "Description of the shortcut key to stop ghostbird",
+    "message": "Disconnect from the GhostText server and Stop Ghostbird_ (Set the same shortcut as 'Start Ghostbird' to toggle)"
+  }
+}
