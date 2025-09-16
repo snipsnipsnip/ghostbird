@@ -56,7 +56,7 @@ export class GhostTextClient {
           res = yield { type: "applyChange", change: makeChange(isPlainText, res.change) }
           continue
         case "clientEdited":
-          res = yield { type: "requestUpdate", update: makePartialUpdate(res.edit) }
+          res = yield { type: "requestUpdate", update: makePartialUpdate(isPlainText, res.edit) }
           continue
         case "clientState":
           res = yield { type: "requestUpdate", update: makeFullUpdate(res.state) }
@@ -78,9 +78,9 @@ function makeFullUpdate({ body, subject, selections, url }: EmailState): UpdateR
   }
 }
 
-function makePartialUpdate(edit: InternalEdit): UpdateRequest {
+function makePartialUpdate(isPlainText: boolean, edit: InternalEdit): UpdateRequest {
   return {
-    text: "body" in edit ? edit.body : (edit.plainText ?? edit.html ?? ""),
+    text: ("body" in edit ? edit.body : isPlainText ? edit.plainText : edit.html) ?? "",
     title: "",
     url: "",
     selections: [],
@@ -166,7 +166,7 @@ if (import.meta.vitest) {
       }
       expect(g.next({ type: "clientEdited", edit }).value).to.deep.equal({
         type: "requestUpdate",
-        update: makePartialUpdate(edit),
+        update: makePartialUpdate(true, edit),
       } satisfies Command)
 
       // Disconnected, expect termination
@@ -179,7 +179,7 @@ if (import.meta.vitest) {
 
   const initialState: EmailState = {
     subject: "Test Subject",
-    url: "http://example.com",
+    url: "example.com",
     isPlainText: true,
     body: "Initial text",
     selections: [],
