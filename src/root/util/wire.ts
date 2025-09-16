@@ -223,7 +223,7 @@ export class Wire<TCatalog> implements IWire<TCatalog>, IResolver<TCatalog> {
     let depNames = wantArray ? deps.map(this.nameForDuplicatesOf) : deps
 
     // Assumes there is no dependency loop; we test elsewhere to verify this
-    return this.wire(ctor, depNames as (keyof TCatalog & string)[]) as T
+    return this.wire(ctor as new () => T, depNames as [])
   }
 }
 
