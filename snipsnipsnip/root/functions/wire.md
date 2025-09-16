@@ -8,7 +8,7 @@
 
 > **wire**\<`TCatalog`\>(`classes`, `registry`): [`IWire`](../interfaces/IWire.md)\<`TCatalog`\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:241](https://github.com/snipsnipsnip/ghostbird/blob/b99fe991c2421e326430d052fb6e5577b4eb8215/src/root/util/wire.ts#L241)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:241](https://github.com/snipsnipsnip/ghostbird/blob/ed6238c5d74dfacaab726d53a88eb816ce71bd8e/src/root/util/wire.ts#L241)
 
 Creates a factory from the collected class constructors and their parameters
 

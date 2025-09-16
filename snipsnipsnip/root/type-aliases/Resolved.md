@@ -8,7 +8,7 @@
 
 > **Resolved**\<`TCatalog`, `TCtor`\> = `TCtor` *extends* (...`args`) => infer T ? [`ResolvableArgs`](ResolvableArgs.md)\<`TCatalog`, `T`, `TArgs`\> : \[`"Failed to unpack arguments. Is it a constructor?"`, `never`, `TCtor`\]
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:72](https://github.com/snipsnipsnip/ghostbird/blob/b99fe991c2421e326430d052fb6e5577b4eb8215/src/root/util/wire.ts#L72)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:72](https://github.com/snipsnipsnip/ghostbird/blob/ed6238c5d74dfacaab726d53a88eb816ce71bd8e/src/root/util/wire.ts#L72)
 
 Resolves to the instance type of `TCtor` after some checks.
 
