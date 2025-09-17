@@ -1,6 +1,9 @@
 {
   "typescript.tsdk": ".yarn/sdks/typescript/lib",
   "typescript.enablePromptUseWorkspaceTsdk": true,
+  "editor.rulers": [
+    120
+  ],
   "search.useIgnoreFiles": true,
   "you might also want to enable": {
     "explorer.excludeGitIgnore": true
