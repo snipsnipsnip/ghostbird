@@ -7,6 +7,12 @@
   "homepage_url": "$homepage_url$",
   "default_locale": "en",
   "author": "snipsnipsnip",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@ghostbird.exteditor.github.io",
+      "strict_min_version": "128.0"
+    }
+  },
   "permissions": [
     "alarms",
     "storage",
@@ -22,12 +28,6 @@
   },
   "icons": {
     "96": "blue.svg"
-  },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "@ghostbird.exteditor.github.io",
-      "strict_min_version": "128.0"
-    }
   },
   "commands": {
     "start_ghostbird": {
