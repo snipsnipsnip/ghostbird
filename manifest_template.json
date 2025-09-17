@@ -50,7 +50,8 @@
     ]
   },
   "options_ui": {
-    "page": "options.html"
+    "page": "options.html",
+    "browser_style": true
   },
   "compose_action": {
     "default_title": "Ghostbird",
