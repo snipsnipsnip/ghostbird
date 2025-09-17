@@ -77,5 +77,5 @@ async function getVersionInfo(envInfo: undefined | Record<string, string>): Prom
 }
 
 function appendSha(version: string, sha: string): string {
-  return `${version}.${parseInt(sha.slice(0, 7), 16)}`
+  return `${version}.${Number.parseInt(sha.slice(0, 7), 16)}`
 }
