@@ -16,6 +16,10 @@ This extension includes part of the following libraries and software:
   * License: MPL-2.0
   * Author: exteditor contributors
 
+* [webext-support](https://github.com/thunderbird/webext-support/)
+  * License: MPL-2.0
+  * Author: Thunderbird authors
+
 * [GhostText](https://github.com/fregante/GhostText/)
 * [webext-events](https://github.com/fregante/webext-events)
 * [webext-options-sync](https://github.com/fregante/webext-options-sync)
