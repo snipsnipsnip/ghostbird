@@ -36,6 +36,9 @@ export function startup<TCatalog>(
 ): <TCtor>(ctor: TCtor, deps?: Iterable<string & keyof TCatalog>) => Resolved<TCatalog, TCtor> {
   let wired = wire(listClasses(modules) as Iterable<IClassInfo<TCatalog>>, registry)
 
+  // Register the container itself so that we can (ab)use it as a factory
+  registry.set("$wire$", ["const", wired])
+
   return (ctor, deps) =>
     wired.wire(
       ctor,
