@@ -98,17 +98,6 @@
           "semicolons": "asNeeded"
         }
       }
-    },
-    {
-      "includes": [
-        "ext/**/*.json"
-      ],
-      "json": {
-        "formatter": {
-          "enabled": true,
-          "expand": "auto"
-        }
-      }
     }
   ]
 }
