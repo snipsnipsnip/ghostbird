@@ -3,7 +3,7 @@ import type { EmittedAsset, Plugin } from "rolldown"
 import manifest from "../manifest_template.json" with { type: "json" }
 import pkg from "../package.json" with { type: "json" }
 
-type VersionInfo = { version: string }
+type VersionInfo = { version: string; sha?: string | undefined }
 
 export type Options = { env?: undefined | Record<string, string> }
 
@@ -19,14 +19,14 @@ export const generateManifest = ({ env }: Options = {}): Plugin => ({
     }
 
     this.info("Generating manifest.json")
-    let { version } = await getVersionInfo(env).catch((e) => {
+    let versionInfo = await getVersionInfo(env).catch((e) => {
       this.warn(e)
       this.warn(
         "Generating dummy version; Build from a Git clone or place your ext/manifest.json to use the real one instead",
       )
-      return { version: `unknown-${Date.now()}-try-placing-your-manifest-json-in-ext-directory-before-build` }
+      return { version: `0.0.${Date.now()}`, sha: "try placing your manifest.json in ext directory before building" }
     })
-    let manifest = makeManifestJson(version)
+    let manifest = makeManifestJson(versionInfo)
 
     this.emitFile({
       type: "asset",
@@ -37,11 +37,12 @@ export const generateManifest = ({ env }: Options = {}): Plugin => ({
   },
 })
 
-function makeManifestJson(version: string): string {
+function makeManifestJson({ version, sha }: VersionInfo): string {
   // biome-ignore-start lint/style/useNamingConvention: required by the spec https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/homepage_url
   let contents = {
     ...manifest,
     version,
+    version_name: sha ? `${version}-${sha}` : undefined,
     homepage_url: pkg.homepage,
   }
   // biome-ignore-end lint/style/useNamingConvention: required by the spec https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/homepage_url
@@ -57,7 +58,7 @@ async function getVersionInfo(envInfo: undefined | Record<string, string>): Prom
     if (refType === "tag" && refName.startsWith("v")) {
       // this is a release build
       let version = appendSha(refName.slice(1), sha)
-      return { version }
+      return { version, sha }
     } else {
       // this is a nightly build
       return { version: `nightly-${refName}-${sha}` }
@@ -71,7 +72,8 @@ async function getVersionInfo(envInfo: undefined | Record<string, string>): Prom
   if (!semverString) {
     throw Error("couldn't get the version from git")
   }
-  let version = distance === 0 ? appendSha(semverString, hash.slice(1)) : semverString
+  const abbrev = hash.slice(1)
+  let version = distance === 0 ? appendSha(semverString, abbrev) : semverString
 
   return { version }
 }
