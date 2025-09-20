@@ -34,14 +34,14 @@
     "start_ghostbird": {
       "description": "__MSG_manifest_commands_start_ghostbird_description__",
       "suggested_key": {
-        "default": "Ctrl+E"
+        "default": "Ctrl+Shift+H"
       }
     },
     "stop_ghostbird": {
-      "description": "__MSG_manifest_commands_stop_ghostbird_description__",
-      "suggested_key": {
-        "default": "Ctrl+E"
-      }
+      "description": "__MSG_manifest_commands_stop_ghostbird_description__"
+    },
+    "toggle_ghostbird": {
+      "description": "__MSG_manifest_commands_toggle_ghostbird_description__"
     }
   },
   "background": {

@@ -34,6 +34,8 @@ export class BackgroundEventRouter {
         return this.composeActionNotifier.start(composeTab)
       case "stop_ghostbird":
         return this.composeActionNotifier.stop(composeTab)
+      case "toggle_ghostbird":
+        return this.composeActionNotifier.toggle(composeTab)
     }
     // We don't handle default here so that tsc checks for exhaustiveness
   }

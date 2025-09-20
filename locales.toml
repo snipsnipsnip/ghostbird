@@ -14,14 +14,19 @@ ja = "Ghostbird - Thunderbird用GhostText"
 [manifest_description]
 # Description of the extension.
 en = "Use your favorite text editor to compose emails"
-ja = "お好みのテキストエディタでメールを編集"
+ja = "好きなテキストエディタでメールを編集"
 
 [manifest_commands_start_ghostbird_description]
 # Description of the shortcut key to start Ghostbird.
-en = "Start syncing with the text editor"
-ja = "テキストエディタとの同期を開始"
+en = "Connect to the text editor"
+ja = "テキストエディタに接続"
 
 [manifest_commands_stop_ghostbird_description]
 # Description of the shortcut key to stop Ghostbird.
-en = "End syncing with the text editor"
-ja = "テキストエディタとの同期を停止"
+en = "Disconnect from the text editor"
+ja = "テキストエディタから切断"
+
+[manifest_commants_toggle_ghostbird_description]
+# Description of the shortcut key to toggle Ghostbird.
+en = "Toggle connection with the text editor"
+ja = "テキストエディタとの接続を切り替え"
