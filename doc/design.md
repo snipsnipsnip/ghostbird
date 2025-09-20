@@ -36,7 +36,7 @@ This is how user actions are handled:
 * We don't implement reconnecting the WebSocket connection when it is closed abnormally. The user has to click the Ghostbird button again to reconnect.
 * Initially, we don't support edits made in the compose window. We aim to support it in v2.0.0, but copying what the original GhostText add-on does might work well enough. We'll see.
 
-### Some diagram that's between a call graph and a collaboration diagram
+### Some diagram that's between a component diagram and a call graph
 
 The diagram below is an initial sketch, so class names may differ from the current codebase.
 

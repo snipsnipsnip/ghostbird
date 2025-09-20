@@ -47,12 +47,12 @@
 > TL;DR: Set your preferred format in `Account Settings`>`Composition & Addressing`, then start a new message.
 
 * In recent versions of Thunderbird, editing mode can't be switched after you start writing an email.
-* Confusingly, editing mode is set at two places: profile-wide and per-account.
-  * You can set profile-wide option at `Setting`>`Composition`>`Sending Format` section. Choose one from `Automatic`, `Both HTML and Plain Text`, `Only HTML`, and `Only Plain Text`.
+* Confusingly, the configuration is split between profile-wide and per-account.
+  * The **sending format**, which you can set profile-wide at `Setting`>`Composition`>`Sending Format` section, is maybe not what you are looking for; it determines the email format what **your recipient** will see when they open your email, not the format you use to compose your email.
 
     <img width="400" height="194" title="profile-wide email format config" alt="profile-wide email format config" src="https://github.com/user-attachments/assets/cbbe7494-1cce-4da8-944f-f5b99d925de4" />
 
-  * You can set per-account option at `Account Setting`>`Composition & Addressing`>`Composition` section. Check or uncheck the `Compose messages in HTML format` checkbox.
+  * The **composing format**, which you can set at `Account Setting`>`Composition & Addressing`>`Composition` section, is maybe what you are looking for; it determines the format **you** will see while composing your email. Check or uncheck the `Compose messages in HTML format` checkbox.
 
     <img width="400" height="184" alt="per-account email format config" title="per-account email format config" src="https://github.com/user-attachments/assets/9305cec5-dc83-4893-8128-bdbaadaa9f6f" />
 
