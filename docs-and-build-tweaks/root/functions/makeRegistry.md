@@ -8,7 +8,7 @@
 
 > **makeRegistry**\<`Catalog`\>(): [`IRegistry`](../type-aliases/IRegistry.md)\<`Catalog` & `object`\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/registry.ts:4](https://github.com/snipsnipsnip/ghostbird/blob/8061cafc81c997f7ee346743cecfdb43cf507bbf/src/root/util/registry.ts#L4)
+Defined in: [work/ghostbird/ghostbird/src/root/util/registry.ts:4](https://github.com/snipsnipsnip/ghostbird/blob/921797a1a857727a2b90f345e08b28153de8c743/src/root/util/registry.ts#L4)
 
 ## Type Parameters
 

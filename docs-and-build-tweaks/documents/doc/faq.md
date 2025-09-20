@@ -149,5 +149,5 @@
 [startup]: ../../_media/startup.ts
 [protocol]: https://github.com/fregante/GhostText/blob/main/PROTOCOL.md
 [gt]: https://ghosttext.fregante.com/
-[chooseicon]: https://github.com/exteditor/ghostbird/issues/<placeholder>
+[chooseicon]: https://github.com/exteditor/ghostbird/issues/7
 [revived]: https://addons.thunderbird.net/en-US/thunderbird/addon/external-editor-revived/

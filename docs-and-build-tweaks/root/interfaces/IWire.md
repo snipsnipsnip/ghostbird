@@ -6,7 +6,7 @@
 
 # Interface: IWire\<TCatalog\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:54](https://github.com/snipsnipsnip/ghostbird/blob/8061cafc81c997f7ee346743cecfdb43cf507bbf/src/root/util/wire.ts#L54)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:54](https://github.com/snipsnipsnip/ghostbird/blob/921797a1a857727a2b90f345e08b28153de8c743/src/root/util/wire.ts#L54)
 
 A DI container that appears to be type-safe after construction
 
@@ -22,7 +22,7 @@ A DI container that appears to be type-safe after construction
 
 > **wire**\<`TCtor`\>(`ctor`, `deps`): [`Resolved`](../type-aliases/Resolved.md)\<`TCatalog`, `TCtor`\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:58](https://github.com/snipsnipsnip/ghostbird/blob/8061cafc81c997f7ee346743cecfdb43cf507bbf/src/root/util/wire.ts#L58)
+Defined in: [work/ghostbird/ghostbird/src/root/util/wire.ts:58](https://github.com/snipsnipsnip/ghostbird/blob/921797a1a857727a2b90f345e08b28153de8c743/src/root/util/wire.ts#L58)
 
 Instantiate the given constructor with the dependencies that this container has
 

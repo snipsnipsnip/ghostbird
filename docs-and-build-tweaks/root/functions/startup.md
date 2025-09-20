@@ -6,9 +6,9 @@
 
 # Function: startup()
 
-> **startup**\<`TCatalog`\>(`modules`, `registry`): \<`TCtor`\>(`ctor`, `deps?`) => [`Resolved`](../type-aliases/Resolved.md)\<`TCatalog`, `TCtor`\>
+> **startup**\<`TCatalog`\>(`modules`, `registry`): [`Startup`](../type-aliases/Startup.md)\<`TCatalog`\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/startup.ts:33](https://github.com/snipsnipsnip/ghostbird/blob/8061cafc81c997f7ee346743cecfdb43cf507bbf/src/root/startup.ts#L33)
+Defined in: [work/ghostbird/ghostbird/src/root/startup.ts:38](https://github.com/snipsnipsnip/ghostbird/blob/921797a1a857727a2b90f345e08b28153de8c743/src/root/startup.ts#L38)
 
 Collects available classes from given module objects to make a factory.
 
@@ -30,24 +30,4 @@ Collects available classes from given module objects to make a factory.
 
 ## Returns
 
-> \<`TCtor`\>(`ctor`, `deps?`): [`Resolved`](../type-aliases/Resolved.md)\<`TCatalog`, `TCtor`\>
-
-### Type Parameters
-
-#### TCtor
-
-`TCtor`
-
-### Parameters
-
-#### ctor
-
-`TCtor`
-
-#### deps?
-
-`Iterable`\<`string` & keyof `TCatalog`, `any`, `any`\>
-
-### Returns
-
-[`Resolved`](../type-aliases/Resolved.md)\<`TCatalog`, `TCtor`\>
+[`Startup`](../type-aliases/Startup.md)\<`TCatalog`\>

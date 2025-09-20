@@ -32,6 +32,7 @@
         }
       },
       "nursery": {
+        "useExplicitType": "error",
         "noFloatingPromises": "error",
         "noImportCycles": "error"
       },
