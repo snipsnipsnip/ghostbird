@@ -15,13 +15,13 @@ export class EmailEditor implements IClientEditor, IStatusIndicator {
   async getState(): Promise<EmailState> {
     let { body, subject, isPlainText } = await this.composeWindow.getDetails()
 
+    this.port.send({ isPlainText })
+
     // Expect body from the compose window
     await this.waitEdit()
-    let r = this.port.clearReceived()
-    if (isPlainText && r && "plainText" in r && r.plainText != null) {
-      body = r.plainText
-    } else if (!isPlainText && r && "html" in r && r.html != null) {
-      body = r.html
+    const r = this.port.clearReceived()
+    if (r?.body != null) {
+      body = r.body
     }
 
     // TODO Add an option to strip HTML tags on edit
