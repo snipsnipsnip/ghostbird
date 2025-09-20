@@ -1,3 +1,4 @@
+import type { IComposeWindow } from "src/ghosttext-adaptor/api"
 import type { CommandId, ICommandConfig, IComposeWindowDetector, ITab } from "./api"
 import type { ComposeActionNotifier } from "./compose_action_notifier"
 
@@ -24,10 +25,14 @@ export class BackgroundEventRouter {
       return this.composeActionNotifier.toggle(composeTab)
     }
 
+    return this.runCommand(command, composeTab)
+  }
+
+  private runCommand(command: string, composeTab: IComposeWindow): Promise<void> {
     switch (command as CommandId) {
-      case "start-ghostbird":
+      case "start_ghostbird":
         return this.composeActionNotifier.start(composeTab)
-      case "stop-ghostbird":
+      case "stop_ghostbird":
         return this.composeActionNotifier.stop(composeTab)
     }
     // We don't handle default here so that tsc checks for exhaustiveness

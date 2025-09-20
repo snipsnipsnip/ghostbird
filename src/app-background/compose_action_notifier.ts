@@ -28,7 +28,7 @@ export class ComposeActionNotifier {
     }
   }
 
-  stop(tab: IComposeWindow): void {
+  async stop(tab: IComposeWindow): Promise<void> {
     this.close(tab, this.runners.get(tab.tabId))
   }
 

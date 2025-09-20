@@ -1,12 +1,19 @@
 {
   "manifest_version": 3,
-  "name": "Ghostbird - GhostText for Thunderbird",
+  "name": "__MSG_manifest_name__",
   "short_name": "Ghostbird",
-  "description": "Use your favorite text editor to compose emails in Thunderbird",
+  "description": "__MSG_manifest_description__",
   "version": "$version$",
   "homepage_url": "$homepage_url$",
+  "version_name": "$version_name$",
   "default_locale": "en",
   "author": "snipsnipsnip",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@ghostbird.exteditor.github.io",
+      "strict_min_version": "128.0"
+    }
+  },
   "permissions": [
     "alarms",
     "storage",
@@ -23,21 +30,15 @@
   "icons": {
     "96": "blue.svg"
   },
-  "browser_specific_settings": {
-    "gecko": {
-      "id": "@ghostbird.exteditor.github.io",
-      "strict_min_version": "128.0"
-    }
-  },
   "commands": {
-    "start-ghostbird": {
-      "description": "Start Ghostbird and connect to the GhostText server",
+    "start_ghostbird": {
+      "description": "__MSG_manifest_commands_start_ghostbird_description__",
       "suggested_key": {
         "default": "Ctrl+E"
       }
     },
-    "stop-ghostbird": {
-      "description": "Disconnect from the GhostText server and Stop Ghostbird. (Set the same shortcut as 'Start Ghostbird' to toggle)",
+    "stop_ghostbird": {
+      "description": "__MSG_manifest_commands_stop_ghostbird_description__",
       "suggested_key": {
         "default": "Ctrl+E"
       }

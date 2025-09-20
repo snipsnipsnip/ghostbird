@@ -1,0 +1,27 @@
+# This file contains translations for various messages Ghostbird shows.
+# The format is as follows:
+#
+# [<message_id>]
+# <language> = "<translated message>"
+#
+# See https://pontoon.mozilla.org/projects/thunderbirdnet/ for canonical terms like "email".
+
+[manifest_name]
+# Full name of the extension.
+en = "Ghostbird - GhostText for Thunderbird"
+ja = "Ghostbird - Thunderbird用GhostText"
+
+[manifest_description]
+# Description of the extension.
+en = "Use your favorite text editor to compose emails"
+ja = "お好みのテキストエディタでメールを編集"
+
+[manifest_commands_start_ghostbird_description]
+# Description of the shortcut key to start Ghostbird.
+en = "Start syncing with the text editor"
+ja = "テキストエディタとの同期を開始"
+
+[manifest_commands_stop_ghostbird_description]
+# Description of the shortcut key to stop Ghostbird.
+en = "End syncing with the text editor"
+ja = "テキストエディタとの同期を停止"
