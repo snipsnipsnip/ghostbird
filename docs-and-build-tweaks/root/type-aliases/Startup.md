@@ -8,7 +8,7 @@
 
 > **Startup**\<`TCatalog`\> = \<`TCtor`\>(`ctor`, `deps?`) => [`Resolved`](Resolved.md)\<`TCatalog`, `TCtor`\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/startup.ts:30](https://github.com/snipsnipsnip/ghostbird/blob/921797a1a857727a2b90f345e08b28153de8c743/src/root/startup.ts#L30)
+Defined in: [work/ghostbird/ghostbird/src/root/startup.ts:30](https://github.com/snipsnipsnip/ghostbird/blob/b00db81ea05d450d522cd701026e90044061b28c/src/root/startup.ts#L30)
 
 ## Type Parameters
 

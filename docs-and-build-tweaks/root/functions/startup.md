@@ -8,7 +8,7 @@
 
 > **startup**\<`TCatalog`\>(`modules`, `registry`): [`Startup`](../type-aliases/Startup.md)\<`TCatalog`\>
 
-Defined in: [work/ghostbird/ghostbird/src/root/startup.ts:38](https://github.com/snipsnipsnip/ghostbird/blob/921797a1a857727a2b90f345e08b28153de8c743/src/root/startup.ts#L38)
+Defined in: [work/ghostbird/ghostbird/src/root/startup.ts:38](https://github.com/snipsnipsnip/ghostbird/blob/b00db81ea05d450d522cd701026e90044061b28c/src/root/startup.ts#L38)
 
 Collects available classes from given module objects to make a factory.
 
