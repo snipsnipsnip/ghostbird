@@ -12,6 +12,11 @@
       "DOM",
       "ES2024"
     ],
+    "paths": {
+      "src/*": [
+        "./*"
+      ]
+    },
     "composite": true,
     "outDir": "../build",
     "rootDir": "..",

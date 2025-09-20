@@ -1,5 +1,5 @@
-import type { IComposeWindowDetector, ITab } from "../../app-background"
-import type { IComposeWindow } from "../../ghosttext-adaptor/api"
+import type { IComposeWindowDetector, ITab } from "src/app-background"
+import type { IComposeWindow } from "src/ghosttext-adaptor/api"
 import { ComposeTab } from "./compose_tab"
 
 export class ComposeTabDetector implements IComposeWindowDetector {

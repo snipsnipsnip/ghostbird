@@ -1,4 +1,4 @@
-import type { IBackgroundMessenger } from "../../app-compose"
+import type { IBackgroundMessenger } from "src/app-compose"
 
 export class BackgroundMessenger implements IBackgroundMessenger {
   static isSingleton = true

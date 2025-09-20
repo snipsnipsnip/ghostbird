@@ -5,10 +5,10 @@
 // Content scripts currently can't be a ES module.
 // So all the imports here will be bundled into one file.
 
-import * as compose from "../app-compose"
-import * as thunderbird from "../thunderbird/compose_util"
-import { PromisifiedPort } from "../thunderbird/util/promisified_port"
-import { startup } from "./startup"
+import * as compose from "src/app-compose"
+import * as thunderbird from "src/thunderbird/compose_util"
+import { PromisifiedPort } from "src/thunderbird/util/promisified_port"
+import { type Startup, startup } from "./startup"
 import { makeRegistryWithBody } from "./util/registry"
 
 class Root {
@@ -22,9 +22,9 @@ class Root {
 console.info("starting compose.js")
 console.debug({ document })
 
-const wire = startup([thunderbird, compose], makeRegistryWithBody<Root>())
-const root = wire(Root)
-const composeEventRouter = root.init()
+const wire: Startup<Root> = startup([thunderbird, compose], makeRegistryWithBody<Root>())
+const root: Root = wire(Root)
+const composeEventRouter: compose.ComposeEventRouter = root.init()
 
 messenger.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   try {

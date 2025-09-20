@@ -1,6 +1,6 @@
-import type { IComposeWindow, IGhostServerPort } from "../ghosttext-adaptor/api"
-import { EmailEditor } from "../ghosttext-adaptor/email_editor"
-import type { GhostTextRunner } from "../ghosttext-runner"
+import type { IComposeWindow, IGhostServerPort } from "src/ghosttext-adaptor/api"
+import { EmailEditor } from "src/ghosttext-adaptor/email_editor"
+import type { GhostTextRunner } from "src/ghosttext-runner"
 
 export class ComposeActionNotifier {
   static isSingleton = true
@@ -43,7 +43,7 @@ export class ComposeActionNotifier {
     }
   }
 
-  private close({ tabId }: IComposeWindow, port: IGhostServerPort | undefined) {
+  private close({ tabId }: IComposeWindow, port: IGhostServerPort | undefined): void {
     this.runners.delete(tabId)
     port?.close()
   }

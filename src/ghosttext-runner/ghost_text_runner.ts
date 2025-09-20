@@ -1,4 +1,4 @@
-import type { Command, CommandResult, GhostTextClient, SessionStatus } from "../ghosttext-session/ghost_text_client"
+import type { Command, CommandResult, GhostTextClient, SessionStatus } from "src/ghosttext-session/ghost_text_client"
 import type {
   ClientStatus,
   IClientEditor,

@@ -1,6 +1,6 @@
-import type { IWebClient } from "../../ghosttext-adaptor/api"
-import type { IMessagePort } from "../../ghosttext-runner/message"
-import { PromisifiedWebSocket } from "../util/promisified_web_socket"
+import type { IWebClient } from "src/ghosttext-adaptor/api"
+import type { IMessagePort } from "src/ghosttext-runner/message"
+import { PromisifiedWebSocket } from "src/thunderbird/util/promisified_web_socket"
 
 export class WebClient implements IWebClient {
   static isSingleton = true

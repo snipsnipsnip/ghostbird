@@ -1,4 +1,4 @@
-import type { IHeart } from "../../ghosttext-runner"
+import type { IHeart } from "src/ghosttext-runner"
 
 export class AlarmHeart implements IHeart {
   static isSingleton = true
@@ -9,7 +9,7 @@ export class AlarmHeart implements IHeart {
 
   constructor(readonly messenger: typeof globalThis.messenger) {}
 
-  assumeReady() {
+  assumeReady(): void {
     this.isListenerReady = true
   }
 
@@ -19,6 +19,6 @@ export class AlarmHeart implements IHeart {
       periodInMinutes: 1,
     })
 
-    return () => this.messenger.alarms.clear("heart")
+    return (): boolean => this.messenger.alarms.clear("heart")
   }
 }

@@ -1,4 +1,4 @@
-import type { IClientOptions } from "../ghosttext-runner/api"
+import type { IClientOptions } from "src/ghosttext-runner/api"
 
 export class ClientOptions implements IClientOptions {
   static isSingleton = true

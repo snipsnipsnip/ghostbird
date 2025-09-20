@@ -1,5 +1,5 @@
-import type { ExternalEdit, MessagesFromBackground } from "../ghosttext-runner"
-import type { BodyState } from "../ghosttext-session/types"
+import type { ExternalEdit, MessagesFromBackground } from "src/ghosttext-runner"
+import type { BodyState } from "src/ghosttext-session/types"
 import type { IBackgroundMessenger, IGhostClientPort } from "./api"
 
 export class ComposeEventRouter {
@@ -69,7 +69,7 @@ function response(_message: "ping"): MessagesFromBackground["ping"] {
 }
 
 function makeReadOnly(body: HTMLElement): () => void {
-  const disable = (e: Event) => {
+  const disable = (e: Event): void => {
     if ("getTargetRanges" in e) {
       let i = e as InputEvent
       console.log({ data: i.data, ranges: i.getTargetRanges() })
@@ -89,7 +89,7 @@ function makeReadOnly(body: HTMLElement): () => void {
   body.style.pointerEvents = "none"
   body.blur()
 
-  return () => {
+  return (): void => {
     body.style.removeProperty("pointerEvents")
     body.style.removeProperty("background")
     controller.abort()

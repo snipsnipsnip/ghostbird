@@ -1,4 +1,4 @@
-import type { CommandInfo, ICommandConfig } from "../../app-background/api"
+import type { CommandInfo, ICommandConfig } from "src/app-background/api"
 
 export class CommandConfig implements ICommandConfig {
   static isSingleton = true

@@ -1,5 +1,5 @@
-import type { ClientStatus, ExternalEdit, IClientEditor, InternalEdit, IStatusIndicator } from "../ghosttext-runner"
-import type { EmailState } from "../ghosttext-session"
+import type { ClientStatus, ExternalEdit, IClientEditor, InternalEdit, IStatusIndicator } from "src/ghosttext-runner"
+import type { EmailState } from "src/ghosttext-session"
 import type { IComposeWindow, IGhostServerPort } from "./api"
 
 export class EmailEditor implements IClientEditor, IStatusIndicator {

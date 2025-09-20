@@ -1,15 +1,15 @@
 import { toKebabCase } from "@std/text"
+import * as appBackground from "src/app-background"
+import * as appCompose from "src/app-compose"
+import * as appOptions from "src/app-options"
+import * as ghosttextAdaptor from "src/ghosttext-adaptor"
+import * as ghosttextRunner from "src/ghosttext-runner"
+import * as ghosttextSession from "src/ghosttext-session"
+import { startup } from "src/root/startup"
+import type { ResolveQuery } from "src/root/util/wire"
+import * as thunderbird from "src/thunderbird"
+import * as util from "src/util"
 import { describe, expect, test } from "vitest"
-import * as appBackground from "../app-background"
-import * as appCompose from "../app-compose"
-import * as appOptions from "../app-options"
-import * as ghosttextAdaptor from "../ghosttext-adaptor"
-import * as ghosttextRunner from "../ghosttext-runner"
-import * as ghosttextSession from "../ghosttext-session"
-import { startup } from "../root/startup"
-import type { ResolveQuery } from "../root/util/wire"
-import * as thunderbird from "../thunderbird"
-import * as util from "../util"
 import { writeText } from "./testutil"
 
 type AnyEntry = ResolveQuery<Record<string, unknown>, unknown>
@@ -24,7 +24,7 @@ class TestRegistry extends util.CaseFoldingMap<AnyEntry> {
   }
 }
 
-const modules = {
+const modules: Record<string, Record<string, unknown>> = {
   appOptions,
   ghosttextSession,
   appBackground,
@@ -106,7 +106,7 @@ async function dumpTree(fileName: string, deps: string[][]): Promise<void> {
   await writeText(fileName, text)
 }
 
-function makeDummyMessenger() {
+function makeDummyMessenger(): Record<string, symbol> {
   const namespaces = ["runtime", "tabs", "commands", "composeAction", "scripting"] as const
 
   return Object.fromEntries(namespaces.map((name) => [name, Symbol(`dummy messenger.${name}`)]))

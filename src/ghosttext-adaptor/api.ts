@@ -1,4 +1,4 @@
-import type { ExternalEdit, IMessagePort, InternalEdit } from "../ghosttext-runner"
+import type { ExternalEdit, IMessagePort, InternalEdit } from "src/ghosttext-runner"
 
 /** Wrapper for `fetch` and `WebSocket` */
 export interface IWebClient {

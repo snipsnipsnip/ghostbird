@@ -1,5 +1,5 @@
-import type { IGhostTextConnector, IMessagePort, ISession } from "../ghosttext-runner"
-import type { EditorChangeResponse, ServerInitialResponse, UpdateRequest } from "../ghosttext-session"
+import type { IGhostTextConnector, IMessagePort, ISession } from "src/ghosttext-runner"
+import type { EditorChangeResponse, ServerInitialResponse, UpdateRequest } from "src/ghosttext-session"
 import type { IWebClient } from "./api"
 
 export class GhostTextConnector implements IGhostTextConnector {
