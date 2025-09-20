@@ -174,7 +174,7 @@ end
 * [Barrelsby](https://github.com/bencoveney/barrelsby)  generates `index.ts`.
   * See [`tools/tsdown_config.ts`](../tools/tsdown_config.ts).
 
-## Structure of the code {#structure}
+## Structure of the code<a name="structure"></a>
 
 The code loosely follows the [Ports and Adapters architecture](https://8thlight.com/insights/a-color-coded-guide-to-ports-and-adapters) and adheres to the [Dependency Inversion Principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle).
 * Interface implementations are preferred over class inheritance.
