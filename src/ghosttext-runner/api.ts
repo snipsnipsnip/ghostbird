@@ -5,7 +5,7 @@ import type {
   InternalEdit,
   ServerInitialResponse,
   UpdateRequest,
-} from "../ghosttext-session/types"
+} from "src/ghosttext-session/types"
 
 /** Tries to prevent background script from suspending */
 export interface IHeart {

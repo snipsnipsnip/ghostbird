@@ -5,9 +5,9 @@
 // Content scripts currently can't be a ES module.
 // So all the imports here will be bundled into one file.
 
-import * as compose from "../app-compose"
-import * as thunderbird from "../thunderbird/compose_util"
-import { PromisifiedPort } from "../thunderbird/util/promisified_port"
+import * as compose from "src/app-compose"
+import * as thunderbird from "src/thunderbird/compose_util"
+import { PromisifiedPort } from "src/thunderbird/util/promisified_port"
 import { startup } from "./startup"
 import { makeRegistryWithBody } from "./util/registry"
 

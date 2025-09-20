@@ -1,4 +1,4 @@
-import type { IHeart } from "../../ghosttext-runner"
+import type { IHeart } from "src/ghosttext-runner"
 
 export class AlarmHeart implements IHeart {
   static isSingleton = true

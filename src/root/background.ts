@@ -1,4 +1,4 @@
-import type { BackgroundEventRouter } from "../app-background"
+import type { BackgroundEventRouter } from "src/app-background"
 
 console.log("starting", import.meta.url)
 

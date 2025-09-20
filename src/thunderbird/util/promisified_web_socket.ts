@@ -1,5 +1,5 @@
-import type { IMessagePort } from "../../ghosttext-runner/message"
-import { PromisifyingQueue } from "../../util/promisifying_queue"
+import type { IMessagePort } from "src/ghosttext-runner/message"
+import { PromisifyingQueue } from "src/util/promisifying_queue"
 
 export class PromisifiedWebSocket implements IMessagePort<string, string> {
   private readonly q = new PromisifyingQueue<string>()

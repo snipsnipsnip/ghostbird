@@ -1,6 +1,6 @@
-import type { IComposeWindow } from "../ghosttext-adaptor/api"
+import type { IComposeWindow } from "src/ghosttext-adaptor/api"
 
-export type { IGhostServerPort } from "../ghosttext-adaptor/api"
+export type { IGhostServerPort } from "src/ghosttext-adaptor/api"
 
 /** IDs of shortcut keys. Must be in sync with ones in manifest.json */
 export type CommandId = "start-ghostbird" | "stop-ghostbird"

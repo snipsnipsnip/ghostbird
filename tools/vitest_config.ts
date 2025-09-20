@@ -1,3 +1,4 @@
+import { join } from "node:path"
 import type { ViteUserConfig } from "vitest/config"
 
 export const config: ViteUserConfig = {
@@ -6,6 +7,11 @@ export const config: ViteUserConfig = {
   server: {
     watch: {
       ignored: ["**/dist/**", "**/build/**"],
+    },
+  },
+  resolve: {
+    alias: {
+      src: join(__dirname, "../src"),
     },
   },
   test: {

@@ -1,4 +1,4 @@
-import { CaseFoldingMap } from "../../util"
+import { CaseFoldingMap } from "src/util"
 import type { IRegistry } from "./wire"
 
 export function makeRegistry<Catalog>(): IRegistry<Catalog & { messenger: typeof globalThis.messenger }> {

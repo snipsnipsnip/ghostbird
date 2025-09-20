@@ -1,5 +1,5 @@
-import * as options from "../app-options"
-import * as thunderbird from "../thunderbird/options_util"
+import * as options from "src/app-options"
+import * as thunderbird from "src/thunderbird/options_util"
 import { startup } from "./startup"
 import { makeRegistry } from "./util/registry"
 

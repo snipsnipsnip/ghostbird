@@ -1,8 +1,8 @@
-import type { IGhostServerPort } from "../../app-background/api"
-import type { ComposeDetails, IComposeWindow, SettableComposeDetails } from "../../ghosttext-adaptor/api"
-import type { MessagesFromBackground } from "../../ghosttext-runner"
-import type { IScriptingAPI } from "../"
-import { PromisifiedPort } from "../util/promisified_port"
+import type { IGhostServerPort } from "src/app-background/api"
+import type { ComposeDetails, IComposeWindow, SettableComposeDetails } from "src/ghosttext-adaptor/api"
+import type { MessagesFromBackground } from "src/ghosttext-runner"
+import type { IScriptingAPI } from "src/thunderbird"
+import { PromisifiedPort } from "src/thunderbird/util/promisified_port"
 
 export class ComposeTab implements IComposeWindow {
   constructor(

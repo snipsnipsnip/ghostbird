@@ -1,5 +1,5 @@
-import type { ExternalEdit, MessagesFromBackground } from "../ghosttext-runner"
-import type { BodyState } from "../ghosttext-session/types"
+import type { ExternalEdit, MessagesFromBackground } from "src/ghosttext-runner"
+import type { BodyState } from "src/ghosttext-session/types"
 import type { IBackgroundMessenger, IGhostClientPort } from "./api"
 
 export class ComposeEventRouter {
