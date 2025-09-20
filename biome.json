@@ -31,6 +31,9 @@
           }
         }
       },
+      "nursery": {
+        "useExplicitType": "error"
+      },
       "style": {
         "useConst": "off",
         "noCommonJs": "error",

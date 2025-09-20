@@ -61,7 +61,7 @@ export class PromisifiedPort<TRequest extends object, TResponse extends object |
     this.handleClose()
   }
 
-  private handleClose() {
+  private handleClose(): void {
     this.q.notifyClosed(this.port.error ?? Error("Port disconnected"))
   }
 }

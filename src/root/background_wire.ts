@@ -5,7 +5,7 @@ import * as runner from "src/ghosttext-runner"
 import * as session from "src/ghosttext-session"
 import * as thunderbird from "src/thunderbird/background_util"
 import type { AlarmHeart } from "src/thunderbird/background_util/alarm_heart"
-import { startup } from "./startup"
+import { type Startup, startup } from "./startup"
 import { makeRegistry } from "./util/registry"
 
 class Root {
@@ -14,18 +14,18 @@ class Root {
     readonly heart: AlarmHeart,
   ) {}
 
-  init() {
+  init(): BackgroundEventRouter {
     this.heart.assumeReady()
 
     return this.backgroundEventRouter
   }
 }
 
-export const backgroundWire = <TRoot>() =>
-  startup([thunderbird, background, adaptor, runner, session], makeRegistry<TRoot>())
+export const backgroundWire = (): Startup<Root> =>
+  startup([thunderbird, background, adaptor, runner, session], makeRegistry<Root>())
 
 export function prepareBackgroundRouter(): BackgroundEventRouter {
-  let wire = backgroundWire<Root>()
+  let wire = backgroundWire()
   let root = wire(Root)
 
   return root.init()

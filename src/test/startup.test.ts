@@ -24,7 +24,7 @@ class TestRegistry extends util.CaseFoldingMap<AnyEntry> {
   }
 }
 
-const modules = {
+const modules: Record<string, Record<string, unknown>> = {
   appOptions,
   ghosttextSession,
   appBackground,
@@ -106,7 +106,7 @@ async function dumpTree(fileName: string, deps: string[][]): Promise<void> {
   await writeText(fileName, text)
 }
 
-function makeDummyMessenger() {
+function makeDummyMessenger(): Record<string, symbol> {
   const namespaces = ["runtime", "tabs", "commands", "composeAction", "scripting"] as const
 
   return Object.fromEntries(namespaces.map((name) => [name, Symbol(`dummy messenger.${name}`)]))

@@ -43,7 +43,7 @@ export class ComposeActionNotifier {
     }
   }
 
-  private close({ tabId }: IComposeWindow, port: IGhostServerPort | undefined) {
+  private close({ tabId }: IComposeWindow, port: IGhostServerPort | undefined): void {
     this.runners.delete(tabId)
     port?.close()
   }

@@ -189,7 +189,7 @@ if (import.meta.vitest) {
    * Brings the generator to the state where it's in the main event loop.
    * @param g the generator from `run()`
    */
-  function runHandshake(g: Generator<Command, SessionStatus, CommandResult>) {
+  function runHandshake(g: Generator<Command, SessionStatus, CommandResult>): void {
     // 1. notifyStatus connecting
     expect(g.next().value).to.deep.equal({ type: "notifyStatus", status: "connecting" } satisfies Command)
     // 2. connect
