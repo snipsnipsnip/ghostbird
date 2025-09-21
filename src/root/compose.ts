@@ -1,30 +1,29 @@
 /**
- * @file content script injected into a compose window.
+ * @file entrypoint of the content script injected into a compose window.
  */
 
 // Content scripts currently can't be a ES module.
 // So all the imports here will be bundled into one file.
 
-import * as compose from "src/app-compose"
-import * as thunderbird from "src/thunderbird/compose_util"
+import { ComposeEventRouter } from "src/app-compose"
 import { PromisifiedPort } from "src/thunderbird/util/promisified_port"
-import { type Startup, startup } from "./startup"
-import { makeRegistryWithBody } from "./util/registry"
+import { startupCompose } from "./startup/startup_compose"
 
-class Root {
-  constructor(readonly composeEventRouter: compose.ComposeEventRouter) {}
-
-  init(): compose.ComposeEventRouter {
-    return this.composeEventRouter
+function prepareRouter(): ComposeEventRouter {
+  const selection = getSelection()
+  if (!selection) {
+    throw Error("Unexpected state: no selection found in the compose window")
   }
+  const startup = startupCompose({
+    messenger,
+    body: document.body,
+  })
+  return startup(ComposeEventRouter)
 }
 
 console.info("starting compose.js")
-console.debug({ document })
 
-const wire: Startup<Root> = startup([thunderbird, compose], makeRegistryWithBody<Root>())
-const root: Root = wire(Root)
-const composeEventRouter: compose.ComposeEventRouter = root.init()
+const composeEventRouter: ComposeEventRouter = prepareRouter()
 
 messenger.runtime.onMessage.addListener((message, _sender, sendResponse) => {
   try {

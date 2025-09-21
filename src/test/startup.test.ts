@@ -5,15 +5,15 @@ import * as appOptions from "src/app-options"
 import * as ghosttextAdaptor from "src/ghosttext-adaptor"
 import * as ghosttextRunner from "src/ghosttext-runner"
 import * as ghosttextSession from "src/ghosttext-session"
-import { startup } from "src/root/startup"
-import type { ResolveQuery } from "src/root/util/wire"
+import type { ResolveQuery } from "src/root"
+import { wireless } from "src/root/util"
 import * as thunderbird from "src/thunderbird"
 import * as util from "src/util"
 import { CaseFoldingSet } from "src/util"
 import { describe, expect, test } from "vitest"
 import { writeText } from "./testutil"
 
-type AnyEntry = ResolveQuery<Record<string, unknown>, unknown>
+type AnyEntry = ResolveQuery<Record<string, unknown>>
 
 class TestRegistry extends util.CaseFoldingMap<AnyEntry> {
   override set(key: string, value: AnyEntry): this {
@@ -35,13 +35,16 @@ const modules: Record<string, Record<string, unknown>> = {
   ghosttextRunner,
 }
 
-describe(startup, () => {
-  test("All collected classes must be resolvable", () => {
-    const registry = new TestRegistry([
-      ["messenger", ["const", makeDummyMessenger()]],
-      ["body", ["const", Symbol("body")]],
-    ])
-    const wire = startup(Object.values(modules), registry)
+describe("startup", () => {
+  const constants: [string, AnyEntry][] = [
+    ["messenger", ["const", makeDummyMessenger()]],
+    ["body", ["const", Symbol("body")]],
+    ["heart", ["const", Symbol("heart")]],
+  ]
+
+  test("All collected classes should be resolvable", () => {
+    const registry = new TestRegistry(constants)
+    const wire = wireless(Object.values(modules), registry)
 
     // TODO test handling of name clash across modules
     let all = wire(Array, registry.keys()) as unknown[]
@@ -51,16 +54,14 @@ describe(startup, () => {
   })
 
   test("All collected classes won't use given dependency immediately in constructor", async () => {
-    const registry = new Map<string, AnyEntry>([
-      ["messenger", ["const", Symbol("messenger")]],
-      ["body", ["const", Symbol("body")]],
-    ])
-    startup(Object.values(modules), registry)
+    const registry = new Map(constants)
+    wireless(Object.values(modules), registry)
 
     // Adjacency list with some non-class entry for starting points
     const depList = [
       ["background.ts", "BackgroundEventRouter"],
       ["compose.ts", "ComposeEventRouter"],
+      ["options.ts", "OptionsEventRouter"],
       ...collectDeps(registry),
     ] as [string, ...string[]][]
 

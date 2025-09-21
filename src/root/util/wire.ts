@@ -1,4 +1,4 @@
-/** @file A part of startup.ts that is less opinionated than the other half */
+/** @file A part of startup.ts that has relatively less assumptions than the other two modules (wired.ts and wireless.ts) */
 
 // Requirements:
 // * Cache instances when they are requested ("singleton")
@@ -17,10 +17,16 @@
 // production. That said, we should provide check functions separately for some common errors so that
 // users can use them in their test harness when released as a library in the future.
 
+export type KeyOf<TCatalog> = keyof TCatalog & string
+
 /**
  * A class constructor with some metadata to be registered to the container.
  */
-export interface IClassInfo<TCatalog, T = unknown, TArgs extends unknown[] = unknown[]> {
+export interface IClassInfo<
+  TCatalog,
+  Name extends KeyOf<TCatalog> = KeyOf<TCatalog>,
+  TCtor extends new () => TCatalog[Name] = new () => TCatalog[Name],
+> {
   /**
    * Specifies the lifetime of the class.
    * If `true`, only one instance is created and shared.
@@ -36,21 +42,19 @@ export interface IClassInfo<TCatalog, T = unknown, TArgs extends unknown[] = unk
   /**
    * The name of the class as a dependency.
    */
-  name: keyof TCatalog & string
+  name: Name
   /**
    * The constructor of the class.
    */
-  ctor: new (
-    ...args: TArgs
-  ) => T
+  ctor: TCtor
   /**
    * Names of dependencies that the constructor requires.
    */
-  deps: (string & keyof TCatalog)[]
+  deps: KeyOf<TCatalog>[]
   /**
    * Optional alternative names to register the class as.
    */
-  aliases?: (keyof TCatalog & string) | (keyof TCatalog & string)[] | undefined
+  aliases?: KeyOf<TCatalog> | KeyOf<TCatalog>[] | undefined
 }
 
 /**
@@ -100,30 +104,30 @@ export interface IResolver<TCatalog> {
   /**
    * Instantiate the class by the name, or get the cached instance if one is available
    */
-  resolveOne<Name extends keyof TCatalog & string>(name: Name): TCatalog[Name]
+  resolveOne<Name extends KeyOf<TCatalog>>(name: Name): TCatalog[Name] | TCatalog[KeyOf<TCatalog>][]
   /**
    * Prepare instances of registered classes
    */
-  resolveAll<Name extends keyof TCatalog & string>(v: Iterable<Name>): TCatalog[Name][]
+  resolveAll(v: Iterable<KeyOf<TCatalog>>): TCatalog[KeyOf<TCatalog>][] | TCatalog[KeyOf<TCatalog>][][]
   /**
    * Instantiate the class from the info, or get the cached instance if one is available
    */
-  prepareOne<T>(info: Readonly<IClassInfo<TCatalog, T>>): T
+  prepareOne<Name extends KeyOf<TCatalog>>(info: Readonly<IClassInfo<TCatalog, Name>>): TCatalog[Name]
 }
 
 /**
  * Stores registered classes for lookup.
  */
-export type IRegistry<TCatalog> = Pick<Map<string, ResolveQuery<TCatalog, unknown>>, "get" | "set">
+export type IRegistry<TCatalog> = Pick<Map<KeyOf<TCatalog>, ResolveQuery<TCatalog>>, "get" | "set">
 
 /**
  * An entry in the registry. It contains a query to the `IResolver` paired with a key.
  */
-export type ResolveQuery<TCatalog, T> =
-  | ["prepareOne", Readonly<IClassInfo<TCatalog, T>>]
-  | ["resolveOne", keyof TCatalog & string]
-  | ["resolveAll", Iterable<keyof TCatalog & string>]
-  | ["const", T]
+export type ResolveQuery<TCatalog, Name extends KeyOf<TCatalog> = KeyOf<TCatalog>> =
+  | ["prepareOne", Readonly<IClassInfo<TCatalog, Name>>]
+  | ["resolveOne", Name]
+  | ["resolveAll", Iterable<Name>]
+  | ["const", TCatalog[Name]]
 
 /**
  * Collects and handles duplicate aliases
@@ -137,99 +141,67 @@ export interface IAliasMap<TCatalog> {
   /**
    * Generates registry entries from collected aliases
    */
-  makeAliasEntries(): Generator<[string, ResolveQuery<TCatalog, unknown>]>
-}
-
-/** @inheritdoc */
-class AliasMap<TCatalog> implements IAliasMap<TCatalog> {
-  constructor(
-    private readonly map: Map<keyof TCatalog & string, Set<keyof TCatalog & string>>,
-    private readonly duplicateWanted: Set<keyof TCatalog & string>,
-    private readonly nameForDuplicatesOf: (alias: string) => string,
-  ) {}
-
-  /** @inheritdoc */
-  collectAliases({ aliases, name, wantArray, deps }: IClassInfo<TCatalog>): void {
-    if (wantArray) {
-      for (let dep of deps) {
-        this.duplicateWanted.add(dep)
-      }
-    }
-
-    if (!aliases) {
-      return
-    }
-    let keys = typeof aliases === "string" ? [aliases] : aliases
-    for (const key of keys) {
-      let names = this.map.get(key) ?? new Set()
-      this.map.set(key, names.add(name))
-    }
-  }
-
-  /** @inheritdoc */
-  *makeAliasEntries(): Generator<[string, ResolveQuery<TCatalog, unknown>]> {
-    for (const [k, v] of this.map) {
-      const [one] = v
-      if (one) {
-        yield [k, ["resolveOne", one]]
-      }
-
-      if (this.duplicateWanted.has(k)) {
-        // provide duplicates as an array if needed
-        yield [this.nameForDuplicatesOf(k), ["resolveAll", v]]
-      } else if (1 < v.size) {
-        // Duplicates are not allowed otherwise
-        throw Error(`Duplicate registrations found for [${k}]: ${v}`)
-      }
-    }
-  }
+  makeAliasEntries(): Generator<[string, ResolveQuery<TCatalog>]>
 }
 
 /**
  * A factory for creating instances of registered classes
  */
 class Wire<TCatalog> implements IWire<TCatalog>, IResolver<TCatalog> {
-  readonly cache = new Map<keyof TCatalog & string, unknown>()
-
   constructor(
-    private readonly registry: Pick<IRegistry<TCatalog>, "get">,
     private readonly nameForDuplicatesOf: (alias: string) => string,
+    private readonly registry: Pick<IRegistry<TCatalog>, "get">,
+    private readonly cache: Map<KeyOf<TCatalog>, TCatalog[keyof TCatalog]>,
   ) {}
 
-  wire<TCtor>(ctor: TCtor, deps: Iterable<string & keyof TCatalog>): Resolved<TCatalog, TCtor> {
+  wire<TCtor>(ctor: TCtor, deps: Iterable<KeyOf<TCatalog>>): Resolved<TCatalog, TCtor> {
     const resolved = this.resolveAll(deps)
     return Reflect.construct(ctor as new () => Resolved<TCatalog, TCtor>, resolved)
   }
 
-  resolveAll<Name extends keyof TCatalog & string>(deps: Iterable<Name>): TCatalog[Name][] {
-    return Array.from(deps, (name) => this.resolveOne(name))
+  resolveAll(deps: Iterable<KeyOf<TCatalog>>): TCatalog[KeyOf<TCatalog>][] {
+    return Array.from(deps, (name) => this.resolveOne(name) as TCatalog[KeyOf<TCatalog>])
   }
 
-  resolveOne<Name extends keyof TCatalog & string>(name: Name): TCatalog[Name] {
-    const entry = this.registry.get(name) as ResolveQuery<TCatalog, TCatalog[Name]> | undefined
+  resolveOne<Name extends KeyOf<TCatalog>>(name: Name): TCatalog[Name] | TCatalog[KeyOf<TCatalog>][] {
+    const entry = this.registry.get(name) as ResolveQuery<TCatalog, Name> | undefined
     if (!entry) {
       throw Error(`No registration for [${name}]`)
     }
 
-    if (entry[0] === "const") {
-      return entry[1]
-    }
-
-    let method = this[entry[0]] as (this: this, arg: NonNullable<typeof entry>[1]) => TCatalog[Name] | undefined
-    let instance = method?.call(this, entry[1])
-
+    let instance = this.runResolver(entry)
     if (!instance) {
       throw Error(`Failed to resolve [${name}] via ${entry}`)
     }
+
     return instance
   }
 
-  prepareOne<T>(info: Readonly<IClassInfo<TCatalog, T>>): T {
+  private runResolver<Name extends KeyOf<TCatalog>>(
+    query: ResolveQuery<TCatalog, Name>,
+  ): TCatalog[Name] | TCatalog[KeyOf<TCatalog>][] | undefined {
+    switch (query[0]) {
+      case "const":
+        return query[1]
+      default: {
+        let m = this[query[0]] as (
+          arg: Name | Iterable<Name> | Readonly<IClassInfo<TCatalog, Name>>,
+        ) => TCatalog[Name] | TCatalog[KeyOf<TCatalog>][]
+        return m?.call(this, query[1])
+      }
+    }
+  }
+
+  prepareOne<Name extends KeyOf<TCatalog>, TCtor extends new () => TCatalog[Name]>(
+    info: Readonly<IClassInfo<TCatalog, Name, TCtor>>,
+  ): TCatalog[Name] {
     return info.isSingleton ? this.createCached(info) : this.create(info)
   }
 
-  private createCached<T>(info: Readonly<IClassInfo<TCatalog, T>>): T {
-    let instance = this.cache.get(info.name) as T | undefined
+  private createCached<Name extends KeyOf<TCatalog>, TCtor extends new () => TCatalog[Name]>(
+    info: Readonly<IClassInfo<TCatalog, Name, TCtor>>,
+  ): TCatalog[Name] {
+    let instance = this.cache.get(info.name) as TCatalog[Name]
     if (!instance) {
       instance = this.create(info)
       this.cache.set(info.name, instance)
@@ -237,40 +209,17 @@ class Wire<TCatalog> implements IWire<TCatalog>, IResolver<TCatalog> {
     return instance
   }
 
-  private create<T>({ ctor, deps, wantArray }: Readonly<IClassInfo<TCatalog, T>>): T {
+  private create<Name extends KeyOf<TCatalog>, TCtor extends new () => TCatalog[Name]>({
+    ctor,
+    deps,
+    wantArray,
+  }: Readonly<IClassInfo<TCatalog, Name, TCtor>>): TCatalog[Name] {
     // Pass arrays for classes that want all duplicates
     let depNames = wantArray ? deps.map(this.nameForDuplicatesOf) : deps
 
     // Assumes no dependency loops exist (verified by user's unit tests)
-    return this.wire(ctor as new () => T, depNames as [])
+    return this.wire(ctor, depNames as KeyOf<TCatalog>[])
   }
-}
-
-/**
- * Generates the name for the dependency where duplicate registrations are collected into an array
- */
-export const defaultNameForDuplicatesOf = (alias: string): string => `${alias}[]`
-
-/**
- * Creates a factory from the collected class constructors and their parameters
- * @param classes Class constructors with some metadata to instruct its construction
- * @param registry A map used for caching registrations
- * @returns A DI container
- */
-export function wire<TCatalog>(
-  classes: Iterable<Readonly<IClassInfo<TCatalog>>>,
-  registry: IRegistry<TCatalog>,
-): IWire<TCatalog> {
-  return wireWith(classes, registry, makeAliasMap<TCatalog>(defaultNameForDuplicatesOf), defaultNameForDuplicatesOf)
-}
-
-/**
- * Creates a map that collects (possibly duplicated) aliases and populate them as dependencies
- * @param nameForDuplicatesOf A function to generate names for duplicate aliases
- * @return AliasMap that can be passed as an argument to `wireWith`
- */
-export function makeAliasMap<TCatalog>(nameForDuplicatesOf: (alias: string) => string): IAliasMap<TCatalog> {
-  return new AliasMap<TCatalog>(new Map(), new Set(), nameForDuplicatesOf)
 }
 
 /**
@@ -281,7 +230,7 @@ export function makeAliasMap<TCatalog>(nameForDuplicatesOf: (alias: string) => s
  * @param nameForDuplicatesOf A function to generate names for duplicate aliases
  * @returns A DI container
  */
-export function wireWith<TCatalog>(
+export function wire<TCatalog>(
   classes: Iterable<Readonly<IClassInfo<TCatalog>>>,
   registry: IRegistry<TCatalog>,
   aliasCollector: IAliasMap<TCatalog>,
@@ -292,7 +241,7 @@ export function wireWith<TCatalog>(
     aliasCollector.collectAliases(info)
   }
   for (let entry of aliasCollector.makeAliasEntries()) {
-    registry.set(...entry)
+    registry.set(...(entry as [KeyOf<TCatalog>, ResolveQuery<TCatalog, KeyOf<TCatalog>>]))
   }
-  return new Wire(registry, nameForDuplicatesOf)
+  return new Wire(nameForDuplicatesOf, registry, new Map())
 }

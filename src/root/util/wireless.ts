@@ -1,4 +1,7 @@
-import { type IClassInfo, type IRegistry, type IWire, type Resolved, wire } from "./util/wire"
+/** @file wire with conventions */
+
+import type { IClassInfo, IRegistry, KeyOf, Resolved } from "."
+import { wired } from "./wired"
 
 /**
  * A class constructor collected.
@@ -27,34 +30,25 @@ interface Ctor {
   new (...args: unknown[]): unknown
 }
 
-export type Startup<TCatalog> = <TCtor>(
+export type WirelessInjector<TCatalog> = <TCtor>(
   ctor: TCtor,
-  deps?: Iterable<string & keyof (TCatalog & { $wire$: IWire<TCatalog> })>,
-) => Resolved<TCatalog & { $wire$: IWire<TCatalog> }, TCtor>
+  deps?: Iterable<KeyOf<TCatalog>>,
+) => Resolved<TCatalog, TCtor>
 
 /**
  * Collects available classes from given module objects to make a factory.
  */
-export function startup<TCatalog>(
+export function wireless<TCatalog>(
   modules: Iterable<Record<string, unknown>>,
   registry: IRegistry<TCatalog>,
-): Startup<TCatalog> {
-  let wired = wire<TCatalog & { $wire$: IWire<TCatalog> }>(
-    listClasses(modules) as Iterable<IClassInfo<TCatalog>>,
-    registry,
-  )
+): WirelessInjector<TCatalog> {
+  let wire = wired(listClasses(modules) as unknown as Iterable<IClassInfo<TCatalog>>, registry)
 
   // Register the container itself so that we can (ab)use it as a factory
-  registry.set("$wire$", ["const", wired])
+  registry.set("$wire$" as KeyOf<TCatalog>, ["const", wired as TCatalog[KeyOf<TCatalog>]])
 
-  return <TCtor>(ctor: TCtor, deps?: Iterable<string & keyof (TCatalog & { $wire$: IWire<TCatalog> })>) =>
-    wired.wire(
-      ctor,
-      deps ??
-        (parseConstructorForDependencyNames(ctor as new () => unknown) as Iterable<
-          string & keyof (TCatalog & { $wire$: IWire<TCatalog> })
-        >),
-    )
+  return <TCtor>(ctor: TCtor, deps?: Iterable<KeyOf<TCatalog>>) =>
+    wire.wire(ctor, deps ?? (parseConstructorForDependencyNames(ctor as new () => unknown) as KeyOf<TCatalog>[]))
 }
 
 /**
@@ -107,9 +101,9 @@ function parseConstructorForDependencyNames(ctor: { length: number }): string[] 
 
   // Extract property initializations to get names.
   // I believe Rolldown keeps property names.
-  const matches = /\bconstructor\s*[(][^{]+[{]([^}]+)/
+  const matches = /\bconstructor\s*[(]\s*[{]?\s*[^{}]+[}]?[^{]+[{]([^}]+)/
     .exec(ctor as unknown as string)?.[1]
-    ?.matchAll(/\bthis\s*[.]\s*([^\s=]+)\s*=/g)
+    ?.matchAll(/\bthis[.]#?([^\s=]+)\s*=/g)
   if (!matches) {
     throw Error(`Failed to parse ${ctor}`)
   }
@@ -126,15 +120,34 @@ if (import.meta.vitest) {
       expect(r).deep.equals(["foo", "bar"])
     })
 
+    test("With private fields", () => {
+      let r = parseConstructorForDependencyNames(
+        `class Foo { #foo; #bar; constructor(a, b) { this.#foo = a; this.#bar = b; } }`,
+      )
+      expect(r).deep.equals(["foo", "bar"])
+    })
+
+    test("With an object parameter", () => {
+      let r = parseConstructorForDependencyNames(
+        `class Foo { foo; bar; constructor({a, b}) { this.foo = a; this.bar = b; } }`,
+      )
+      expect(r).deep.equals(["foo", "bar"])
+    })
+
     test("With newlines", () => {
       let r = parseConstructorForDependencyNames(
-        "class Foo { constructor(a, b) { this.foo = a this.bar = b } }".replaceAll(" ", "\n"),
+        "class Foo { constructor(a, b) { this.foo = a; this.bar = b } }".replaceAll(" ", "\n"),
       )
       expect(r).deep.equals(["foo", "bar"])
     })
 
     test("With a minified example", () => {
       let r = parseConstructorForDependencyNames(`class{constructor($a$1,$b$3){this.foo=$a$1,this.bar=$b$3}}`)
+      expect(r).deep.equals(["foo", "bar"])
+    })
+
+    test("With a minified example in an object parameter", () => {
+      let r = parseConstructorForDependencyNames(`class{constructor({$a$1,$b$3}){this.foo=$a$1,this.bar=$b$3}}`)
       expect(r).deep.equals(["foo", "bar"])
     })
 
@@ -150,6 +163,19 @@ if (import.meta.vitest) {
             private foo: number,
             private bar: string,
           ) {}
+        },
+      )
+      expect(r).deep.equals(["foo", "bar"])
+    })
+    test("With a TypeScript class with a object argument", () => {
+      let r = parseConstructorForDependencyNames(
+        class {
+          foo: number
+          bar: string
+          constructor({ foo, bar }: { foo: number; bar: string }) {
+            this.foo = foo
+            this.bar = bar
+          }
         },
       )
       expect(r).deep.equals(["foo", "bar"])
