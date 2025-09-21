@@ -3,7 +3,7 @@ import type { IComposeWindow } from "src/ghosttext-adaptor/api"
 export type { IGhostServerPort } from "src/ghosttext-adaptor/api"
 
 /** IDs of shortcut keys. Must be in sync with ones in manifest.json */
-export type CommandId = "start-ghostbird" | "stop-ghostbird"
+export type CommandId = "start_ghostbird" | "stop_ghostbird" | "toggle_ghostbird"
 
 /** Queries current shortcut key config */
 export interface ICommandConfig {

@@ -69,10 +69,9 @@ export type EmailState = {
 }
 
 /** Edits from the external text editor (the GhostText server) */
-export type ExternalEdit = BodyState
+export type ExternalEdit = {
+  body: string
+}
 
 /** Edits from the email compose window (the GhostText client) */
-export type InternalEdit = { body: string } | BodyState
-
-/** Email text in the compose window */
-export type BodyState = { plainText?: string | undefined; html?: string | undefined }
+export type InternalEdit = { body: string }

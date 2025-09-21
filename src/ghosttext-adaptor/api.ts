@@ -1,4 +1,4 @@
-import type { ExternalEdit, IMessagePort, InternalEdit } from "src/ghosttext-runner"
+import type { IMessagePort } from "src/ghosttext-runner"
 
 /** Wrapper for `fetch` and `WebSocket` */
 export interface IWebClient {
@@ -64,7 +64,13 @@ export interface IComposeWindow {
   setIcon(imageFilePath: string): Promise<void>
 }
 
+/** Message sent from  the background script to the compose window */
+export type BackgroundMessage = { body: string } | { isPlainText: boolean }
+
+/** Email text in the compose window */
+export type BodyState = { body: string }
+
 /** Connection to the background script, and the GhostText server behind it */
-export type IGhostClientPort = IMessagePort<InternalEdit, ExternalEdit>
+export type IGhostClientPort = IMessagePort<BodyState, BackgroundMessage>
 /** Connection to the content script */
-export type IGhostServerPort = IMessagePort<ExternalEdit, InternalEdit>
+export type IGhostServerPort = IMessagePort<BackgroundMessage, BodyState>

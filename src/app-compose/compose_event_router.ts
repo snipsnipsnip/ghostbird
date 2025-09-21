@@ -1,5 +1,4 @@
-import type { ExternalEdit, MessagesFromBackground } from "src/ghosttext-runner"
-import type { BodyState } from "src/ghosttext-session/types"
+import type { MessagesFromBackground } from "src/ghosttext-runner"
 import type { IBackgroundMessenger, IGhostClientPort } from "./api"
 
 export class ComposeEventRouter {
@@ -11,30 +10,38 @@ export class ComposeEventRouter {
   ) {}
 
   async handleConnect(port: IGhostClientPort): Promise<void> {
-    const clearReadOnly = makeReadOnly(this.body)
+    const clearEventHandlers = this.listen()
     try {
       console.info({ connected: Date.now(), date: new Date() })
 
-      port.send({ html: this.body.innerHTML, plainText: this.body.textContent } satisfies BodyState)
+      let isPlainText = await this.receiveFormat(port)
+
+      this.sendBody(port, isPlainText)
 
       for (;;) {
         await port.waitReady()
 
-        let got = port.clearReceived()
-
-        if (!got || !this.applyEdit(got)) {
+        const got = port.clearReceived()
+        if (!got || !("body" in got)) {
           break
         }
-
-        // TODO sync cursors
-        // TODO send changes
+        this.applyEdit(got.body, isPlainText)
       }
     } catch (thrown) {
       console.info({ thrown })
     } finally {
       console.info({ disconnected: Date.now(), date: new Date() })
-      clearReadOnly()
+      clearEventHandlers()
     }
+  }
+
+  private async receiveFormat(port: IGhostClientPort): Promise<boolean> {
+    await port.waitReady()
+    const config = port.clearReceived()
+    if (config && "isPlainText" in config && typeof config.isPlainText === "boolean") {
+      return config.isPlainText
+    }
+    throw new Error("email format not received")
   }
 
   handleMessage(message: string): MessagesFromBackground[keyof MessagesFromBackground] {
@@ -47,51 +54,45 @@ export class ComposeEventRouter {
     }
   }
 
-  private applyEdit(got: ExternalEdit): boolean {
-    console.debug({ got })
+  private sendBody(port: IGhostClientPort, isPlainText: boolean): void {
+    const body = (isPlainText ? this.body.textContent : this.body.innerHTML) ?? ""
+    port.send({ body })
+  }
 
-    if (typeof got.plainText === "string") {
-      this.body.textContent = got.plainText
-      return true
+  private applyEdit(body: string, isPlainText: boolean): void {
+    if (isPlainText) {
+      this.body.textContent = body
+    } else {
+      this.body.innerHTML = body
     }
+  }
 
-    if (typeof got.html === "string") {
-      this.body.innerHTML = got.html
-      return true
+  private listen(): () => void {
+    let body = this.body
+    const disable = (e: Event): void => {
+      e.preventDefault()
+      body.blur()
     }
+    const controller = new AbortController()
+    const option = { signal: controller.signal }
 
-    return false
+    body.addEventListener("beforeinput", disable, option)
+    body.addEventListener("paste", disable, option)
+    body.addEventListener("cut", disable, option)
+    body.addEventListener("drop", disable, option)
+    body.addEventListener("dragover", disable, option)
+    body.addEventListener("selectionchange", disable, option)
+
+    body.style.background = "lightgray"
+
+    controller.signal.addEventListener("abort", () => {
+      body.style.removeProperty("background")
+    })
+
+    return (): void => controller.abort()
   }
 }
 
 function response(_message: "ping"): MessagesFromBackground["ping"] {
   return "pong"
-}
-
-function makeReadOnly(body: HTMLElement): () => void {
-  const disable = (e: Event): void => {
-    if ("getTargetRanges" in e) {
-      let i = e as InputEvent
-      console.log({ data: i.data, ranges: i.getTargetRanges() })
-    }
-    e.preventDefault()
-  }
-  const controller = new AbortController()
-  const option = { signal: controller.signal }
-
-  body.addEventListener("beforeinput", disable, option)
-  body.addEventListener("paste", disable, option)
-  body.addEventListener("cut", disable, option)
-  body.addEventListener("drop", disable, option)
-  body.addEventListener("dragover", disable, option)
-
-  body.style.background = "lightgray"
-  body.style.pointerEvents = "none"
-  body.blur()
-
-  return (): void => {
-    body.style.removeProperty("pointerEvents")
-    body.style.removeProperty("background")
-    controller.abort()
-  }
 }

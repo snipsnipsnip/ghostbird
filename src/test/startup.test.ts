@@ -9,6 +9,7 @@ import { startup } from "src/root/startup"
 import type { ResolveQuery } from "src/root/util/wire"
 import * as thunderbird from "src/thunderbird"
 import * as util from "src/util"
+import { CaseFoldingSet } from "src/util"
 import { describe, expect, test } from "vitest"
 import { writeText } from "./testutil"
 
@@ -50,7 +51,10 @@ describe(startup, () => {
   })
 
   test("All collected classes won't use given dependency immediately in constructor", async () => {
-    const registry = new Map<string, AnyEntry>()
+    const registry = new Map<string, AnyEntry>([
+      ["messenger", ["const", Symbol("messenger")]],
+      ["body", ["const", Symbol("body")]],
+    ])
     startup(Object.values(modules), registry)
 
     // Adjacency list with some non-class entry for starting points
@@ -58,50 +62,59 @@ describe(startup, () => {
       ["background.ts", "BackgroundEventRouter"],
       ["compose.ts", "ComposeEventRouter"],
       ...collectDeps(registry),
-    ] as string[][]
+    ] as [string, ...string[]][]
 
     await dumpTree("dependency_tree.mermaid", depList)
   })
 })
 
 /** Collect dependencies by inspecting the registry entries. */
-function* collectDeps(registry: Map<string, AnyEntry>): Generator<string[]> {
+function* collectDeps(registry: Map<string, AnyEntry>): Generator<[string, ...string[]]> {
+  let knownNames = new CaseFoldingSet()
+  let requiredNames = new CaseFoldingSet()
   for (let [k, v] of registry) {
-    if (typeof v === "function") {
-      continue
-    }
-
     const [method, arg] = v
+
+    knownNames.add(k)
+
     switch (method) {
-      case "createOne":
+      case "const":
+        yield [k]
+        break
+      case "prepareOne":
         yield [k, ...arg.deps]
+        for (let dep of arg.deps) {
+          requiredNames.add(dep)
+        }
         break
       case "resolveAll":
         yield [k, ...arg]
+        for (let dep of arg) {
+          requiredNames.add(dep)
+        }
         break
       case "resolveOne":
         yield [k, arg]
+        requiredNames.add(arg)
         break
       default:
         throw Error("unexpected command name")
     }
+  }
+
+  let missingNames = requiredNames.difference(knownNames)
+  if (missingNames.size) {
+    throw Error(`Missing definitions: ${Array.from(missingNames)}`)
   }
 }
 
 /**
  * Write out the dependency tree to the file in mermaid syntax.
  */
-async function dumpTree(fileName: string, deps: string[][]): Promise<void> {
-  let nodeLines = [] as string[]
-  for (let [name] of deps) {
-    if (name) {
-      nodeLines.push(`${name.toLowerCase()}["${findModule(name)}<br>${name}"]`)
-    }
-  }
-
-  let graphLines = deps.flatMap((arr) => (arr.length <= 1 ? [] : [`${arr[0]} --> ${arr.slice(1).join(" & ")}`]))
-  graphLines.sort()
-  let text = ["flowchart LR", ...nodeLines, graphLines.join("\n").toLowerCase()].join("\n")
+async function dumpTree(fileName: string, deps: [string, ...string[]][]): Promise<void> {
+  let nodeLines = deps.map(([name, ...deps]) => `${name.toLowerCase()}["${findModule(name, deps)}<br>${name}"]`)
+  let graphLines = deps.flatMap(([name, ...deps]) => (deps.length === 0 ? [] : [`${name} --> ${deps.join(" & ")}`]))
+  let text = ["flowchart LR", ...nodeLines.sort(), graphLines.sort().join("\n").toLowerCase()].join("\n")
 
   await writeText(fileName, text)
 }
@@ -112,13 +125,17 @@ function makeDummyMessenger(): Record<string, symbol> {
   return Object.fromEntries(namespaces.map((name) => [name, Symbol(`dummy messenger.${name}`)]))
 }
 
-function findModule(name: string): string {
+function findModule(name: string, deps: string[]): string {
   if (name.endsWith(".ts")) {
     return "root/"
   }
   let mod = Object.entries(modules).find(([_, v]) => name in v)?.[0]
   if (!mod) {
-    return "(alias)"
+    if (deps.length) {
+      return "(alias)"
+    } else {
+      return "(const)"
+    }
   }
   return `${toKebabCase(mod)}/`
 }

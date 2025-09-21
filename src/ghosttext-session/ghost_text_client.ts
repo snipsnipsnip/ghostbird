@@ -48,12 +48,11 @@ export class GhostTextClient {
     if (res?.type !== "clientState" || !res.state) {
       return "error"
     }
-    let { isPlainText } = res.state
 
     while (res) {
       switch (res.type) {
         case "serverChanged":
-          res = yield { type: "applyChange", change: makeChange(isPlainText, res.change) }
+          res = yield { type: "applyChange", change: makeChange(res.change) }
           continue
         case "clientEdited":
           res = yield { type: "requestUpdate", update: makePartialUpdate(res.edit) }
@@ -80,7 +79,7 @@ function makeFullUpdate({ body, subject, selections, url }: EmailState): UpdateR
 
 function makePartialUpdate(edit: InternalEdit): UpdateRequest {
   return {
-    text: "body" in edit ? edit.body : (edit.plainText ?? edit.html ?? ""),
+    text: edit.body ?? "",
     title: "",
     url: "",
     selections: [],
@@ -88,8 +87,8 @@ function makePartialUpdate(edit: InternalEdit): UpdateRequest {
   }
 }
 
-function makeChange(isPlainText: boolean, res: EditorChangeResponse): ExternalEdit | undefined {
-  return res?.text == null ? undefined : isPlainText ? { plainText: res.text } : { html: res.text }
+function makeChange(res: EditorChangeResponse): ExternalEdit | undefined {
+  return res?.text == null ? undefined : { body: res.text }
 }
 
 if (import.meta.vitest) {
@@ -156,7 +155,7 @@ if (import.meta.vitest) {
       const serverChange: EditorChangeResponse = { text: "Server changed text" }
       expect(g.next({ type: "serverChanged" as const, change: serverChange }).value).to.deep.equal({
         type: "applyChange" as const,
-        change: { plainText: "Server changed text" },
+        change: { body: "Server changed text" },
       } satisfies Command)
 
       // After applying change, the client will wait for the next event.
@@ -179,7 +178,7 @@ if (import.meta.vitest) {
 
   const initialState: EmailState = {
     subject: "Test Subject",
-    url: "http://example.com",
+    url: "example.com",
     isPlainText: true,
     body: "Initial text",
     selections: [],
