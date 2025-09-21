@@ -1,0 +1,115 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.2.0/schema.json",
+  "files": {
+    "includes": [
+      "**/*.json",
+      "**/*.js",
+      "**/*.ts",
+      "ext/**/*.css",
+      "ext/**/*.html"
+    ]
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "defaultBranch": "main",
+    "useIgnoreFile": true
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": true,
+    "useEditorconfig": true
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": {
+            "maxAllowedComplexity": 10
+          }
+        }
+      },
+      "nursery": {
+        "useExplicitType": "error",
+        "noFloatingPromises": "error",
+        "noImportCycles": "error"
+      },
+      "suspicious": {
+        "noVar": "error"
+      },
+      "style": {
+        "useConst": "off",
+        "noCommonJs": "error",
+        "useNodejsImportProtocol": "error",
+        "noDefaultExport": "error",
+        "useBlockStatements": "error",
+        "useSingleVarDeclarator": "error",
+        "noInferrableTypes": "error",
+        "useNumberNamespace": "error",
+        "useAsConstAssertion": "error",
+        "useNamingConvention": {
+          "level": "warn",
+          "options": {
+            "strictCase": false
+          }
+        },
+        "useFilenamingConvention": {
+          "level": "error",
+          "options": {
+            "match": "([^.]+)[.](?:[^.]*[.])?([^.]+)",
+            "filenameCases": [
+              "snake_case"
+            ]
+          }
+        }
+      }
+    }
+  },
+  "html": {
+    "formatter": {
+      "enabled": true
+    }
+  },
+  "javascript": {
+    "globals": [
+      "messenger"
+    ],
+    "formatter": {
+      "lineWidth": 120
+    }
+  },
+  "assist": {
+    "enabled": true
+  },
+  "json": {
+    "formatter": {
+      "enabled": true,
+      "expand": "always"
+    }
+  },
+  "overrides": [
+    {
+      "includes": [
+        "**/*.ts"
+      ],
+      "javascript": {
+        "formatter": {
+          "semicolons": "asNeeded"
+        }
+      }
+    },
+    {
+      "includes": [
+        "ext/**/*.json"
+      ],
+      "json": {
+        "formatter": {
+          "enabled": true,
+          "expand": "auto"
+        }
+      }
+    }
+  ]
+}
