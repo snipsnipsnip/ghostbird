@@ -2,40 +2,6 @@
 
 ## How it works
 
-This is how user actions are handled:
-
-### The Ghostbird button
-
-1. The Ghostbird button is clicked in the compose window.
-1. The background script `background.js` responds to the event and starts a WebSocket connection to the GhostText server. (See [the protocol document][protocol] for details)
-1. `background` injects `compose.js` into the compose window.
-1. `background` connects to `compose` via a [`Port`](https://developer.thunderbird.net/add-ons/webextensions/api/runtime/port).
-1. `background` reads text content from the compose window.
-1. `background` sends the text to the GhostText server via WebSocket.
-1. The text editor shows the received text.
-1. Having established the connection, Thunderbird and the text editor can now synchronize text.
-    * When the text is changed in the text editor, the server sends the update to `background`, which relays it to `compose`, which updates the compose window.
-    * ~~When the text is changed in the compose window, `compose` sends the update to `background`, which relays it to the server, which updates the text editor.~~ (Not until v2.0.0)
-1. The WebSocket connection remains open until one of the following happens:
-    * a) When the server closes the WebSocket connection, which `background` detects and notifies `compose`.
-    * b) When the shortcut key assigned to the close function is pressed, `compose` closes the `Port`, which `background` detects and closes the WebSocket connection.
-    * c) When the compose window is closed, `compose` closes the `Port`, handled as the same as (b).
-1. The compose window returns to its normal state and the button is toggled off.
-
-### The options page
-
-1. The options page is opened from Thunderbird's add-on manager.
-1. `options.js` runs and loads saved settings from `browser.storage.local`.
-1. The user changes settings and clicks "Save".
-1. `options.js` saves the settings to `browser.storage.local`.
-1. The next time the Ghostbird button is clicked, `background.js` reads the saved settings from `browser.storage.local` and uses them.
-
-### Quirks and limitations
-
-* Because of [MV3 limitations][so], `background.js` may occasionally be suspended (all variables including WebSockets are unloaded, so it's effectively terminated). We do our best to prevent it, but ultimately it's up to Thunderbird.
-* We don't implement reconnecting the WebSocket connection when it is closed abnormally. The user has to click the Ghostbird button again to reconnect.
-* Initially, we don't support edits made in the compose window. We aim to support it in v2.0.0, but copying what the original GhostText add-on does might work well enough. We'll see.
-
 ### Some diagram that's between a component diagram and a call graph
 
 The diagram below is an initial sketch, so class names may differ from the current codebase.
@@ -90,7 +56,6 @@ thunderbird -- Open --> option
 thunderbird -- Load --> background
 connector <--> Port <--> port_handler
 ```
-
 
 ### Sequence diagram
 
@@ -152,18 +117,51 @@ loop
   else
     break When background.js has been suspended
       B-->>-B: Suspend (forgets everything)
-      S->>-S: Notice that the WebSocket has closed
       C->>C: Notice that the port has closed
-      C->>B: Request reconnection
-      activate B
-      B->>B: Wake up to<br>find a WebSocket alive<br>but nothing matches
-      B-->>C: Notify that it's gone
-      deactivate B
       deactivate C
+      S->>-S: Notice that the WebSocket has closed
     end
   end
 end
 ```
+
+## User interactions
+
+This is how user actions are handled:
+
+### The Ghostbird button
+
+1. The Ghostbird button is clicked in the compose window.
+1. The background script `background.js` responds to the event and starts a WebSocket connection to the GhostText server. (See [the protocol document][protocol] for details)
+1. `background` injects `compose.js` into the compose window.
+1. `background` connects to `compose` via a [`Port`](https://developer.thunderbird.net/add-ons/webextensions/api/runtime/port).
+1. `background` reads text content from the compose window.
+1. `background` sends the text to the GhostText server via WebSocket.
+1. The text editor shows the received text.
+1. Having established the connection, Thunderbird and the text editor can now synchronize text.
+    * When the text is changed in the text editor, the server sends the update to `background`, which relays it to `compose`, which updates the compose window.
+    * ~~When the text is changed in the compose window, `compose` sends the update to `background`, which relays it to the server, which updates the text editor.~~ (Not until v2.0.0)
+1. The WebSocket connection remains open until one of the following happens:
+    * `a)` When the server closes the WebSocket connection, which `background` detects and closes the Port.
+    * `b)` When the shortcut key to stop is pressed, `background` closes both the Port and the WebSocket connection.
+    * `c)` When the compose window is closed, the Port closes, which is detected by `background` and the WebSocket connection is closed.
+    * `d)` When Thunderbird suspends the `background` script, both the WebSocket and the Port will close.
+1. The compose window returns to its normal state and the button is toggled off.
+
+### The options page
+
+1. The options page is opened from Thunderbird's add-on manager.
+1. `options.js` runs and loads saved settings from `browser.storage.local`.
+1. The user changes settings and clicks "Save".
+1. `options.js` saves the settings to `browser.storage.local`.
+1. The next time the Ghostbird button is clicked, `background.js` reads the saved settings from `browser.storage.local` and uses them.
+
+### Quirks and limitations
+
+* Because of [MV3 limitations][so], `background.js` may occasionally be suspended (all variables including WebSockets are unloaded, so it's effectively terminated). We do our best to prevent it, but ultimately it's up to Thunderbird.
+* We don't implement reconnecting the WebSocket connection when it is closed abnormally. The user has to click the Ghostbird button again to reconnect.
+* Connections will also closes when the user updates the add-on. It will be handled similarly to `(b)`.
+* Initially, we don't support edits made in the compose window. We aim to support it in v2.0.0, but copying what the original GhostText add-on does might work well enough. We'll see.
 
 ## Tooling
 
@@ -181,7 +179,8 @@ The code loosely follows the [Ports and Adapters architecture](https://8thlight.
   * Fortunately, wrapping everything in interfaces is often unnecessary in TypeScript.
 * Exported classes are preferred over exported functions, unless a function is unlikely to be swapped out for another implementation.
 * That said, we don't go overboard with design patterns. We don't turn it into a Visitor just to pass a callback; feel free to use lambdas.
-* I'm trying this in the hope that it makes it easier to [test](./testing.md), [extend](#about-startupts), and [maintain](./faq-architectural.md) the code, not for philosophical reasons.
+* I'm trying this in the hope that it makes it easier to [test](./testing.md), [extend](#about-startup_ts), and [maintain](./faq-architectural.md) the code, not for philosophical reasons.
+
 
 ### Files
 
@@ -208,7 +207,7 @@ Other directories are:
 The arrows in diagram below point from the dependent to the dependency.
 
 ```mermaid
-flowchart LR
+flowchart BT
 root_all@{shape: procs, label: root/}
 options@{shape: procs, label: app-options/}
 background@{shape: procs, label: app-background/}
@@ -216,23 +215,26 @@ compose@{shape: procs, label: app-compose/}
 thunderbird@{shape: procs, label: thunderbird/}
 ghosttext-runner@{shape: procs, label: ghosttext-runner/}
 ghosttext-adaptor@{shape: procs, label: ghosttext-adaptor/}
-ghosttext@{shape: procs, label: ghosttext-session/}
-root_all --> background & thunderbird & compose & options
-compose & background --> ghosttext-adaptor --> ghosttext-runner --> ghosttext
-thunderbird --> background & compose & options
+ghosttext-session@{shape: procs, label: ghosttext-session/}
+root_all --> thunderbird -->
+compose & background & options --> ghosttext-adaptor --> ghosttext-runner --> ghosttext-session
 ```
 
 * All `src/*/index.ts` export everything in the same folder, so practically these folders are equivalent to modules.
 * `root/` contains entry points and depends on all other modules except `test/`.
 * `ghosttext-session/` doesn't depend on other modules.
 * `ghosttext-adaptor/` depends on `ghosttext-runner/`, which depends on `ghosttext-session/`.
-* `root/` and `thunderbird/` can use Thunderbird API directly.
-  * Other modules define subsets of the Thunderbird API they use as interfaces in `api.ts` files in their directories, which are implemented by `thunderbird/` modules.
 
 ```mermaid
-flowchart LR
+flowchart BT
+
+root_all@{shape: procs, label: root/}
+thunderbird@{shape: procs, label: thunderbird/}
+apps@{shape: procs, label: "app-*/" }
+ghosts@{shape: procs, label: "ghosttext-*/" }
+
 test@{shape: procs, label: test/ }
---> other@{shape: procs, label: "*/" }
+--> root_all & thunderbird & apps & ghosts
 --> util@{shape: procs, label: util/ }
 ```
 
@@ -240,35 +242,67 @@ test@{shape: procs, label: test/ }
 * `test/` can reference all other modules.
 
 
-### About `api.ts`
+### Callgraphs
 
 ```mermaid
-flowchart RL
+flowchart TB
+root_all@{shape: procs, label: root/}
+thunderbird@{shape: procs, label: thunderbird/}
+messenger@{shape: pill, label: globalThis.messenger<br>(Thunderbird API)}
+
+root_all --> thunderbird & messenger
+thunderbird --> messenger
+```
+
+* Modules don't  use Thunderbird API directly, except `root/` and `thunderbird/`.
+  * Other modules define subsets of the Thunderbird API they use as interfaces in `api.ts` files in their directories, which are implemented by `thunderbird/` modules.
+
+```mermaid
+flowchart TB
 options@{shape: procs, label: app-options/}
 background@{shape: procs, label: app-background/}
 compose@{shape: procs, label: app-compose/}
 thunderbird@{shape: procs, label: thunderbird/}
-options -->|uses| options_api["app-options/api"]
-background -->|uses| background_api["app-background/api"]
-compose -->|uses| compose_api["app-compose/api"]
+options -->|uses| options_api@{shape: pill, label: app-options/<br>api.ts}
+background -->|uses| background_api@{shape: pill, label: app-background/<br>api.ts}
+compose -->|uses| compose_api@{shape: pill, label: app-compose/<br>api.ts}
 
-options_api & background_api & compose_api -.->|indirectly uses| thunderbird
+options_api & background_api & compose_api -.->|indirectly calls| thunderbird
 ```
 
 * `api.ts` defines subsets of the Thunderbird API used by the module in the folder.
 * These interfaces are implemented by `thunderbird/` modules.
 * This is to isolate the impact of future Thunderbird API changes to `src/thunderbird/` modules only.
 
-### About `startup.ts`
+```mermaid
+flowchart TB
+ghostbird_adapter@{shape: procs, label: ghostbird-adapter/}
+ghostbird_runner@{shape: procs, label: ghostbird-runner/}
+ghostbird_session@{shape: procs, label: ghosttext-session/}
+background@{shape: procs, label: app-background/}
+compose@{shape: procs, label: app-compose/}
+options@{shape: procs, label: app-options/}
+ghostbird_adapter -->|uses| adapters_api@{shape: pill, label: "ghostbird_adapter/<br>api.ts"}
+ghostbird_runner -->|uses| runners_api@{shape: pill, label: "ghostbird_runner/<br>api.ts"}
+adapters_api -.->|indirectly calls| background & compose & options
+runners_api -.->|indirectly calls| ghostbird_adapter
+ghostbird_runner -->|uses| ghostbird_session
+```
+
+* Likewise, `ghostbird-adapter/` doesn't depend on `app-*/` and call them through `api.ts`.
+* `ghostbird-runner/` doesn't depend on `app-adapter/` and call them through `api.ts` too.
+* `ghostbird-session/` doesn't have `api.ts`, as it's the core module.
+
+### About `startup_*.ts`
 
 TL;DR: `root` module contains entry point and the [Composition Root][ploeh].
 
-* `root/startup.ts` is used at the toplevel, namely `background.ts`, `compose.ts`, and `options.ts`. It initializes classes.
+* `root/startup/startup_{background,compose,options}.ts` is used at the toplevel modules, namely `background.ts`, `compose.ts`, and `options.ts`. It initializes classes.
 * All the non-root classes in the codebase are either:
-  * A) instantiated by `startup.ts`, or
+  * A) instantiated by `startup*()`, or
   * B) instantiated directly with `new` operator by instances of (A).
 * All (A) classes have a property `static isSingleton: boolean`.
-* `startup()` returns a factory on steroids; it scans classes that have a `static isSingleton` property and instantiates them.
+* `startup*()` returns a factory on steroids; it scans classes that have a `static isSingleton` property and instantiates them.
   * Instantiated classes are passed to the constructors of dependent classes, which must also define `static isSingleton`.
 * `static isSingleton: boolean` indicates whether and how the class should be instantiated:
   * If `true`, only one instance is created and shared.

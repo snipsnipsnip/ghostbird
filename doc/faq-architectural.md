@@ -3,7 +3,7 @@
 ### Why do some classes have `static isSingleton` property?
 
 * [`root/startup.ts`][startup] scans for classes that have a `static isSingleton` property defined and instantiates them.
-* See [About `startup.ts`](./design.md#about-startupts) for details.
+* See [About `startup_*.ts`](./design.md#about-startup_ts) for details.
 
 ### Instantiate automatically? Doesn't it make the code harder to follow?
 

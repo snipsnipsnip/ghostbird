@@ -17,6 +17,8 @@
  * - Design, documentation, coding, debugging, dogfooding (humans)
  * - Testing with the real Thunderbird (humans)
  * - Going through AMO review (humans)
+ *
+ * @see ../doc/building.md
  */
 
 import { existsSync } from "node:fs"
