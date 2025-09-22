@@ -4,7 +4,7 @@
 # [<message_id>]
 # <language> = "<translated message>"
 #
-# See https://pontoon.mozilla.org/projects/thunderbirdnet/ for canonical terms like "email".
+# See https://pontoon.mozilla.org/projects/thunderbirdnet/ for translations for common terms like "email".
 
 [manifest_name]
 # Full name of the extension.
@@ -26,7 +26,7 @@ ja = "テキストエディタに接続"
 en = "Disconnect from the text editor"
 ja = "テキストエディタから切断"
 
-[manifest_commants_toggle_ghostbird_description]
+[manifest_commands_toggle_ghostbird_description]
 # Description of the shortcut key to toggle Ghostbird.
 en = "Toggle connection with the text editor"
 ja = "テキストエディタとの接続を切り替え"
