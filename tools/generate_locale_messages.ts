@@ -1,10 +1,11 @@
 import { readFile } from "node:fs/promises"
 import { parse } from "@std/toml"
 import type { EmittedAsset, Plugin } from "rolldown"
+import type { LocaleId, LocalesTomlContent, MessagesJsonContent } from "src/util/types"
 
 type Options = { path: string }
 
-/** Generates _locales/<lang>/messages.json from the template file */
+/** Generates _locales/<locale>/messages.json from the template file */
 export const generateLocaleMessages = ({ path }: Options): Plugin => ({
   name: "generate_locale_messages",
   async generateBundle(): Promise<void> {
@@ -29,17 +30,11 @@ export const generateLocaleMessages = ({ path }: Options): Plugin => ({
   },
 })
 
-type LanguageId = string
-type MessageId = string
-type MessageLabel = string
-type MessagesJsonContent = Record<MessageId, { message: MessageLabel }>
-type LocaleTomlContent = Record<MessageId, Record<LanguageId, MessageLabel | { message: MessageLabel }>>
-
 /**
  * Converts a set of translations into WebExtension's locale messages.json format.
  */
-function localeToMessages(toml: LocaleTomlContent): Map<LanguageId, MessagesJsonContent> {
-  let langs = new Map<LanguageId, MessagesJsonContent>()
+function localeToMessages(toml: LocalesTomlContent): Map<LocaleId, MessagesJsonContent> {
+  let langs = new Map<LocaleId, MessagesJsonContent>()
   for (const [messageId, translations] of Object.entries(toml)) {
     for (const [lang, msg] of Object.entries(translations)) {
       let content = langs.get(lang) ?? {}
@@ -51,7 +46,7 @@ function localeToMessages(toml: LocaleTomlContent): Map<LanguageId, MessagesJson
 }
 
 /** Loads a TOML file that contains translations for various messages Ghostbird shows. */
-async function loadLocaleToml(tomlPath: string): Promise<LocaleTomlContent> {
+export async function loadLocaleToml(tomlPath: string): Promise<LocalesTomlContent> {
   let tomlText = await readFile(tomlPath, { encoding: "utf8" })
-  return parse(tomlText) as LocaleTomlContent
+  return parse(tomlText) as LocalesTomlContent
 }
