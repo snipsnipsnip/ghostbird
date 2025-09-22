@@ -19,7 +19,7 @@
  */
 
 import { existsSync } from "node:fs"
-import { dirname, join, resolve } from "node:path"
+import { join, resolve } from "node:path"
 import { env } from "node:process"
 import type { Options, UserConfig } from "tsdown"
 import { barrelsby } from "./barrelsby"
@@ -62,13 +62,14 @@ const commonConfig = {
 const esmConfig = {
   name: "ext",
   entry: [
-    // Bundled to ext/*.js and common parts go to chunks/*.js
+    // Bundled to ext/js/*.js
     "src/root/background.ts",
     "src/root/options.ts",
   ],
   format: "es",
   outputOptions: {
-    chunkFileNames: "chunks/[name].[hash].js",
+    entryFileNames: "js/[name].js",
+    chunkFileNames: "js/[name].[hash].js",
     sourcemapPathTransform,
   },
   // Add non-js files
@@ -89,14 +90,13 @@ const esmConfig = {
 const iifeConfig = {
   name: "compose",
   entry: [
-    // Bundled to ext/compose.js as a plain non-ESM js
+    // Bundled to ext/js/compose.js as a plain non-ESM js
     "src/root/compose.ts",
   ],
   format: "iife",
   outputOptions: {
     intro: "'use strict';",
-    name: "compose",
-    entryFileNames: "[name].js",
+    entryFileNames: "js/[name].js",
     sourcemapPathTransform,
   },
 } satisfies Options
@@ -106,24 +106,34 @@ type Test<A, B> = Extract<A, B> extends never ? "ok" : ["Keys overlap", A & B]
 "ok" satisfies Test<keyof typeof commonConfig, keyof typeof esmConfig>
 "ok" satisfies Test<keyof typeof commonConfig, keyof typeof iifeConfig>
 
-// Somehow absolute paths are needed to make sourcemaps browsable
+/** Adjusts source paths in sourcemap files */
 function sourcemapPathTransform(relativeSourcePath: string, sourcemapPath: string): string {
-  if (isRelease) {
-    // Leave it as is if it's release build
-    return relativeSourcePath
+  if (!isRelease) {
+    // For dev builds, we include the full path which makes the vscode debugger happy.
+    // In this case we don't have to embed the original source code, but somehow tsdown seems to lack the option to
+    // turn it off.
+    return makeAbsolute(relativeSourcePath, sourcemapPath)
   }
 
-  let p = sourcemapPath
-  for (let i = 0; ; i++) {
-    if (3 < i) {
-      throw Error(`Couldn't fix the sourcemap path [${relativeSourcePath}] -> [${sourcemapPath}]`)
-    }
-
-    p = dirname(p)
-
-    let resolved = resolve(p, relativeSourcePath)
-    if (existsSync(resolved)) {
-      return resolved
-    }
+  // For release builds, we strip the path to make it easier to navigate in Thunderbird devtools
+  let stripped = findPrefix("/node_modules/", relativeSourcePath) ?? findPrefix("/src/", relativeSourcePath)
+  if (!stripped) {
+    throw Error(`unexpected source path: ${relativeSourcePath}`)
   }
+  return stripped
+}
+
+/** Resolves source paths in sourcemap files to absolute paths */
+function makeAbsolute(relativeSourcePath: string, sourcemapPath: string): string {
+  let path = resolve(`${sourcemapPath}/../../`, relativeSourcePath)
+  if (!existsSync(path)) {
+    throw Error(`Couldn't fix the sourcemap path [${relativeSourcePath}] -> [${sourcemapPath}]`)
+  }
+  return path
+}
+
+/** Find the start of a prefix in `path` and returns the rest of the string if found */
+function findPrefix(prefix: string, path: string): string | undefined {
+  let i = path.indexOf(prefix)
+  return i === -1 ? undefined : path.slice(i)
 }

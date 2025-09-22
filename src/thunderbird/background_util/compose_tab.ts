@@ -26,7 +26,7 @@ export class ComposeTab implements IComposeWindow {
     const result = await this.scripting.executeScript({
       target: { tabId: this.tabId },
       injectImmediately: true,
-      files: ["compose.js"],
+      files: ["js/compose.js"],
     })
     console.log({ result })
 

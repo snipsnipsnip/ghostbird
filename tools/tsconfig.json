@@ -2,12 +2,15 @@
   "extends": "../src/tsconfig-base",
   "include": [
     "*.ts",
-    "../src/background/types.ts",
     "../*.json"
+  ],
+  "references": [
+    {
+      "path": "../src/util"
+    }
   ],
   "compilerOptions": {
     "module": "preserve",
-    "emitDeclarationOnly": true,
     "resolveJsonModule": true,
     "types": [
       "node"

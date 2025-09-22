@@ -16,16 +16,16 @@
   },
   "permissions": [
     "alarms",
-    "storage",
+    "compose",
     "scripting",
-    "compose"
+    "storage"
   ],
   "host_permissions": [
-    "http://localhost/*",
-    "ws://localhost/*"
+    "http://localhost/",
+    "ws://localhost/"
   ],
   "content_security_policy": {
-    "extension_pages": "connect-src 'self' http://localhost:* ws:; script-src 'self';"
+    "extension_pages": "script-src 'self'; connect-src http://localhost:* ws://localhost:*;"
   },
   "icons": {
     "96": "blue.svg"
@@ -47,7 +47,7 @@
   "background": {
     "type": "module",
     "scripts": [
-      "background.js"
+      "js/background.js"
     ]
   },
   "options_ui": {
