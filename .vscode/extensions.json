@@ -6,6 +6,7 @@
     "EditorConfig.EditorConfig",
     "firefox-devtools.vscode-firefox-debug",
     "gamunu.vscode-yarn",
+    "tamasfe.even-better-toml",
     "vitest.explorer"
   ]
 }
