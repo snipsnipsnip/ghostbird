@@ -19,7 +19,7 @@
   },
   "scripts": {
     "sdk": "yarn dlx @yarnpkg/sdks",
-    "check": "biome check && run check-type",
+    "check": "run check-type && biome check --error-on-warnings",
     "fix": "biome check --write",
     "doc": "run check-type && typedoc",
     "doc:md": "run doc --plugin typedoc-plugin-markdown",
