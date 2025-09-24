@@ -1,0 +1,66 @@
+{
+  "manifest_version": 3,
+  "name": "__MSG_manifest_name__",
+  "short_name": "Ghostbird",
+  "description": "__MSG_manifest_description__",
+  "version": "$version$",
+  "homepage_url": "$homepage_url$",
+  "version_name": "$version_name$",
+  "default_locale": "en",
+  "author": "snipsnipsnip",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "@ghostbird.exteditor.addons.thunderbird.net",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
+    }
+  },
+  "permissions": [
+    "alarms",
+    "storage",
+    "scripting",
+    "compose"
+  ],
+  "host_permissions": [
+    "http://localhost/*",
+    "ws://localhost/*"
+  ],
+  "content_security_policy": {
+    "extension_pages": "connect-src 'self' http://localhost:* ws:; script-src 'self';"
+  },
+  "icons": {
+    "96": "blue.svg"
+  },
+  "commands": {
+    "start_ghostbird": {
+      "description": "__MSG_manifest_commands_start_ghostbird_description__",
+      "suggested_key": {
+        "default": "Ctrl+Shift+H"
+      }
+    },
+    "stop_ghostbird": {
+      "description": "__MSG_manifest_commands_stop_ghostbird_description__"
+    },
+    "toggle_ghostbird": {
+      "description": "__MSG_manifest_commands_toggle_ghostbird_description__"
+    }
+  },
+  "background": {
+    "type": "module",
+    "scripts": [
+      "js/background.js"
+    ]
+  },
+  "options_ui": {
+    "page": "options.html"
+  },
+  "compose_action": {
+    "default_title": "Ghostbird",
+    "default_label": "",
+    "default_icon": "gray.svg"
+  }
+}
