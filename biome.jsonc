@@ -6,7 +6,8 @@
       "**/*.js",
       "**/*.ts",
       "ext/**/*.css",
-      "ext/**/*.html"
+      "ext/**/*.html",
+      "!**/*.nolint.*"
     ]
   },
   "vcs": {
@@ -50,6 +51,12 @@
         "useNodejsImportProtocol": "error",
         "useNumberNamespace": "warn",
         "useSingleVarDeclarator": "warn",
+        "useReadonlyClassProperties": {
+          "level": "warn",
+          "options": {
+            "checkAllProperties": true
+          }
+        },
         "useNamingConvention": {
           "level": "warn",
           "options": {
@@ -98,6 +105,16 @@
       "javascript": {
         "formatter": {
           "semicolons": "asNeeded"
+        }
+      }
+    },
+    {
+      "includes": [
+        "**/tsconfig*.json"
+      ],
+      "json": {
+        "parser": {
+          "allowComments": true
         }
       }
     },
