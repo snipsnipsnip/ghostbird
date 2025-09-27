@@ -1,0 +1,58 @@
+name: ':bug: Bug Report'
+description: File a bug in Ghostbird
+type: Bug
+title: '[BUG] <title>'
+body:
+  - type: textarea
+    attributes:
+      label: Please describe steps to reproduce the problem.
+      value: |
+        1. Start <kbd>+ New Message</kbd> and press the Ghostbird button...
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What is the expected behavior after steps above?
+      value: "* The text editor shows..."
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: What did happen instead?
+      value: "* An error occurs..."
+    validations:
+      required: true
+
+  - type: markdown
+    attributes:
+      value: "---"
+
+  - type: dropdown
+    attributes:
+      label: OS
+    validations:
+      required: true
+    multiple: false
+    options:
+      - Windows
+      - macOS
+      - Linux
+      - Other / Not relevant
+
+  - type: input
+    attributes:
+      label: Thunderbird version
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Ghostbird version
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Anything else to add?
