@@ -95,7 +95,7 @@ gtClient -->|Updates| mailCompose
 |:white_large_square:|Planned|Have to be implemented to release the version|
 |:no_entry:|Limitation|The version will be released with this limitation|
 
-### v0.0.1 (Alpha) - Current
+### v0.0.1 (Alpha) - Released
 
 * :nest_with_eggs: Prepare the project skeleton (README, build, test, lint, debug, CI)
 * :nest_with_eggs: Start button on the toolbar
@@ -108,27 +108,32 @@ gtClient -->|Updates| mailCompose
 
 >\*GhostText communicates only in UTF-8, so you can safely write emails in any language.
 
-### v0.1.0 (Alpha) - 2025 Q3
+### v0.1.0 (Alpha) - Released
 
 * :nest_with_eggs: [Debug](https://github.com/exteditor/ghostbird/issues/2)
 
+### v0.2.0 (Beta) - Current
+
+* :nest_with_eggs: [Basic option (at minimum, the port of the GhostText server)](https://github.com/exteditor/ghostbird/issues/3)
+* :nest_with_eggs: [Prepare for i18n (Make texts translatable)](https://github.com/exteditor/ghostbird/issues/4)
+
 ### v0.x.x (Beta) - 2025 Q4
 
-* :white_large_square: [Website with some screenshot](https://github.com/exteditor/ghostbird/issues/5)
-* :construction: [Basic option (at minimum, the port of the GhostText server)](https://github.com/exteditor/ghostbird/issues/3)
-* :construction: [Prepare for i18n (Make texts translatable)](https://github.com/exteditor/ghostbird/issues/4)
-* :white_large_square: [Smoother editing of HTML emails](https://github.com/exteditor/ghostbird/issues/6)
+* :construction: [Notifications](https://github.com/exteditor/ghostbird/issues/4)
+* :construction: [](https://github.com/exteditor/ghostbird/issues/4)
+* :construction: [Website with some screenshot](https://github.com/exteditor/ghostbird/issues/5)
+* :construction: [Smoother editing of HTML emails](https://github.com/exteditor/ghostbird/issues/6)
 
 ### v1.0.0 (Stable) - 2026 Q2
 
-* :white_large_square: [Publish on AMO (functionally identical to the last beta)](https://github.com/exteditor/ghostbird/issues/9)
+* :construction: [Publish on AMO (functionally identical to the last beta)](https://github.com/exteditor/ghostbird/issues/9)
 
 ### v1.x.x (Stable) - 2026 Q4
 
 * :white_large_square: [Edit Address and Subject fields](https://github.com/exteditor/ghostbird/issues/8)
 * :white_large_square: Continue i18n (Add more languages)
 * :white_large_square: Support text editors that lack a GhostText add-on (e.g., Notepad)*
-* :white_large_square: Automate AMO release on GitHub
+* :white_large_square: Automate AMO release on GitHub Action
 
 > \*Requires protocol extension and server-side support. I intend to develop one by forking [GhostText-Any](https://github.com/newsch/GhostText-Any/).
 
