@@ -1,0 +1,21 @@
+import type { IClassInfo, IRegistry, IWire } from "."
+import { AliasMap } from "./alias_map"
+import { wire } from "./wire"
+
+/**
+ * Generates the name for the dependency where duplicate registrations are collected into an array
+ */
+export const defaultNameForDuplicatesOf = (alias: string): string => `${alias}[]`
+
+/**
+ * Initialize wire with a default `AliasMap` class. Creates a factory from the collected class constructors and their parameters.
+ * @param classes Class constructors with some metadata to instruct its construction
+ * @param registry A map used for caching registrations
+ * @returns A DI container
+ */
+export function wired<TCatalog>(
+  classes: Iterable<Readonly<IClassInfo<TCatalog>>>,
+  registry: IRegistry<TCatalog>,
+): IWire<TCatalog> {
+  return wire(classes, registry, new AliasMap<TCatalog>(defaultNameForDuplicatesOf), defaultNameForDuplicatesOf)
+}

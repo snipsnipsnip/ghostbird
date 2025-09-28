@@ -1,0 +1,77 @@
+@import "chrome://global/skin/in-content/common.css";
+@import "options.nolint.css";
+:root {
+  background: var(--background-color-box);
+  direction: var(--direction);
+}
+ghostbird-options {
+  margin: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+}
+form {
+  display: grid;
+  grid-template: auto / 1fr auto;
+  border-radius: var(--border-radius-medium);
+  border: 1px solid var(--border-color);
+  box-shadow: var(--box-shadow-level-2);
+}
+form > * {
+  align-items: center;
+  align-content: center;
+  background: var(--layout-background-2);
+  padding: 0.5rem 1rem;
+}
+form > *:first-child {
+  border-start-start-radius: var(--border-radius-medium);
+}
+form > *:nth-child(2) {
+  border-start-end-radius: var(--border-radius-medium);
+}
+form > *:nth-last-child(2) {
+  border-end-start-radius: var(--border-radius-medium);
+}
+form > *:last-child {
+  border-end-end-radius: var(--border-radius-medium);
+}
+input {
+  width: 100%;
+  height: 100%;
+}
+input[type="number"] {
+  text-align: var(--align-end);
+}
+input[type="reset"] {
+  height: var(--in-content-button-height);
+}
+label[for="serverPort"]::before {
+  content: "__MSG_options_server_port__";
+}
+label[for="enableNotifications"]::before {
+  content: "__MSG_options_enable_notifications__";
+}
+.progress.saved::before {
+  content: "__MSG_options_saved__";
+  color: var(--color-success-default);
+  animation: fadeOut 1s forwards;
+}
+.progress.error::before {
+  content: "__MSG_options_error__";
+  color: var(--color-danger-default);
+  animation: fadeOut 1s forwards;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}

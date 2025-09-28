@@ -1,12 +1,15 @@
 import type { IComposeWindow, IGhostServerPort } from "src/ghosttext-adaptor/api"
 import { EmailEditor } from "src/ghosttext-adaptor/email_editor"
-import type { GhostTextRunner } from "src/ghosttext-runner"
+import type { GhostTextRunner, IClientOptionsLoader } from "src/ghosttext-runner"
 
 export class ComposeActionNotifier {
   static isSingleton = true
-  readonly runners = new Map<number, IGhostServerPort>()
+  private readonly runners = new Map<number, IGhostServerPort>()
 
-  constructor(readonly ghostTextRunner: GhostTextRunner) {}
+  constructor(
+    private readonly ghostTextRunner: GhostTextRunner,
+    private readonly clientOptionsLoader: IClientOptionsLoader,
+  ) {}
 
   async start(tab: IComposeWindow): Promise<void> {
     if (this.findOpenPort(tab)) {
@@ -20,8 +23,9 @@ export class ComposeActionNotifier {
 
     try {
       console.info("starting session")
-      let editor = new EmailEditor(tab, port)
-      await this.ghostTextRunner.run(editor, editor)
+      const options = await this.clientOptionsLoader.load()
+      const editor = new EmailEditor(tab, port, options)
+      await this.ghostTextRunner.run(editor, editor, options)
     } finally {
       console.info("session closed")
       this.close(tab, port)

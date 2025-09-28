@@ -1,0 +1,6 @@
+/* biome-ignore-all parse: These rules are preprocessed at runtime by Thunderbird, producing valid css */
+/* @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Internationalization#predefined_messages */
+:root {
+  --direction: __MSG_@@bidi_dir__;
+  --align-end: __MSG_@@bidi_end_edge__;
+}

@@ -38,7 +38,7 @@ jobs:
       run: corepack yarn install --immutable
 
     - name: Lint
-      run: corepack yarn exec biome ci
+      run: corepack yarn exec biome ci --error-on-warnings
 
     - name: Test
       run: corepack yarn test --reporter=github-actions

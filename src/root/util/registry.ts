@@ -1,17 +1,7 @@
 import { CaseFoldingMap } from "src/util"
-import type { IRegistry } from "./wire"
+import type { IRegistry, KeyOf } from "."
 
-export function makeRegistry<Catalog>(): IRegistry<Catalog & { messenger: typeof globalThis.messenger }> {
-  // Sneak `messenger` into the container as a constant
-  return new CaseFoldingMap([["messenger", ["const", globalThis.messenger]]])
-}
-
-export function makeRegistryWithBody<Catalog>(): IRegistry<
-  Catalog & { messenger: typeof globalThis.messenger; body: HTMLBodyElement }
-> {
-  // Sneak `messenger` and `body` into the container as a constant
-  return new CaseFoldingMap([
-    ["messenger", ["const", globalThis.messenger]],
-    ["body", ["const", globalThis.document.body]],
-  ])
+/** Make a registry for `wire` with initial constant registrations */
+export function makeRegistry<Consts extends Record<string, unknown>>(consts: Consts): IRegistry<Consts> {
+  return new CaseFoldingMap(Object.entries(consts).map(([k, v]) => [k, ["const", v as Consts[KeyOf<Consts>]]]))
 }

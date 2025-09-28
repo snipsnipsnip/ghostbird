@@ -1,7 +1,7 @@
 import { gitDescribe } from "git-describe"
 import type { EmittedAsset, Plugin } from "rolldown"
-import manifest from "../manifest_template.json" with { type: "json" }
-import pkg from "../package.json" with { type: "json" }
+import manifestTemplate from "../manifest_template.json"
+import pkg from "../package.json"
 
 type VersionInfo = { version: string; sha?: string | undefined }
 
@@ -11,7 +11,7 @@ export type Options = { env?: undefined | Record<string, string> }
 export const generateManifest = ({ env }: Options = {}): Plugin => ({
   name: "generate_manifest",
   async generateBundle(): Promise<void> {
-    // manifest.json can be reused for reproducibility
+    // Developer may place their own manifest.json to reproduce builds
     let existing = await this.resolve("./ext/manifest.json")
     if (existing) {
       this.info(`manifest.json already exists; skipping generation`)
@@ -37,10 +37,11 @@ export const generateManifest = ({ env }: Options = {}): Plugin => ({
   },
 })
 
+/** Build manifest.json by filling in template */
 function makeManifestJson({ version, sha }: VersionInfo): string {
   // biome-ignore-start lint/style/useNamingConvention: required by the spec https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/manifest.json/homepage_url
   let contents = {
-    ...manifest,
+    ...manifestTemplate,
     version,
     version_name: sha ? `${version}-${sha}` : undefined,
     homepage_url: pkg.homepage,
@@ -50,22 +51,32 @@ function makeManifestJson({ version, sha }: VersionInfo): string {
   return JSON.stringify(contents, undefined, 2)
 }
 
+/** Make the version number to include in manifest.json */
 async function getVersionInfo(envInfo: undefined | Record<string, string>): Promise<VersionInfo> {
+  // Use version info from CI environment if available
+  // Use Git if not
+  return tryGetVersionInfoFromEnv(envInfo) ?? getVersionInfoFromGit()
+}
+
+/** Get version info from GitHub Actions env variables if available */
+function tryGetVersionInfoFromEnv(envInfo: Record<string, string> | undefined): VersionInfo | undefined {
   let { GITHUB_REF_NAME: refName, GITHUB_SHA: sha, GITHUB_REF_TYPE: refType } = envInfo ?? {}
 
-  // Use version info from env if available
-  if (refName && sha && refType) {
-    if (refType === "tag" && refName.startsWith("v")) {
-      // this is a release build
-      let version = appendSha(refName.slice(1), sha)
-      return { version, sha }
-    } else {
-      // this is a nightly build
-      return { version: `nightly-${refName}-${sha}` }
-    }
+  if (!refName || !sha || !refType) {
+    return
   }
+  if (refType === "tag" && refName.startsWith("v")) {
+    // this is a release build
+    let version = appendSha(refName.slice(1), sha)
+    return { version, sha }
+  } else {
+    // this is a nightly build
+    return { version: `nightly-${refName}-${sha}` }
+  }
+}
 
-  // Query git for local build
+/** Get version info from `git describe` command. */
+async function getVersionInfoFromGit(): Promise<VersionInfo> {
   let { semverString, hash, distance } = await gitDescribe({
     customArguments: ["--abbrev=16"],
   })
@@ -78,6 +89,7 @@ async function getVersionInfo(envInfo: undefined | Record<string, string>): Prom
   return { version }
 }
 
+/** Append a git commit id as a suffix to the version number. */
 function appendSha(version: string, sha: string): string {
   return `${version}.${Number.parseInt(sha.slice(0, 7), 16)}`
 }

@@ -1,11 +1,19 @@
-import type { ClientStatus, ExternalEdit, IClientEditor, InternalEdit, IStatusIndicator } from "src/ghosttext-runner"
+import type {
+  ClientOptions,
+  ClientStatus,
+  ExternalEdit,
+  IClientEditor,
+  InternalEdit,
+  IStatusIndicator,
+} from "src/ghosttext-runner"
 import type { EmailState } from "src/ghosttext-session"
 import type { IComposeWindow, IGhostServerPort } from "./api"
 
 export class EmailEditor implements IClientEditor, IStatusIndicator {
   constructor(
-    readonly composeWindow: IComposeWindow,
-    readonly port: IGhostServerPort,
+    private readonly composeWindow: IComposeWindow,
+    private readonly port: IGhostServerPort,
+    private readonly options: ClientOptions,
   ) {}
 
   update(status: ClientStatus): Promise<void> {
@@ -25,11 +33,9 @@ export class EmailEditor implements IClientEditor, IStatusIndicator {
     }
 
     // TODO Add an option to strip HTML tags on edit
-    // TODO pass a better url that identify the email
 
-    let { host } = new URL(import.meta.url)
-
-    return { selections: [{ start: 0, end: 0 }], subject, isPlainText, body, url: host }
+    let url = this.options.clientHostName
+    return { selections: [{ start: 0, end: 0 }], subject, isPlainText, body, url }
   }
 
   async applyChange(change: ExternalEdit): Promise<void> {

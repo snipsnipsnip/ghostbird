@@ -1,10 +1,15 @@
 {
   "extends": "../tsconfig-base",
   "include": [
-    "**/*.ts",
-    "../app-background/client_options.ts"
+    "**/*.ts"
   ],
   "compilerOptions": {
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2024",
+      "ESNext.Collection"
+    ],
     "types": [
       "vitest/importMeta",
       "thunderbird-webext-browser"

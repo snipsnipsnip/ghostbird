@@ -3,6 +3,14 @@
   "include": [
     "**/*.ts"
   ],
+  "compilerOptions": {
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2024",
+      "ESNext.Collection"
+    ]
+  },
   "references": [
     {
       "path": "../util"

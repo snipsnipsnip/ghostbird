@@ -1,9 +1,6 @@
 import type { IHeart } from "src/ghosttext-runner"
 
 export class AlarmHeart implements IHeart {
-  static isSingleton = true
-  static aliases = "heart"
-
   /** Should be set if the onAlarm listener has been registered */
   private isListenerReady = false
 

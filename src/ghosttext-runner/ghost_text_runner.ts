@@ -1,8 +1,8 @@
 import type { Command, CommandResult, GhostTextClient, SessionStatus } from "src/ghosttext-session/ghost_text_client"
 import type {
+  ClientOptions,
   ClientStatus,
   IClientEditor,
-  IClientOptions,
   IGhostTextConnector,
   IHeart,
   ISession,
@@ -14,12 +14,11 @@ export class GhostTextRunner {
 
   constructor(
     private readonly ghostTextConnector: IGhostTextConnector,
-    private readonly clientOptions: IClientOptions,
     private readonly ghostTextClient: GhostTextClient,
     private readonly heart: IHeart,
   ) {}
 
-  async run(statusIndicator: IStatusIndicator, editor: IClientEditor): Promise<void> {
+  async run(statusIndicator: IStatusIndicator, editor: IClientEditor, options: ClientOptions): Promise<void> {
     let stopHeartbeat = this.heart.startBeat()
     let session: ISession | undefined
     let command: IteratorResult<Command, SessionStatus> | undefined
@@ -28,7 +27,7 @@ export class GhostTextRunner {
       command = g.next()
 
       while (!command.done && command.value.type !== "queryEditor") {
-        let [r, s] = await this.runHandshakeCommand(statusIndicator, command.value)
+        let [r, s] = await this.runHandshakeCommand(statusIndicator, command.value, options)
 
         session ??= s
 
@@ -58,11 +57,12 @@ export class GhostTextRunner {
   async runHandshakeCommand(
     indicator: IStatusIndicator,
     command: Command,
+    { serverUrl }: ClientOptions,
   ): Promise<[CommandResult] | [CommandResult, ISession]> {
     switch (command.type) {
       case "connect":
         try {
-          let [session, initRes] = await this.ghostTextConnector.connect(this.clientOptions.serverUrl)
+          let [session, initRes] = await this.ghostTextConnector.connect(serverUrl)
           return [{ type: "connected", init: initRes }, session]
         } catch (e) {
           return [{ type: "disconnected", error: e as Error }]

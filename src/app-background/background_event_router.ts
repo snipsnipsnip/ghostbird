@@ -1,28 +1,20 @@
 import type { IComposeWindow } from "src/ghosttext-adaptor/api"
-import type { CommandId, ICommandConfig, IComposeWindowDetector, ITab } from "./api"
+import type { CommandId, IComposeWindowDetector, ITab } from "./api"
 import type { ComposeActionNotifier } from "./compose_action_notifier"
 
 export class BackgroundEventRouter {
   static isSingleton = true
 
   constructor(
-    readonly composeActionNotifier: ComposeActionNotifier,
-    readonly composeTabDetector: IComposeWindowDetector,
-    readonly commandConfig: ICommandConfig,
+    private readonly composeActionNotifier: ComposeActionNotifier,
+    private readonly composeTabDetector: IComposeWindowDetector,
   ) {}
 
   /** Handles shortcut key presses defined in the manifest.json */
-  async handleCommand(command: string, tab: ITab): Promise<void> {
-    console.log("handleCommand")
-
-    let isToggleMode = this.isToggleMode()
+  handleCommand(command: string, tab: ITab): Promise<void> {
     let composeTab = this.composeTabDetector.tryWrap(tab)
     if (!composeTab) {
-      throw Error("Event dropped")
-    }
-
-    if (await isToggleMode) {
-      return this.composeActionNotifier.toggle(composeTab)
+      return Promise.reject(Error("Event dropped"))
     }
 
     return this.runCommand(command, composeTab)
@@ -38,12 +30,6 @@ export class BackgroundEventRouter {
         return this.composeActionNotifier.toggle(composeTab)
     }
     // We don't handle default here so that tsc checks for exhaustiveness
-  }
-
-  private async isToggleMode(): Promise<boolean> {
-    let config = await this.commandConfig.getAll()
-
-    return new Set(config.map((x) => x.shortcut)).size === 1
   }
 
   /** Handles the toolbar button press */

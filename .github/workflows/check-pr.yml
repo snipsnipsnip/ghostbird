@@ -38,7 +38,7 @@ jobs:
       run: YARN_ENABLE_HARDENED_MODE=0 corepack yarn install --immutable
 
     - name: Lint
-      run: corepack yarn exec biome ci
+      run: corepack yarn exec biome ci --error-on-warnings
 
     - name: Check Type
       run: corepack yarn run check-type

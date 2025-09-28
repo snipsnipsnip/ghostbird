@@ -10,22 +10,27 @@
   "author": "snipsnipsnip",
   "browser_specific_settings": {
     "gecko": {
-      "id": "@ghostbird.exteditor.github.io",
-      "strict_min_version": "128.0"
+      "id": "@ghostbird.exteditor.addons.thunderbird.net",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
     }
   },
   "permissions": [
     "alarms",
-    "storage",
+    "compose",
     "scripting",
-    "compose"
+    "storage"
   ],
   "host_permissions": [
-    "http://localhost/*",
-    "ws://localhost/*"
+    "http://localhost/",
+    "ws://localhost/"
   ],
   "content_security_policy": {
-    "extension_pages": "connect-src 'self' http://localhost:* ws:; script-src 'self';"
+    "extension_pages": "script-src 'self'; connect-src http://localhost:* ws://localhost:*;"
   },
   "icons": {
     "96": "blue.svg"
@@ -47,7 +52,7 @@
   "background": {
     "type": "module",
     "scripts": [
-      "background.js"
+      "js/background.js"
     ]
   },
   "options_ui": {

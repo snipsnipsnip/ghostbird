@@ -35,11 +35,11 @@ export const config: ViteUserConfig = {
     ],
     env: {
       // biome-ignore lint/style/useNamingConvention: It's a constant
-      OUTPUT_DIR: "build/test/",
+      OUTPUT_DIR: join(__dirname, "../build/test/"),
     },
     reporters: ["default", "junit"],
     outputFile: {
-      junit: "build/test/result.xml",
+      junit: join(__dirname, "build/test/result.xml"),
     },
     testTimeout: 20000,
     environment: "jsdom",
