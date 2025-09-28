@@ -6,12 +6,16 @@ import { PromisifiedPort } from "src/thunderbird/util/promisified_port"
 
 export class ComposeTab implements IComposeWindow {
   constructor(
-    readonly tabId: number,
-    readonly tabs: typeof messenger.tabs,
-    readonly scripting: IScriptingAPI,
-    readonly compose: typeof messenger.compose,
-    readonly composeAction: typeof messenger.composeAction,
+    private readonly id: number,
+    private readonly tabs: typeof messenger.tabs,
+    private readonly scripting: IScriptingAPI,
+    private readonly compose: typeof messenger.compose,
+    private readonly composeAction: typeof messenger.composeAction,
   ) {}
+
+  get tabId(): number {
+    return this.id
+  }
 
   async prepareContentScript(): Promise<boolean> {
     console.info("Pinging the content script...")
@@ -24,7 +28,7 @@ export class ComposeTab implements IComposeWindow {
     console.info("No pong. initializing...")
 
     const result = await this.scripting.executeScript({
-      target: { tabId: this.tabId },
+      target: { tabId: this.id },
       injectImmediately: true,
       files: ["js/compose.js"],
     })
@@ -34,7 +38,7 @@ export class ComposeTab implements IComposeWindow {
   }
 
   async getDetails(): Promise<ComposeDetails> {
-    let orig = await this.compose.getComposeDetails(this.tabId)
+    let orig = await this.compose.getComposeDetails(this.id)
     let { isPlainText, subject, plainTextBody, body } = orig
     console.log({ orig })
     body = isPlainText ? plainTextBody : body
@@ -47,22 +51,22 @@ export class ComposeTab implements IComposeWindow {
     // TODO edit address lines
     let details: messenger.compose.ComposeDetails = { subject }
 
-    return this.compose.setComposeDetails(this.tabId, details)
+    return this.compose.setComposeDetails(this.id, details)
   }
 
   private send<const TType extends keyof MessagesFromBackground>(
     message: TType,
   ): Promise<MessagesFromBackground[TType]> {
-    return this.tabs.sendMessage(this.tabId, message)
+    return this.tabs.sendMessage(this.id, message)
   }
 
   openPort(): IGhostServerPort {
-    return PromisifiedPort.listenTo(this.tabs.connect(this.tabId))
+    return PromisifiedPort.listenTo(this.tabs.connect(this.id))
   }
 
   setIcon(path: string): Promise<void> {
     return this.composeAction.setIcon({
-      tabId: this.tabId,
+      tabId: this.id,
       path,
     })
   }

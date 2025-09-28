@@ -17,6 +17,8 @@ function prepareRouter(): ComposeEventRouter {
   const startup = startupCompose({
     messenger,
     body: document.body,
+    selection,
+    domParser: new DOMParser(),
   })
   return startup(ComposeEventRouter)
 }

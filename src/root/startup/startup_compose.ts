@@ -1,4 +1,4 @@
-import type { IBackgroundMessenger } from "src/app-compose"
+import type { ComposeEditListener, IBackgroundMessenger, PortHandler } from "src/app-compose"
 import * as appCompose from "src/app-compose"
 import type { WirelessInjector } from "src/root/util"
 import { makeRegistry } from "src/root/util/registry"
@@ -8,10 +8,14 @@ import * as thunderbirdCompose from "src/thunderbird/compose_util"
 export type ComposeConstants = {
   messenger: typeof messenger
   body: HTMLElement
+  selection: Selection
+  domParser: DOMParser
 }
 
 export type ComposeCatalog = ComposeConstants & {
   backgroundMessenger: IBackgroundMessenger
+  portHandler: PortHandler
+  composeEditListener: ComposeEditListener
 }
 
 /** Collects related classes and prepares the injector for compose.js */

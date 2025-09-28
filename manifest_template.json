@@ -10,8 +10,13 @@
   "author": "snipsnipsnip",
   "browser_specific_settings": {
     "gecko": {
-      "id": "@ghostbird.exteditor.github.io",
-      "strict_min_version": "128.0"
+      "id": "@ghostbird.exteditor.addons.thunderbird.net",
+      "strict_min_version": "128.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
     }
   },
   "permissions": [

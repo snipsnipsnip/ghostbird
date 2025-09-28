@@ -2,15 +2,30 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <title>Ghostbird Options</title>
     <script type="module" src="js/options.js"></script>
+    <link rel="stylesheet" href="options.css">
   </head>
   <body>
-    <h1>Ghostbird: GhostText for Thunderbird</h1>
-    <p>
-      Options are still in development. See
-      <a href="https://github.com/exteditor/ghostbird/">GitHub page</a>for the
-      roadmap.
-    </pp>
-    <ghostbird-options></ghostbird-options>
+    <ghostbird-options>
+      <form>
+        <label for="serverPort"></label>
+        <label>
+          <input
+            id="serverPort"
+            name="serverPort"
+            type="number"
+            min="1"
+            max="65535"
+            size="4"
+          >
+        </label>
+        <span></span>
+        <span
+          ><input type="reset"></span
+        >
+      </form>
+      <div class="progress"></div>
+    </ghostbird-options>
   </body>
 </html>

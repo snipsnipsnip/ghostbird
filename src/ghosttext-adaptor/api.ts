@@ -64,6 +64,21 @@ export interface IComposeWindow {
   setIcon(imageFilePath: string): Promise<void>
 }
 
+/** Informations defined in manifest.json */
+export interface IManifestInfo {
+  /** The extension ID */
+  getId(): string
+}
+
+/** Options stored in local storage  */
+export type StoredOptions = { serverPort: number }
+
+/** * Loads options from storage */
+export interface IStoredOptionsLoader {
+  /** * Loads options from storage */
+  load(): Promise<StoredOptions>
+}
+
 /** Message sent from  the background script to the compose window */
 export type BackgroundMessage = { body: string } | { isPlainText: boolean }
 

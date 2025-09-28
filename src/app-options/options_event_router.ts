@@ -1,11 +1,11 @@
-import type { GhostbirdOptionsElement } from "."
+import type { GhostbirdOptionsElement, IOptionsStore } from "."
 
 export class OptionsEventRouter {
   static isSingleton = true
 
-  constructor() {}
+  constructor(readonly optionsStore: IOptionsStore) {}
 
-  initOptions(_elem: GhostbirdOptionsElement): Promise<void> {
-    return Promise.resolve()
+  initOptions(elem: GhostbirdOptionsElement): Promise<void> {
+    return elem.startSync(this.optionsStore)
   }
 }

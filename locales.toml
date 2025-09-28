@@ -30,3 +30,19 @@ ja = "テキストエディタから切断"
 # Description of the shortcut key to toggle Ghostbird.
 en = "Toggle connection with the text editor"
 ja = "テキストエディタとの接続を切り替え"
+
+[options_server_port]
+en = "GhostText destination port"
+ja = "GhostText接続先ポート"
+
+[options_enable_notifications]
+en = "Show notifications"
+ja = "通知を表示する"
+
+[options_saved]
+en = "Options saved"
+ja = "保存しました"
+
+[options_error]
+en = "Error saving options"
+ja = "保存に失敗しました"

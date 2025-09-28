@@ -39,6 +39,8 @@ describe("startup", () => {
   const constants: [string, AnyEntry][] = [
     ["messenger", ["const", makeDummyMessenger()]],
     ["body", ["const", Symbol("body")]],
+    ["domParser", ["const", Symbol("domParser")]],
+    ["selection", ["const", Symbol("selection")]],
     ["heart", ["const", Symbol("heart")]],
   ]
 

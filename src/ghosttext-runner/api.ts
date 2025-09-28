@@ -27,9 +27,20 @@ export interface IGhostTextConnector {
 }
 
 /** Option fields needed for GhostText client */
-export interface IClientOptions {
+export type ClientOptions = {
+  readonly clientHostName: string
   /** Initial GET request will be sent here */
   readonly serverUrl: URL
+}
+
+/**
+ * Wraps Thunderbird's storage API.
+ */
+export interface IClientOptionsLoader {
+  /**
+   * Loads the options from the Thunderbird's storage.
+   */
+  load(): Promise<ClientOptions>
 }
 
 /** Active WebSocket connection to the GhostText server */
