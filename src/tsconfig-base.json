@@ -9,9 +9,11 @@
       "vitest/importMeta"
     ],
     "lib": [
-      "DOM",
       "ES2024",
-      "ESNext.Collection"
+      "ESNext.Collection",
+      // Actually we don't run the code as a Worker
+      // Repurposing it so we can explicitly allow access to `document` on a per-project basis
+      "WebWorker"
     ],
     "paths": {
       "src/*": [

@@ -8,12 +8,6 @@
       "path": "../util"
     },
     {
-      "path": "../ghosttext-session"
-    },
-    {
-      "path": "../ghosttext-runner"
-    },
-    {
       "path": "../ghosttext-adaptor"
     }
   ]

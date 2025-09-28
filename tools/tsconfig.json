@@ -1,7 +1,7 @@
 {
   "extends": "../src/tsconfig-base",
   "include": [
-    "*.ts",
+    "**/*.ts",
     "../*.json"
   ],
   "references": [

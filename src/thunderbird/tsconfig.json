@@ -4,6 +4,12 @@
     "**/*.ts"
   ],
   "compilerOptions": {
+    "lib": [
+      "DOM",
+      "DOM.Iterable",
+      "ES2024",
+      "ESNext.Collection"
+    ],
     "types": [
       "vitest/importMeta",
       "thunderbird-webext-browser"
@@ -18,12 +24,6 @@
     },
     {
       "path": "../app-options"
-    },
-    {
-      "path": "../ghosttext-runner"
-    },
-    {
-      "path": "../ghosttext-adaptor"
     },
     {
       "path": "../util"
