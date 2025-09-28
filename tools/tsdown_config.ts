@@ -3,6 +3,7 @@
  * Not only does it convert *.ts to *.js, it also does:
  * - Generating index.ts (./barrelsby)
  * - Type checking with tsc (./typecheck_with_tsc)
+ * - Running basic unit tests with vitest (./test_sanity)
  * - Generating manifest.json (./generate_manifest)
  * - Generating messages.json in _locales (./generate_locale_messages)
  * - Bundling and minifying
@@ -10,12 +11,14 @@
  *
  * It does NOT do the following:
  * - Linting and formatting (biome)
- * - Unit-testing (vitest)
+ * - Running a full test (vitest)
  * - Releasing (git and GitHub actions)
  * - Packaging and signing (web-ext and AMO)
  * - Design, documentation, coding, debugging, dogfooding (humans)
  * - Testing with the real Thunderbird (humans)
  * - Going through AMO review (humans)
+ *
+ * @see ../doc/building.md
  */
 
 import { existsSync } from "node:fs"
@@ -25,6 +28,7 @@ import type { Options, UserConfig } from "tsdown"
 import { barrelsby } from "./barrelsby"
 import { generateLocaleMessages } from "./generate_locale_messages"
 import { generateManifest } from "./generate_manifest"
+import { testSanity } from "./test_sanity"
 import { typecheckWithTsc } from "./typecheck_with_tsc"
 
 // biome-ignore lint/style/noDefaultExport: tsdown requires it
@@ -69,7 +73,7 @@ const esmConfig = {
   format: "es",
   outputOptions: {
     entryFileNames: "js/[name].js",
-    chunkFileNames: "js/[name].[hash].js",
+    chunkFileNames: "js/[name].bundle.js",
     sourcemapPathTransform,
   },
   // Add non-js files
@@ -77,8 +81,10 @@ const esmConfig = {
   plugins: [
     // Generate index.ts
     barrelsby(),
+    // Run basic tests
+    !isRelease && testSanity(),
     // Run tsc
-    typecheckWithTsc(),
+    !isRelease && typecheckWithTsc(),
     // Generate manifest.json
     generateManifest({ env: isRelease ? (env as Record<string, string>) : {} }),
     // Generate _locales/*/messages.json

@@ -55,9 +55,11 @@ describe("startup", () => {
     expect(all.every((x) => x)).toBeTruthy()
   })
 
-  test("All collected classes won't use given dependency immediately in constructor", async () => {
+  test("All collected classes won't use given dependency in constructor immediately, but refers to it later", async () => {
     const registry = new Map(constants)
     wireless(Object.values(modules), registry)
+
+    checkDependencyUsage(registry)
 
     // Adjacency list with some non-class entry for starting points
     const depList = [
@@ -141,4 +143,31 @@ function findModule(name: string, deps: string[]): string {
     }
   }
   return `${toKebabCase(mod)}/`
+}
+
+function sliceSourceAfterCtor(ctor: new () => unknown): string {
+  let source = `${ctor}`
+  let m = /\bconstructor\s*[(]\s*[{]?\s*[^{]+[{][^}]+[}]/d.exec(source)
+  if (!m || !m[0]) {
+    return ""
+  }
+
+  return source.slice(m.index + m[0].length)
+}
+
+function checkDependencyUsage(registry: Map<string, AnyEntry>): void {
+  for (const [name, v] of registry) {
+    const [method, arg] = v
+    if (method !== "prepareOne" || arg.deps.length === 0) {
+      continue
+    }
+    let { ctor } = arg
+    let body = sliceSourceAfterCtor(ctor)
+    if (!body) {
+      throw Error(`Failed to parse entry [${name}]`)
+    }
+    for (let dep of arg.deps) {
+      expect(body).to.include(`this.${dep}`, `class ${name} should use this.${dep}`)
+    }
+  }
 }

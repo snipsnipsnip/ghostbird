@@ -8,7 +8,7 @@
   "license": "MPL-2.0 OR GPL-3.0-or-later",
   "private": true,
   "type": "module",
-  "packageManager": "yarn@4.9.4",
+  "packageManager": "yarn@4.10.3",
   "engines": {
     "thunderbird": ">= 128"
   },
@@ -19,6 +19,7 @@
   },
   "scripts": {
     "sdk": "yarn dlx @yarnpkg/sdks",
+    "barrelsby": "node --experimental-strip-types tools/barrelsby.ts",
     "check": "run check-type && biome check --error-on-warnings",
     "fix": "biome check --write",
     "doc": "run check-type && typedoc",
@@ -28,11 +29,12 @@
     "lint": "biome lint",
     "start": "web-ext run",
     "test": "vitest run",
-    "test:watch": "vitest",
+    "test:list": "vitest list",
+    "test:sanity": "vitest run sanity",
     "test:ui": "vitest --ui",
-    "barrelsby": "node --experimental-strip-types tools/barrelsby.ts",
+    "test:watch": "vitest",
     "check-type": "tsc --build --emitDeclarationOnly",
-    "build-js": "NODE_OPTIONS=\"--no-experimental-strip-types ${NODE_OPTIONS}\" tsdown --config=tools/tsdown_config.ts",
+    "build-js": "tsdown --config=tools/tsdown_config.ts",
     "build-xpi": "web-ext build",
     "build": "run check && run test && run build-js && run build-xpi",
     "dev": "run watch & run start",
@@ -65,13 +67,13 @@
     "git-describe": "^4.1.1",
     "jsdom": "^26.1.0",
     "rolldown": "latest",
-    "tsdown": "^0.15.1",
+    "tsdown": "^0.15.5",
     "typedoc": "^0.28.12",
     "typedoc-plugin-markdown": "^4.8.1",
     "typedoc-plugin-mermaid": "^1.12.0",
     "typescript": "^5.9.2",
     "vitest": "^3.2.4",
-    "web-ext": "^8.9.0",
+    "web-ext": "^8.10.0",
     "webext-options-sync": "^4.3.0"
   },
   "peerDependencies": {

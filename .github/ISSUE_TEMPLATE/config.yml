@@ -1,0 +1,6 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Help
+    url: https://github.com/exteditor/ghostbird/discussions
+    about: If you need help with using Ghostbird, please open a discussion, as it's likely to result in faster replies.
+

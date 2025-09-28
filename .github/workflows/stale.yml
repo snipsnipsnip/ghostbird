@@ -1,0 +1,13 @@
+name: 'Stale issues and PRs'
+on:
+  schedule:
+    - cron: '4 2 1,18 * *'
+
+jobs:
+  stale:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/stale@v10
+        with:
+          days-before-stale: 180
+          exempt-all-milestones: true

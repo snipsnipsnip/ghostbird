@@ -2,16 +2,19 @@ name: Documentation
 
 on:
   push:
-    branches-ignore: [ 'wip/*' ]
+    branches:
+      - main
     paths:
       - 'README.md'
       - 'doc/**/*'
       - '.github/workflows/doc.yml'
 jobs:
-  publish:
+  build-doc:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+      pages: write
+      id-token: write
 
     steps:
       - uses: actions/checkout@v5
@@ -42,12 +45,15 @@ jobs:
         run: corepack yarn install --immutable
 
       - name: Generate docs
-        run: corepack yarn run doc:md
+        run: corepack yarn run doc
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
+      - name: Configure pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: build/doc
-          destination_dir: ${{ github.ref_name }}
-          enable_jekyll: true
+          path: build/doc
+
+      - name: Deploy pages
+        uses: actions/deploy-pages@v4

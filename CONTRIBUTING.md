@@ -11,12 +11,19 @@
 * It works by connecting to a GhostText server (listening on port 4001 by default) via WebSocket and relaying messages between the compose window and the server.
 * You can find a sequence diagram in [`doc/design.md`](./doc/design.md#sequence-diagram).
 
-## Tools
+## Requirements
 
-Running `yarn` will fetch the rest of the tools, but you need at least the following:
+You need at least the following:
 
+- [Git](https://git-scm.com/download)
+- [Thunderbird](https://thunderbird.net/)
 - [Node.js](https://nodejs.org/download/) LTS (v22.18.0 as of writing) or a compatible one that can run Yarn
 - Your favorite code editor (e.g., [VSCodium](https://vscodium.com/))
+- [a GitHub account](https://github.com/join)\*
+
+Running `yarn` will fetch the rest of JS tools.
+
+\* If you don't like GitHub, we have mirrors on [Codeberg](https://codeberg.org/exteditor/ghostbird/) and [GitLab](https://gitlab.com/exteditor/ghostbird), although it may not be as up-to-date. Try pinging by raising an issue on one of those platforms.
 
 ## Workflow (If you found a typo or just want to add documentation)
 
@@ -36,15 +43,16 @@ Running `yarn` will fetch the rest of the tools, but you need at least the follo
   * You can continue using `corepack yarn` without installing Yarn globally.
   * See [the note about `corepack` in the Yarn documentation](https://yarnpkg.com/corepack) for details.
 * Run `yarn` to install dependencies.
-* Run `yarn test` to run tests. If it fails, that's on the maintainers; please open an issue and attach `build/test/result.xml`.
-* Run `yarn build` to build the extension.
-* Run `yarn start` to launch Thunderbird with the extension loaded temporarily.
-* Make your changes.
-* Run `yarn test` to run tests.
-* Run `yarn check` and `yarn fix` to lint and format.
+* Run `yarn test`. If it fails, that's on the maintainers; please open an issue and attach `build/test/result.xml`.
+* Make your changes and debug.
+  * Run `yarn build` to build the extension.
+  * Run `yarn start` to launch Thunderbird with the extension loaded temporarily.
+  * Add unit tests as a byproduct of debugging, or if you feel generous.
+  * Run `yarn check` and `yarn fix` to lint and format.
+* Run `yarn test` again.
 * Commit and push your changes.
 * Create a pull request.
-* Install the built add-on and dogfood your changes in Thunderbird in the meantime. (You're using Thunderbird daily, right?)
+* Install the changed add-on and dogfood your changes in Thunderbird in the meantime. (You're using Thunderbird daily, aren't you?)
 
 ## Individual tasks
 
@@ -85,13 +93,14 @@ Running `yarn` will fetch the rest of the tools, but you need at least the follo
 ### Commit
 
 * Run `yarn fix` to lint and format the code.
-* Commit your changes. If you're wondering what to write:
+* Commit your changes. If you're wondering what to write, here's a template:
 
 ```
-${the_folder_name_I_mainly_worked_in}: ${what_I_changed_in_imperative_mood}
+{fix|feat|feat!|docs|refactor|test|chore}: ${what_I_changed_in_imperative_mood}
 
-${this_change_impacts_users_like_this}
 ${you_should_merge_my_awesome_commit_heres_why}
+${this_change_impacts_users_like_this}
+${this_change_can_be_tested_by_doing_these_steps}
 ```
 
 ### Send a pull request
@@ -102,7 +111,7 @@ ${you_should_merge_my_awesome_commit_heres_why}
 ## Code style
 
 * We mostly adhere to [biome defaults](https://biomejs.dev/linter/rules/use-naming-convention/) for formatting and linting, with some exceptions that reflect my personal preferences.
-* You can adjust [`.editorconfig`](./.editorconfig) and [`biome.json`](./biome.json) to your taste locally, but please make sure to run `yarn fix` with the original config before sending a PR.
+* You can adjust [`.editorconfig`](./.editorconfig) and [`biome.jsonc`](./biome.jsonc) to your taste locally, but please make sure to run `yarn fix` with the original config before sending a PR.
 * PRs that suggest adjusting these are also welcome, as long as they don't cause a huge rewrite.
 
 ## FAQ
