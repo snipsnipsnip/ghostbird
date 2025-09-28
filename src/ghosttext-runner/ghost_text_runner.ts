@@ -1,74 +1,59 @@
-import type { Command, CommandResult, GhostTextClient, SessionStatus } from "src/ghosttext-session/ghost_text_client"
-import type {
-  ClientOptions,
-  ClientStatus,
-  IClientEditor,
-  IGhostTextConnector,
-  IHeart,
-  ISession,
-  IStatusIndicator,
-} from "./api"
+import type { Command, CommandResult, GhostTextSession, SessionStatus } from "src/ghosttext-session"
+import type { ClientOptions, ClientStatus, IClientEditor, IGhostTextConnector, ISession, IStatusIndicator } from "./api"
 
 export class GhostTextRunner {
-  static isSingleton = true
+  private command: IteratorResult<Command, SessionStatus> | undefined
+  private session: ISession | undefined
 
   constructor(
     private readonly ghostTextConnector: IGhostTextConnector,
-    private readonly ghostTextClient: GhostTextClient,
-    private readonly heart: IHeart,
+    private readonly options: ClientOptions,
+    private readonly statusIndicator: IStatusIndicator,
+    private readonly editor: IClientEditor,
   ) {}
 
-  async run(statusIndicator: IStatusIndicator, editor: IClientEditor, options: ClientOptions): Promise<void> {
-    let stopHeartbeat = this.heart.startBeat()
-    let session: ISession | undefined
-    let command: IteratorResult<Command, SessionStatus> | undefined
-    try {
-      const g = this.ghostTextClient.run()
-      command = g.next()
+  get lastStatus(): ClientStatus {
+    return this.command?.done ? translateStatus(this.command.value) : "error"
+  }
 
-      while (!command.done && command.value.type !== "queryEditor") {
-        let [r, s] = await this.runHandshakeCommand(statusIndicator, command.value, options)
+  close(): Promise<void> {
+    this.session?.close()
+    return this.statusIndicator.update(this.lastStatus)
+  }
 
-        session ??= s
+  async run(g: GhostTextSession): Promise<void> {
+    this.command = g.next()
 
-        command = g.next(r)
-      }
+    while (!this.command.done && this.command.value.type !== "queryEditor") {
+      let [r, s] = await this.runHandshakeCommand(this.command.value)
 
-      if (!session) {
-        return
-      }
+      this.session ??= s
 
-      while (!command.done) {
-        let result = await this.runSessionCommand(statusIndicator, editor, session, command.value)
+      this.command = g.next(r)
+    }
 
-        command = g.next(result)
-      }
-    } finally {
-      console.log("generator finished")
-      let lastStatus = command?.done ? translateStatus(command.value) : "error"
+    if (!this.session) {
+      return
+    }
 
-      // TODO send the last update before closing
-      session?.close()
-      await statusIndicator.update(lastStatus).catch(() => {})
-      stopHeartbeat()
+    while (!this.command.done) {
+      let result = await this.runSessionCommand(this.session, this.command.value)
+
+      this.command = g.next(result)
     }
   }
 
-  async runHandshakeCommand(
-    indicator: IStatusIndicator,
-    command: Command,
-    { serverUrl }: ClientOptions,
-  ): Promise<[CommandResult] | [CommandResult, ISession]> {
+  async runHandshakeCommand(command: Command): Promise<[CommandResult, ISession?]> {
     switch (command.type) {
       case "connect":
         try {
-          let [session, initRes] = await this.ghostTextConnector.connect(serverUrl)
+          let [session, initRes] = await this.ghostTextConnector.connect(this.options.serverUrl)
           return [{ type: "connected", init: initRes }, session]
         } catch (e) {
           return [{ type: "disconnected", error: e as Error }]
         }
       case "notifyStatus":
-        await indicator.update(translateStatus(command.status))
+        await this.statusIndicator.update(translateStatus(command.status))
         return [{ type: "statusUpdated" }]
       case "queryEditor":
       case "requestUpdate":
@@ -78,25 +63,20 @@ export class GhostTextRunner {
     // We don't handle default here so that tsc checks for exhaustiveness
   }
 
-  async runSessionCommand(
-    indicator: IStatusIndicator,
-    editor: IClientEditor,
-    session: ISession,
-    command: Command,
-  ): Promise<CommandResult> {
+  async runSessionCommand(session: ISession, command: Command): Promise<CommandResult> {
     switch (command.type) {
       case "queryEditor":
-        return { type: "clientState", state: await editor.getState() }
+        return { type: "clientState", state: await this.editor.getState() }
       case "requestUpdate":
         session.sendUpdate(command.update)
-        return receiveChange(editor, session)
+        return receiveChange(this.editor, session)
       case "applyChange":
         if (command.change) {
-          await editor.applyChange(command.change)
+          await this.editor.applyChange(command.change)
         }
-        return receiveChange(editor, session)
+        return receiveChange(this.editor, session)
       case "notifyStatus":
-        await indicator.update(translateStatus(command.status))
+        await this.statusIndicator.update(translateStatus(command.status))
         return { type: "statusUpdated" }
       case "connect":
         return { type: "disconnected", error: Error("unexpected command") }
@@ -137,7 +117,6 @@ async function receiveChangeOnce(editor: IClientEditor, session: ISession): Prom
     return { type }
   }
 }
-
 function translateStatus(s: SessionStatus): ClientStatus {
   switch (s) {
     case "error":
