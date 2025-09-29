@@ -32,12 +32,10 @@ import { testSanity } from "./test_sanity"
 import { typecheckWithTsc } from "./typecheck_with_tsc"
 
 // biome-ignore lint/style/noDefaultExport: tsdown requires it
-export default (): UserConfig => {
-  return [
-    { ...commonConfig, ...esmConfig },
-    { ...commonConfig, ...iifeConfig },
-  ]
-}
+export default (): UserConfig => [
+  { ...commonConfig, ...esmConfig },
+  { ...commonConfig, ...iifeConfig },
+]
 
 const isRelease: boolean = env.CI === "true" || existsSync(join(__dirname, "..", "ext", "manifest.json"))
 
@@ -60,6 +58,12 @@ const commonConfig = {
   report: {
     maxCompressSize: 0,
   },
+  outputOptions: {
+    entryFileNames: "js/[name].js",
+    chunkFileNames: "js/[name].bundle.js",
+    intro: "'use strict';",
+    sourcemapPathTransform,
+  },
 } satisfies Options
 
 // biome-ignore lint/nursery/useExplicitType: we want tsc to infer it
@@ -71,11 +75,6 @@ const esmConfig = {
     "src/root/options.ts",
   ],
   format: "es",
-  outputOptions: {
-    entryFileNames: "js/[name].js",
-    chunkFileNames: "js/[name].bundle.js",
-    sourcemapPathTransform,
-  },
   // Add non-js files
   copy: { from: "ext", to: "dist/ext" },
   plugins: [
@@ -100,11 +99,6 @@ const iifeConfig = {
     "src/root/compose.ts",
   ],
   format: "iife",
-  outputOptions: {
-    intro: "'use strict';",
-    entryFileNames: "js/[name].js",
-    sourcemapPathTransform,
-  },
 } satisfies Options
 
 // Check the keys are disjoint
