@@ -22,13 +22,14 @@
  */
 
 import { existsSync } from "node:fs"
-import { join, resolve } from "node:path"
+import { join } from "node:path"
 import { env } from "node:process"
 import type { Options, UserConfig } from "tsdown"
 import { barrelsby } from "./barrelsby"
 import { generateLocaleMessages } from "./generate_locale_messages"
 import { generateManifest } from "./generate_manifest"
 import { testSanity } from "./test_sanity"
+import { chunkFileNames, makeAbsoluteSourcePath, makeRelativeSourcePath } from "./tsdown_path"
 import { typecheckWithTsc } from "./typecheck_with_tsc"
 
 // biome-ignore lint/style/noDefaultExport: tsdown requires it
@@ -45,8 +46,8 @@ const commonConfig = {
   tsconfig: "src/root/tsconfig.json",
   ignoreWatch: [/[/](?:[.]|build[/]|dist[/])/i, /index[.]ts$/i],
   platform: "browser",
-  // Corresponds to Thunderbird 140 ESR
-  target: "firefox140",
+  // Corresponds to Thunderbird 128 ESR
+  target: "firefox128",
   sourcemap: true,
   // We don't remove whitespaces for people like me who enjoy unpacking xpis and reading the content.
   // We still bundle because it reduces the number of files to check.
@@ -56,13 +57,22 @@ const commonConfig = {
     "import.meta.vitest": "undefined",
   },
   report: {
-    maxCompressSize: 0,
+    gzip: false,
   },
   outputOptions: {
     entryFileNames: "js/[name].js",
-    chunkFileNames: "js/[name].bundle.js",
     intro: "'use strict';",
-    sourcemapPathTransform,
+    sourcemapPathTransform: isRelease ? makeRelativeSourcePath : makeAbsoluteSourcePath,
+    chunkFileNames,
+    advancedChunks: {
+      groups: [
+        // Separate library files
+        {
+          test: "node_modules",
+          name: (moduleId: string): string => moduleId,
+        },
+      ],
+    },
   },
 } satisfies Options
 
@@ -101,39 +111,7 @@ const iifeConfig = {
   format: "iife",
 } satisfies Options
 
-// Check the keys are disjoint
+// Check that the keys are disjoint
 type Test<A, B> = Extract<A, B> extends never ? "ok" : ["Keys overlap", A & B]
 "ok" satisfies Test<keyof typeof commonConfig, keyof typeof esmConfig>
 "ok" satisfies Test<keyof typeof commonConfig, keyof typeof iifeConfig>
-
-/** Adjusts source paths in sourcemap files */
-function sourcemapPathTransform(relativeSourcePath: string, sourcemapPath: string): string {
-  if (!isRelease) {
-    // For dev builds, we include the full path which makes the vscode debugger happy.
-    // In this case we don't have to embed the original source code, but somehow tsdown seems to lack the option to
-    // turn it off.
-    return makeAbsolute(relativeSourcePath, sourcemapPath)
-  }
-
-  // For release builds, we strip the path to make it easier to navigate in Thunderbird devtools
-  let stripped = findPrefix("/node_modules/", relativeSourcePath) ?? findPrefix("/src/", relativeSourcePath)
-  if (!stripped) {
-    throw Error(`unexpected source path: ${relativeSourcePath}`)
-  }
-  return stripped
-}
-
-/** Resolves source paths in sourcemap files to absolute paths */
-function makeAbsolute(relativeSourcePath: string, sourcemapPath: string): string {
-  let path = resolve(`${sourcemapPath}/../../`, relativeSourcePath)
-  if (!existsSync(path)) {
-    throw Error(`Couldn't fix the sourcemap path [${relativeSourcePath}] -> [${sourcemapPath}]`)
-  }
-  return path
-}
-
-/** Find the start of a prefix in `path` and returns the rest of the string if found */
-function findPrefix(prefix: string, path: string): string | undefined {
-  let i = path.indexOf(prefix)
-  return i === -1 ? undefined : path.slice(i)
-}
