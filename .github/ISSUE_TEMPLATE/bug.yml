@@ -1,7 +1,7 @@
 name: '🐞 Report a bug'
-description: Is something wrong?
+description: Something is wrong
 type: Bug
-title: '[BUG] '
+title: '[Bug]'
 body:
   - type: textarea
     attributes:
@@ -13,15 +13,15 @@ body:
 
   - type: textarea
     attributes:
-      label: What is the expected behavior after steps above?
-      value: "* The text editor shows..."
+      label: What is the expected behavior after the steps above?
+      value: "* The text editor should show[...]"
     validations:
       required: true
 
   - type: textarea
     attributes:
       label: What did happen instead?
-      value: "* An error occurs..."
+      value: "* An error occurs[...]"
     validations:
       required: true
 
@@ -34,10 +34,11 @@ body:
       label: OS
       multiple: false
       options:
+        - N/A
         - Windows
         - macOS
         - Linux
-        - Other / Multiple / Not relevant
+        - Other / Multiple
     validations:
       required: true
 
@@ -45,13 +46,13 @@ body:
     attributes:
       label: Thunderbird version
     validations:
-      required: true
+      required: false
 
   - type: input
     attributes:
       label: Ghostbird version
     validations:
-      required: true
+      required: false
 
   - type: textarea
     attributes:

@@ -1,10 +1,29 @@
 name: '✨ Request a feature'
-description: Want a new behavior?
+description: I have a suggestion
 type: Feature
-title: '[Feature] '
+title: '[Feature]'
 body:
   - type: textarea
     attributes:
-      label: What new features would you like us to add to Ghostbird?
+      label: Is your feature request related to a problem you are experiencing? Please describe.
+      placeholder: A clear and concise description of what the problem is. e.g., I have an issue when doing [...]
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Describe the solution you'd like.
+      placeholder: A clear and concise description of what you want to happen, together with any potential drawbacks.
     validations:
       required: true
+  - type: textarea
+    attributes:
+      label: Describe alternative solutions if any.
+      placeholder: A clear and concise description of any alternative solutions or features you've considered.
+    validations:
+      required: false
+  - type: textarea
+    attributes:
+      label: Please provide information about documentation, adoption, migration strategy.
+      placeholder: If possible, explain how users would adopt this feature and provide a draft of the documentation. Preferably include a screenshot or a design sketch.
+    validations:
+      required: false
