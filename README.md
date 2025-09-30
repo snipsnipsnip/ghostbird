@@ -44,9 +44,7 @@ You can install Ghostbird in several ways:
 
 ### Download and install manually
 
-[![Download on AMO](https://raw.githubusercontent.com/thunderbird/webext-support/refs/heads/master/images/get-the-addon.svg)][amo]
-
-1. Download the latest release from [AMO][amo] or [Github Releases][rels].
+1. Download the latest release from the [Thunderbird add-on website][amo] or [Github Releases][rels].
 2. In Thunderbird, go to `Add-ons Manager`.
 3. Drag and drop the downloaded `.xpi` file into the `Add-ons Manager` window.
 
@@ -203,10 +201,6 @@ We need help with:
 ### Why not just fork the original GhostText add-on, or contribute to it?
 
 * See [faq.md](./doc/faq.md#why).
-
-### When will it be available on addons.thunderbird.net?
-
-* See [Roadmap](#roadmap) for the planned release schedule.
 
 ### How do I set up a development environment?
 
