@@ -49,6 +49,9 @@
   "webExt": {
     "sourceDir": "dist/ext/",
     "artifactsDir": "dist/",
+    "ignoreFiles": [
+      "!**"
+    ],
     "build": {
       "filename": "{short_name}-{version}.xpi"
     },
