@@ -1,9 +1,11 @@
 # Ghostbird: GhostText for Thunderbird :nest_with_eggs::mailbox::ghost:
 
 [![Supports Thunderbird ESR](https://img.shields.io/badge/supports-Thunderbird_140_ESR-0a84ff?logo=thunderbird&logoSize=auto)][tb]<br>
-[![Status: Alpha](https://img.shields.io/badge/project_status-alpha-yellow)][rels]
+[![Status: Beta](https://img.shields.io/badge/project_status-beta-f1b802)][rels]
 [![Latest release](https://img.shields.io/github/v/release/exteditor/ghostbird?include_prereleases&logo=refinedgithub&logoColor=white&logoSize=auto)][rels]<br>
 [![Github Actions Status](https://github.com/exteditor/ghostbird/actions/workflows/build.yml/badge.svg)](https://github.com/exteditor/ghostbird/actions/workflows/build.yml)
+
+[![Download on AMO](https://raw.githubusercontent.com/thunderbird/webext-support/refs/heads/master/images/get-the-addon.svg)](#installation)
 
 A [GhostText][gt] implementation for the [Thunderbird][tb] email client.
 
@@ -24,32 +26,46 @@ This repo contains an in-development Thunderbird add-on that works as a [GhostTe
   [<img src="https://github.com/user-attachments/assets/b0ca34ed-5508-458f-b7af-2642824bf7f7" width="48" height="48" alt="Helix" title="Helix">][helix]
   [`$ANY_EDITOR`](https://github.com/newsch/GhostText-Any/)
 
-  The last two implementations can wrap any editor that behaves like Notepad.
+  The last two implementations can wrap any editor that blocks while editing.
 
 ## Installation
 
 [<img src="./ext/blue.svg" width="48" height="48" border="1" align="right" alt="logo" title="Grey-headed bushshrike (Malaconotus blanchoti) is sometimes called 'ghostbird'">][bird]
 
-This add-on is not yet available on [addons.thunderbird.net](https://addons.thunderbird.net/). You can install it manually or build it from source.
+* See [the help page in the Mozilla Support Center](https://support.mozilla.org/kb/installing-addon-thunderbird) for details.
 
-### Manual Installation
+You can install Ghostbird in several ways:
 
-1. Download the latest release from [Releases][rels].
-2. In Thunderbird, go to `Add-ons Manager` and Press :gear: button at the top-right.
-3. Select `Install Add-on From File...` from the menu.
-4. Select downloaded `.xpi` file.
+### Install within Thunderbird (Recommended)
 
-See [the help page in the Mozilla Support Center](https://support.mozilla.org/kb/installing-addon-thunderbird) for details.
+1. In Thunderbird, open `Add-ons Manager`.
+2. Search for "Ghostbird".
+3. Click the <kbd>+ Add to Thunderbird</kbd> button.
+
+### Download and install manually
+
+[![Download on AMO](https://raw.githubusercontent.com/thunderbird/webext-support/refs/heads/master/images/get-the-addon.svg)][amo]
+
+1. Download the latest release from [AMO][amo] or [Github Releases][rels].
+2. In Thunderbird, go to `Add-ons Manager`.
+3. Drag and drop the downloaded `.xpi` file into the `Add-ons Manager` window.
+
+Alternatively, you can:
+
+3. Press :gear: button at the top-right.
+4. Select `Install Add-on From File...` from the menu.
+5. Select downloaded `.xpi` file.
 
 ### Build from source
 
-Basically `yarn && yarn build`. See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started.
+* Basically, `make` will do, which internally calls `yarn install && yarn build`.
+* See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started.
 
 ## Usage
 
 1. Launch your favorite text editor.
-2. Start GhostText server in your text editor (e.g. with `:GhostTextStart` in Vim).
-3. Press the gray Ghostbird button <img src="./ext/gray.svg" width="24" height="24" border="1"> in the Thunderbird mail compose window. (The default shortcut is <kbd>Ctrl</kbd>+<kbd>E</kbd>)
+2. Start the GhostText server in your text editor (e.g., with `:GhostTextStart` in Vim).
+3. Press the gray Ghostbird button <img src="./ext/gray.svg" width="24" height="24" border="1"> in the Thunderbird mail compose window. (The default shortcut is <kbd>^Ctrl</kbd>+<kbd>⇧Shift</kbd>+<kbd>H</kbd>)
    * If the connection is successful, the button will turn blue <img src="./ext/blue.svg" width="24" height="24" border="1">.
    * If the connection fails, the button will turn red <img src="./ext/red.svg" width="24" height="24" border="1">. Make sure that the GhostText server is listening. See [Troubleshooting page of original GhostText](https://ghosttext.fregante.com/troubleshooting/#unable-to-connect).
 4. Write your email in the text editor.
@@ -89,19 +105,19 @@ gtClient -->|Updates| mailCompose
 
 |Mark|Meaning|Description|
 |----|----|----|
-|:white_check_mark:|Done|Released in previous version|
-|:nest_with_eggs:|Experimental|Released recently; Please try and tell us if you notice something|
-|:construction:|WIP|In development, but not released|
-|:white_large_square:|Planned|Have to be implemented to release the version|
+|:white_check_mark:|Done|Released in previous versions|
+|:nest_with_eggs:|Experimental|Released recently; please try and tell us if you notice something|
+|:construction:|WIP|In development but not released|
+|:white_large_square:|Planned|Must be implemented to release the version|
 |:no_entry:|Limitation|The version will be released with this limitation|
 
 ### v0.0.1 (Alpha) - Released
 
-* :nest_with_eggs: Prepare the project skeleton (README, build, test, lint, debug, CI)
-* :nest_with_eggs: Start button on the toolbar
-* :nest_with_eggs: Edit plain text emails
-* :nest_with_eggs: Keyboard shortcuts
-* :nest_with_eggs: Roadmap and [Project board][proj]
+* :white_check_mark: Prepare the project skeleton (README, build, test, lint, debug, CI)
+* :white_check_mark: Start button on the toolbar
+* :white_check_mark: Edit plain text emails
+* :white_check_mark: Keyboard shortcuts
+* :white_check_mark: Roadmap and [Project board][proj]
 * :no_entry: Non-bidirectional: Thunderbird becomes read-only while Ghostbird is active
 * :no_entry: No i18n: the UI is only in English*
 * :no_entry: Quirky when editing HTML emails
@@ -110,30 +126,33 @@ gtClient -->|Updates| mailCompose
 
 ### v0.1.0 (Alpha) - Released
 
-* :nest_with_eggs: [Debug](https://github.com/exteditor/ghostbird/issues/2)
+* :white_check_mark: [Debug](https://github.com/exteditor/ghostbird/issues/2)
 
-### v0.2.0 (Beta) - Current
+### v0.2.0 (Beta) - Released
 
 * :nest_with_eggs: [Basic option (at minimum, the port of the GhostText server)](https://github.com/exteditor/ghostbird/issues/3)
 * :nest_with_eggs: [Prepare for i18n (Make texts translatable)](https://github.com/exteditor/ghostbird/issues/4)
 
+### v0.2.1 (Beta) - Current
+
+* :construction: [Fix empty host field being sent to the server](https://github.com/exteditor/ghostbird/issues/22)
+* :construction: [Show notifications](https://github.com/exteditor/ghostbird/issues/24)
+
 ### v0.x.x (Beta) - 2025 Q4
 
-* :construction: [Notifications](https://github.com/exteditor/ghostbird/issues/4)
-* :construction: [](https://github.com/exteditor/ghostbird/issues/4)
-* :construction: [Website with some screenshot](https://github.com/exteditor/ghostbird/issues/5)
+* :construction: [Website with some screenshots](https://github.com/exteditor/ghostbird/issues/5)
 * :construction: [Smoother editing of HTML emails](https://github.com/exteditor/ghostbird/issues/6)
 
 ### v1.0.0 (Stable) - 2026 Q2
 
-* :construction: [Publish on AMO (functionally identical to the last beta)](https://github.com/exteditor/ghostbird/issues/9)
+* :white_large_square: [Mark as stable on AMO (functionally identical to the last beta)](https://github.com/exteditor/ghostbird/issues/9)
 
 ### v1.x.x (Stable) - 2026 Q4
 
 * :white_large_square: [Edit Address and Subject fields](https://github.com/exteditor/ghostbird/issues/8)
-* :white_large_square: Continue i18n (Add more languages)
-* :white_large_square: Support text editors that lack a GhostText add-on (e.g., Notepad)*
-* :white_large_square: Automate AMO release on GitHub Action
+* :white_large_square: [Continue i18n (Add more languages)](https://github.com/exteditor/ghostbird/issues/26)
+* :white_large_square: [Support text editors that lack a GhostText add-on (e.g., Notepad)*](https://github.com/exteditor/ghostbird/issues/25)
+* :white_large_square: [Automate AMO release on GitHub Action](https://github.com/exteditor/ghostbird/issues/27)
 
 > \*Requires protocol extension and server-side support. I intend to develop one by forking [GhostText-Any](https://github.com/newsch/GhostText-Any/).
 
@@ -143,7 +162,7 @@ gtClient -->|Updates| mailCompose
   * :white_large_square: Cursor and selection synchronization
   * :white_large_square: Bidirectional editing; changes in Thunderbird are reflected in the text editor
 
-* :white_large_square: Better handling of conflicts, disconnection and reconnection (possibly extending the protocol)
+* :white_large_square: Better handling of conflicts, disconnection, and reconnection (possibly extending the protocol)
 
 ### Non-goals
 
@@ -153,7 +172,7 @@ gtClient -->|Updates| mailCompose
 
 ## Contributing
 
-If you liked the idea, please:
+If you like the idea, please:
 
 * [Star the repo](#repository-container-header).
 * Feel free to open issues and submit pull requests. See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started.
@@ -169,7 +188,7 @@ We need help with:
 * Wiki pages for [user guides](https://github.com/exteditor/ghostbird/wiki/HowTo) and [troubleshooting](https://github.com/exteditor/ghostbird/wiki/Troubleshooting)
 * Developing the server counterpart so that this can be used as an External Editor replacement ([GhostText-Any](https://github.com/newsch/GhostText-Any/) or [Helix-Ghost][helix] can be a good starting point)
 * Creating a testing checklist for testing and debugging ([This page](https://github.com/exteditor/exteditor/wiki/Things-to-test) can be a good starting point)
-* Automating test with the real Thunderbird (See [Testing](./doc/testing.md))
+* Automating tests with the real Thunderbird (See [Testing](./doc/testing.md))
 * Organization members (I want to increase [the bus factor](https://en.wikipedia.org/wiki/Bus_factor) of [the organization](https://github.com/exteditor/))
 
 ## FAQ
@@ -178,8 +197,8 @@ We need help with:
 
 * I'd say yes, but save your work frequently since it may contain bugs and eat your email.
 * This add-on does not collect any personal data and can only connect to localhost. Attempts to send any data to external servers are blocked by Thunderbird's security model.
-* You can look inside the released `.xpi` files (which are just zip files) to verify that it matches the build from the source code.
-* As for trustworthiness, the safest option is to wait until it is published on AMO, as that indicates it has passed Mozilla's review process.
+* You can look inside the released `.xpi` files (which are just zip files) to verify that they match the build from the source code.
+* As for trustworthiness, the safest option is to wait until it reaches 1.0.0, as that indicates it has passed Mozilla's manual review.
 
 ### Why not just fork the original GhostText add-on, or contribute to it?
 
@@ -216,7 +235,7 @@ If you've looked at the options above and still want to motivate the maintainer 
 
 * [Federico Brigante](https://fregante.com/), the author of [GhostText][gt].
 * [Alexandre Feblot](https://github.com/afeblot), the original author of [External Editor](https://github.com/exteditor/exteditor/), which I took over maintaining; it is now in a stale state. I intend to incorporate some of its features into Ghostbird.
-* The button image is based on [photo](https://commons.wikimedia.org/wiki/File:Grey-headed_Bushshrike_(Malaconotus_blanchoti)_in_tree,_crop.jpg) of a [Grey-headed Bushshrike][bird] by [Patty McGann](https://www.flickr.com/photos/10374910@N08/3093177192/) (CC-BY-2.0).
+* The button image is based on a [photo](https://commons.wikimedia.org/wiki/File:Grey-headed_Bushshrike_(Malaconotus_blanchoti)_in_tree,_crop.jpg) of a [Grey-headed Bushshrike][bird] by [Patty McGann](https://www.flickr.com/photos/10374910@N08/3093177192/) (CC-BY-2.0).
 
 ### Tools
 
@@ -246,3 +265,4 @@ Ghostbird is [dual-licensed under (MPL-2.0 OR GPL-3.0-or-later)](./LICENSE). See
 [nvim-svg]: ./doc/res/nvim.svg
 [bird]: https://en.wikipedia.org/wiki/Grey-headed_bushshrike
 [protocol]: https://github.com/fregante/GhostText/blob/refs/heads/main/PROTOCOL.md
+[amo]: https://addons.thunderbird.net/addon/ghostbird/
