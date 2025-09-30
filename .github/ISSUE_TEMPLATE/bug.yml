@@ -1,7 +1,7 @@
-name: ':bug: Bug Report'
-description: File a bug in Ghostbird
+name: ':bug: Report a bug'
+description: Is something wrong?
 type: Bug
-title: '[BUG] <title>'
+title: '[BUG] '
 body:
   - type: textarea
     attributes:
@@ -32,14 +32,14 @@ body:
   - type: dropdown
     attributes:
       label: OS
+      multiple: false
+      options:
+        - Windows
+        - macOS
+        - Linux
+        - Other / Multiple / Not relevant
     validations:
       required: true
-    multiple: false
-    options:
-      - Windows
-      - macOS
-      - Linux
-      - Other / Not relevant
 
   - type: input
     attributes:

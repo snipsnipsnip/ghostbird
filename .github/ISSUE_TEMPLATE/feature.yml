@@ -1,0 +1,10 @@
+name: ':sparkles: Request a feature'
+description: Want a new behavior?
+type: Feature
+title: '[Feature] '
+body:
+  - type: textarea
+    attributes:
+      label: What new features would you like us to add to Ghostbird?”
+    validations:
+      required: true
