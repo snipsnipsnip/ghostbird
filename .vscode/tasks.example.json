@@ -1,0 +1,71 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "tsc:once",
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": "$tsc",
+      "isBackground": false,
+      "command": "corepack",
+      "args": [
+        "yarn",
+        "run",
+        "check-type"
+      ]
+    },
+    {
+      "label": "tsc:watch",
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": "$tsc-watch",
+      "isBackground": true,
+      "command": "corepack",
+      "args": [
+        "yarn",
+        "run",
+        "check-type",
+        "--watch"
+      ]
+    },
+    {
+      "label": "tsdown:once",
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": "$tsc",
+      "isBackground": false,
+      "command": "corepack",
+      "args": [
+        "yarn",
+        "run",
+        "tsdown"
+      ]
+    },
+    {
+      "label": "tsdown:watch",
+      "type": "shell",
+      "group": {
+        "kind": "build",
+        "isDefault": false
+      },
+      "problemMatcher": "$tsc-watch",
+      "isBackground": true,
+      "command": "corepack",
+      "args": [
+        "yarn",
+        "run",
+        "tsdown",
+        "--watch"
+      ]
+    }
+  ]
+}

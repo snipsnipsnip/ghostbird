@@ -14,7 +14,7 @@
 
 ### Which Thunderbird versions are supported?
 
-* Thunderbird 128+ (We will mainly support ESR)
+* Thunderbird 128+ (We will mainly support the latest ESR)
 * Testing with newer versions is welcomed. Please report any issues you notice in newer Thunderbird versions.
 
 ### What text editors are supported?
@@ -126,7 +126,7 @@
 ### What are these `api.ts` files? They seem to only contain interfaces that aren't implemented.
 
 * Implementations are in other modules, mostly in `thunderbird/*.ts`.
-* See [Callgraphs](./design.md#callgraph) for details.
+* See [Callgraphs](./design.md#callgraphs) for details.
 * See [Module Dependencies](./design.md#module-dependencies) for relations.
 
 ### Why do some classes have `static isSingleton` property?
@@ -149,7 +149,7 @@
 [wiki]: https://github.com/exteditor/ghostbird/wiki
 [issue]: https://github.com/exteditor/ghostbird/issues
 [discussion]: https://github.com/exteditor/ghostbird/discussions
-[startup]: ../src/root/startup.ts
+[startup]: ../src/root/startup/startup_compose.ts
 [protocol]: https://github.com/fregante/GhostText/blob/main/PROTOCOL.md
 [gt]: https://ghosttext.fregante.com/
 [chooseicon]: https://github.com/exteditor/ghostbird/issues/7
