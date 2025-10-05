@@ -515,6 +515,7 @@ __metadata:
     "@types/thunderbird-webext-browser": "npm:^127.0.0"
     barrelsby: "npm:^2.8.1"
     git-describe: "npm:^4.1.1"
+    glob: "npm:^10"
     jsdom: "npm:^26.1.0"
     rolldown: "npm:latest"
     tsdown: "npm:^0.15.5"
@@ -2843,7 +2844,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2":
+"glob@npm:^10, glob@npm:^10.2.2":
   version: 10.4.5
   resolution: "glob@npm:10.4.5"
   dependencies:

@@ -71,6 +71,7 @@
     "@types/thunderbird-webext-browser": "^127.0.0",
     "barrelsby": "^2.8.1",
     "git-describe": "^4.1.1",
+    "glob": "^10",
     "jsdom": "^26.1.0",
     "rolldown": "latest",
     "tsdown": "^0.15.5",
