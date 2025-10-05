@@ -3,35 +3,7 @@
  * This script may be suspended and reloaded occasionally by Thunderbird.
  */
 
-import type { BackgroundEventRouter } from "src/app-background"
-
-let router: BackgroundEventRouter | undefined
-function withRouter(handler: (r: BackgroundEventRouter) => Promise<void> | undefined): Promise<void> | undefined {
-  if (router) {
-    return withRouterSync(handler, router)
-  } else {
-    return withRouterAsync(handler)
-  }
-}
-
-function withRouterSync(
-  handler: (r: BackgroundEventRouter) => Promise<void> | undefined,
-  router: BackgroundEventRouter,
-): Promise<void> | undefined {
-  try {
-    return handler(router)
-  } catch (error) {
-    console.error({ error })
-    return
-  }
-}
-
-async function withRouterAsync(handler: (r: BackgroundEventRouter) => Promise<void> | undefined): Promise<void> {
-  const { prepareBackgroundRouter } = await import("./startup/startup_background")
-  router = prepareBackgroundRouter()
-
-  return withRouterSync(handler, router)
-}
+import { withRouter } from "./background_helper"
 
 console.log("starting", import.meta.url)
 

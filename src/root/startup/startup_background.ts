@@ -1,4 +1,4 @@
-import type { ComposeActionNotifier, ICommandConfig, IComposeWindowDetector } from "src/app-background"
+import type { ComposeActionNotifier, IComposeWindowDetector } from "src/app-background"
 import * as appBackground from "src/app-background"
 import { BackgroundEventRouter } from "src/app-background"
 import * as adaptor from "src/ghosttext-adaptor"
@@ -18,7 +18,6 @@ export type BackgroundConstants = {
 export type BackgroundCatalog = BackgroundConstants & {
   composeActionNotifier: ComposeActionNotifier
   composeTabDetector: IComposeWindowDetector
-  commandConfig: ICommandConfig
 }
 
 /** Collects related classes and prepares the injector for background.js */
