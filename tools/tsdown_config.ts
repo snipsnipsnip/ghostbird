@@ -52,6 +52,7 @@ const commonConfig = {
   // We don't remove whitespaces for people like me who enjoy unpacking xpis and reading the content.
   // We still bundle because it reduces the number of files to check.
   minify: "dce-only",
+  noExternal: /(?:)/,
   define: {
     // Remove in-source tests
     "import.meta.vitest": "undefined",
