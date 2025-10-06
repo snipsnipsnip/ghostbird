@@ -1,6 +1,8 @@
 import { join } from "node:path"
 import type { ViteUserConfig } from "vitest/config"
 
+const OUTPUT_DIR: string = join(__dirname, "../build/test/")
+
 export const config: ViteUserConfig = {
   appType: "custom",
   cacheDir: ".cache/vitest",
@@ -35,11 +37,11 @@ export const config: ViteUserConfig = {
     ],
     env: {
       // biome-ignore lint/style/useNamingConvention: It's a constant
-      OUTPUT_DIR: join(__dirname, "../build/test/"),
+      OUTPUT_DIR,
     },
     reporters: ["default", "junit"],
     outputFile: {
-      junit: join(__dirname, "../build/test/result.xml"),
+      junit: join(OUTPUT_DIR, "result.xml"),
     },
     testTimeout: 20000,
     environment: "jsdom",
