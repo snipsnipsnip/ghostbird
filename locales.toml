@@ -32,17 +32,36 @@ en = "Toggle connection with the text editor"
 ja = "テキストエディタとの接続を切り替え"
 
 [options_server_port]
+# Description of the option item for the server port.
 en = "GhostText destination port"
 ja = "GhostText接続先ポート"
 
 [options_enable_notifications]
+# Description of the option item for enabling notifications.
 en = "Show notifications"
 ja = "通知を表示する"
 
 [options_saved]
-en = "Options saved"
+# Message shown when the options has been saved successfully.
+en = "Saved"
 ja = "保存しました"
 
 [options_error]
+# Message shown when failed to save the options.
 en = "Error saving options"
 ja = "保存に失敗しました"
+
+[src_client_status_active]
+# Message shown when Ghostbird has connected to the server.
+en = "Connected to the text editor"
+ja = "テキストエディタに接続しました"
+
+[src_client_status_inactive]
+# Message shown when Ghostbird has disconnected from the server.
+en = "Disconnected from the text editor"
+ja = "テキストエディタから切断しました"
+
+[src_client_status_error]
+# Message shown when Ghostbird has some problem connecting to the server.
+en = "Failed to connect to the text editor"
+ja = "テキストエディタに接続できませんでした"

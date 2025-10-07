@@ -1,4 +1,11 @@
 import type { IMessagePort } from "src/ghosttext-runner"
+import type { MessageId } from "src/util"
+
+/** Wraps the Notification API */
+export interface INotificationTray {
+  /** Shows a notification */
+  showNotification(iconUrl: string, messageId: MessageId): Promise<void>
+}
 
 /** Wrapper for `fetch` and `WebSocket` */
 export interface IWebClient {

@@ -7,17 +7,28 @@ import type {
   IStatusIndicator,
 } from "src/ghosttext-runner"
 import type { EmailState } from "src/ghosttext-session"
-import type { IComposeWindow, IGhostServerPort } from "./api"
+import type { MessageId } from "src/util"
+import type { IComposeWindow, IGhostServerPort, INotificationTray } from "./api"
 
 export class EmailEditor implements IClientEditor, IStatusIndicator {
+  private lastStatus: ClientStatus | undefined
+
   constructor(
+    private readonly notificationTray: INotificationTray,
     private readonly composeWindow: IComposeWindow,
     private readonly port: IGhostServerPort,
     private readonly options: ClientOptions,
   ) {}
 
   update(status: ClientStatus): Promise<void> {
-    return this.composeWindow.setIcon(imageForStatus(status))
+    const icon = imageForStatus(status)
+
+    if (status !== (this.lastStatus ?? "inactive")) {
+      this.notificationTray.showNotification(icon, messageForStatus(status))
+    }
+    this.lastStatus = status
+
+    return this.composeWindow.setIcon(icon)
   }
 
   async getState(): Promise<EmailState> {
@@ -61,5 +72,16 @@ function imageForStatus(status: ClientStatus): string {
       return "gray.svg"
     case "error":
       return "red.svg"
+  }
+}
+
+function messageForStatus(status: ClientStatus): MessageId {
+  switch (status) {
+    case "active":
+      return "src_client_status_active"
+    case "inactive":
+      return "src_client_status_inactive"
+    case "error":
+      return "src_client_status_error"
   }
 }

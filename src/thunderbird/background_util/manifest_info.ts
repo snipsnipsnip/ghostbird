@@ -14,4 +14,8 @@ export class ManifestInfo implements ICommandConfig, IManifestInfo {
   getId(): string {
     return this.messenger.runtime.id
   }
+
+  getShortName(): string {
+    return this.messenger.runtime.getManifest().short_name ?? "<unknown>"
+  }
 }
