@@ -522,6 +522,7 @@ __metadata:
     typescript: "npm:^5.9.3"
     vitest: "npm:^3.2.4"
     web-ext: "npm:^8.10.0"
+    webext-events: "npm:^3.1.1"
     webext-options-sync: "npm:^4.3.0"
   peerDependencies:
     "@vitest/ui": "*"
@@ -5530,7 +5531,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"webext-events@npm:^3.0.1":
+"webext-events@npm:^3.0.1, webext-events@npm:^3.1.1":
   version: 3.1.1
   resolution: "webext-events@npm:3.1.1"
   dependencies:
