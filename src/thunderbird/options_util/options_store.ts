@@ -18,11 +18,6 @@ export class OptionsStore implements IStoredOptionsLoader {
     return this.options.getAll()
   }
 
-  /**
-   * Any defaults or saved options will be loaded into the `<form>` and any change will automatically be saved to storage
-   * @param selector - The `<form>` that needs to be synchronized. The form fields' `name` attributes will have to match the option names.
-   * @returns an async message queue that notifies when the option is changed and saved
-   */
   async syncForm(form: HTMLFormElement): Promise<PromisifyingQueue<"saved" | "error">> {
     // Do a full clear of the options when the form is reset
     form.addEventListener("reset", async (e) => {
