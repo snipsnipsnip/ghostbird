@@ -12,6 +12,12 @@ export class EmailEditorFactory {
 
   async create(tab: IComposeWindow, port: IGhostServerPort): Promise<EmailEditor> {
     const options = await this.clientOptionsLoader.load()
-    return new EmailEditor(this.notificationTray, tab, port, options)
+    let tray = options.enableNotifications ? this.notificationTray : new NullNotificationTray()
+
+    return new EmailEditor(tray, tab, port, options)
   }
+}
+
+class NullNotificationTray implements INotificationTray {
+  async showNotification(): Promise<void> {}
 }

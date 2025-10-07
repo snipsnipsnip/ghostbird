@@ -28,9 +28,12 @@ export interface IGhostTextConnector {
 
 /** Option fields needed for GhostText client */
 export type ClientOptions = {
+  /** Host name to use as `url` field */
   readonly clientHostName: string
   /** Initial GET request will be sent here */
   readonly serverUrl: URL
+  /** Show notifications on connect/disconnect events if true */
+  readonly enableNotifications: boolean
 }
 
 /**

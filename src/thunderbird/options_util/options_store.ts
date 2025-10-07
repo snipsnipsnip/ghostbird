@@ -11,6 +11,7 @@ export class OptionsStore implements IStoredOptionsLoader {
     storageType: "local",
     defaults: {
       serverPort: 4001,
+      enableNotifications: true,
     },
   })
 
@@ -24,10 +25,11 @@ export class OptionsStore implements IStoredOptionsLoader {
       try {
         e.preventDefault()
         await this.options.setAll(this.options.defaults)
-        q.pushReceived("saved")
 
         // Restart sync to let OptionsStore update the form
         await this.options.syncForm(form)
+
+        q.pushReceived("saved")
       } catch {
         q.pushReceived("error")
       }

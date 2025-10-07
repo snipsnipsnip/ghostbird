@@ -10,7 +10,7 @@ export class ClientOptionsLoader implements IClientOptionsLoader {
   ) {}
 
   async load(): Promise<ClientOptions> {
-    let { serverPort } = await this.storedOptionsLoader.load()
+    let { serverPort, enableNotifications } = await this.storedOptionsLoader.load()
     const extensionId = this.manifestInfo.getId()
     let serverUrl = new URL(`http://localhost:${serverPort}/`)
     let { host } = new URL(`extension://${extensionId}.localhost`)
@@ -18,6 +18,7 @@ export class ClientOptionsLoader implements IClientOptionsLoader {
     return {
       serverUrl,
       clientHostName: host,
+      enableNotifications,
     }
   }
 }
@@ -27,13 +28,19 @@ if (import.meta.vitest) {
 
   describe(ClientOptionsLoader, () => {
     it("should build a ClientOption from storage and manifest info correctly", async () => {
-      const storedOptionsLoader = { load: vi.fn().mockResolvedValue({ serverPort: 1234 }) }
+      const storedOptionsLoader = {
+        load: vi.fn().mockResolvedValue({
+          serverPort: 1234,
+          enableNotifications: true,
+        }),
+      }
       const manifestInfo = { getId: vi.fn().mockReturnValue("@test.extension") }
       const sut = new ClientOptionsLoader(storedOptionsLoader, manifestInfo)
 
       await expect(sut.load()).resolves.deep.equals({
         serverUrl: new URL("http://localhost:1234/"),
         clientHostName: "test.extension.localhost",
+        enableNotifications: true,
       })
     })
   })

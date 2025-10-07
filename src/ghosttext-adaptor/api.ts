@@ -78,7 +78,10 @@ export interface IManifestInfo {
 }
 
 /** Options stored in local storage  */
-export type StoredOptions = { serverPort: number }
+export type StoredOptions = {
+  serverPort: number
+  enableNotifications: boolean
+}
 
 /** * Loads options from storage */
 export interface IStoredOptionsLoader {
