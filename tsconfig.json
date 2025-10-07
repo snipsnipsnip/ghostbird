@@ -28,17 +28,25 @@
   },
   "typedocOptions": {
     "out": "build/doc",
+    "favicon": "ext/blue.svg",
+    "router": "structure",
+    "searchInDocuments": true,
+    "githubPages": false,
+    "customJs": "doc/res/typedoc.cjs",
+    "ignoredHighlightLanguages": [
+      "mermaid"
+    ],
     "entryPoints": [
       "./src/*/index.ts"
-    ],
-    "exclude": [
-      "./src/test/**/*"
     ],
     "projectDocuments": [
       "doc/*.md",
       "ext/*.md",
-      "CONTRIBUTING.md"
+      "CONTRIBUTING.md",
+      "BUILDING.md"
     ],
-    "plugin": []
+    "plugin": [
+      "typedoc-plugin-mdn-links"
+    ]
   }
 }
