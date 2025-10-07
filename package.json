@@ -23,7 +23,6 @@
     "check": "run check-type && biome check --error-on-warnings",
     "fix": "biome check --write",
     "doc": "run check-type && typedoc",
-    "doc:md": "run doc --plugin typedoc-plugin-markdown",
     "postinstall": "run generate-index-ts",
     "format": "biome format --write",
     "lint": "biome lint",
@@ -61,7 +60,7 @@
     }
   },
   "devDependencies": {
-    "@biomejs/biome": "2.2.0",
+    "@biomejs/biome": "^2.2.5",
     "@std/text": "jsr:^1.0.16",
     "@std/toml": "jsr:^1.0.10",
     "@types/node": "^24.3.0",
@@ -72,9 +71,7 @@
     "rolldown": "latest",
     "tsdown": "^0.15.5",
     "typedoc": "^0.28.12",
-    "typedoc-plugin-markdown": "^4.8.1",
-    "typedoc-plugin-mermaid": "^1.12.0",
-    "typescript": "^5.9.2",
+    "typescript": "^5.9.3",
     "vitest": "^3.2.4",
     "web-ext": "^8.10.0",
     "webext-options-sync": "^4.3.0"

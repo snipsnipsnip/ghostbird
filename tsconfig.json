@@ -39,8 +39,6 @@
       "ext/*.md",
       "CONTRIBUTING.md"
     ],
-    "plugin": [
-      "typedoc-plugin-mermaid"
-    ]
+    "plugin": []
   }
 }
