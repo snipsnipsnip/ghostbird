@@ -95,6 +95,18 @@ async function receiveChange(editor: IClientEditor, session: ISession): Promise<
   }
 }
 
+/**
+ * Await a single event from the editor or the session and produce the corresponding command result.
+ *
+ * @param editor - Client editor used to wait for an edit and to pop the last edit when one occurs
+ * @param session - Session used to wait for a server change and to pop the server change when one occurs
+ * @returns A `CommandResult` describing the event:
+ * - `{ type: "clientEdited", edit }` when an editor edit was produced
+ * - `{ type: "serverChanged", change }` when a server change was produced
+ * - `{ type: "editorClosed" }` when the editor closed without an edit
+ * - `{ type: "disconnected" }` when the session disconnected without a change
+ * - `undefined` if an edit/change event was signaled but no payload was available to include.
+ */
 async function receiveChangeOnce(editor: IClientEditor, session: ISession): Promise<CommandResult | undefined> {
   let type = await Promise.race([
     editor.waitEdit().then(
@@ -117,6 +129,10 @@ async function receiveChangeOnce(editor: IClientEditor, session: ISession): Prom
     return { type }
   }
 }
+
+/**
+ * Map a connection status to a user-visible ClientStatus.
+ */
 function translateStatus(s: SessionStatus): ClientStatus {
   switch (s) {
     case "error":
