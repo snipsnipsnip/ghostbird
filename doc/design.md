@@ -39,7 +39,7 @@ subgraph "Background Script"
     bg_router -->|fwd onCommand| notifier --> gtclient --> email_editor
     option_holder -.- gtclient
     gtclient --> connector
-    websocket <--> connector
+    websocket <-.-> connector
 end
 
 subgraph "Compose Window Script"
@@ -51,10 +51,10 @@ subgraph "Compose Window Script"
 end
 
 composeeditor -..->|read/write| compose_dom
-ghost_server <-----> websocket
+ghost_server <-....-> websocket
 thunderbird -- Open --> option
 thunderbird -- Load --> background
-connector <--> Port <--> port_handler
+connector <-.-> Port <-.-> port_handler
 ```
 
 ### Sequence diagram
@@ -158,9 +158,11 @@ This is how user actions are handled:
 
 ### Quirks and limitations
 
-* Because of [MV3 limitations][so], `background.js` may occasionally be suspended (all variables including WebSockets are unloaded, so it's effectively terminated). We do our best to prevent it, but ultimately it's up to Thunderbird.
+* Because of [MV3 limitations][so], `background.js` may occasionally be suspended (all variables including WebSockets are unloaded, so it's effectively terminated).
+  * We do our best to prevent it, but ultimately it's up to Thunderbird.
 * We don't implement reconnecting the WebSocket connection when it is closed abnormally. The user has to click the Ghostbird button again to reconnect.
-* Connections will also closes when the user updates the add-on. It will be handled similarly to `(b)`.
+* Connections will also close when the user updates the add-on.
+  * It will be handled similarly to the case `(b)`.
 * Initially, we don't support edits made in the compose window. We aim to support it in v2.0.0, but copying what the original GhostText add-on does might work well enough. We'll see.
 
 ## Tooling
@@ -170,7 +172,7 @@ This is how user actions are handled:
   * See [CONTRIBUTING.md](../CONTRIBUTING.md#code-style) for the code style.
 
 * [Barrelsby](https://github.com/bencoveney/barrelsby)  generates `index.ts`.
-  * See [`tools/tsdown_config.ts`](../tools/tsdown_config.ts).
+  * See [building.md](./building.md) for details on build script internals.
 
 ## Structure of the code<a name="structure"></a>
 
@@ -314,7 +316,7 @@ TL;DR: `root` module contains entry point and the [Composition Root][ploeh].
   * If `false`, `undefined`, or the property is missing, each argument to the constructor will be an instance of the class that has the name uniquely.
 * A class may define `static aliases: string[] | string` to have the other name.
   * Name clashes will result in error at startup, except ones passed to classes with `wantArray = true`.
-* Use of automatic instantiation must be restricted to `root/*.ts` to make the code easier to follow.
+* Use of automatic instantiation must be restricted to `root/` to make the code easier to follow.
 * `test/startup.test.ts` contains tests to verify that all classes registered can be instantiated successfully.
 * See [FAQ](./faq-architectural.md) for some design decisions and justification.
 

@@ -5,7 +5,7 @@ export default {
   run: {
     // You can use flatpak by specifying "flatpak:org.mozilla.Thunderbird"
     firefox: "/usr/bin/thunderbird",
-    firefoxProfile: "/home/your/.config/your-testing-thunderbird-profile",
+    firefoxProfile: import.meta.dirname + "/.cache/thunderbird-testing-profile/",
     profileCreateIfMissing: true,
     // keepProfileChanges: true,
   },

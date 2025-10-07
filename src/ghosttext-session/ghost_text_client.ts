@@ -25,10 +25,12 @@ export type CommandResult =
   | { type: "disconnected"; error?: Error | undefined }
   | { type: "editorClosed" }
 
+export type GhostTextSession = Generator<Command, SessionStatus, CommandResult>
+
 export class GhostTextClient {
   static isSingleton = true;
 
-  *run(): Generator<Command, SessionStatus, CommandResult> {
+  *run(): GhostTextSession {
     let res = yield { type: "notifyStatus", status: "connecting" }
     if (res?.type !== "statusUpdated") {
       return "error"

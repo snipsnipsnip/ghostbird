@@ -42,13 +42,14 @@ export function wireless<TCatalog>(
   modules: Iterable<Record<string, unknown>>,
   registry: IRegistry<TCatalog>,
 ): WirelessInjector<TCatalog> {
-  let wire = wired(listClasses(modules) as unknown as Iterable<IClassInfo<TCatalog>>, registry)
-
-  // Register the container itself so that we can (ab)use it as a factory
-  registry.set("$wire$" as KeyOf<TCatalog>, ["const", wired as TCatalog[KeyOf<TCatalog>]])
-
-  return <TCtor>(ctor: TCtor, deps?: Iterable<KeyOf<TCatalog>>) =>
+  const wire = wired(listClasses(modules) as unknown as Iterable<IClassInfo<TCatalog>>, registry)
+  const injector: WirelessInjector<TCatalog> = <TCtor>(ctor: TCtor, deps?: Iterable<KeyOf<TCatalog>>) =>
     wire.wire(ctor, deps ?? (parseConstructorForDependencyNames(ctor as new () => unknown) as KeyOf<TCatalog>[]))
+
+  // Register the injector itself so that we can (ab)use it as a factory
+  registry.set("$injector" as KeyOf<TCatalog>, ["const", injector as TCatalog[KeyOf<TCatalog>]])
+
+  return injector
 }
 
 /**

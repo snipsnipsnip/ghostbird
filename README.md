@@ -1,9 +1,9 @@
 # Ghostbird: GhostText for Thunderbird :nest_with_eggs::mailbox::ghost:
 
-[![Supports Thunderbird ESR](https://img.shields.io/badge/supports-Thunderbird_140_ESR-0a84ff?logo=thunderbird&logoSize=auto)][tb]<br>
-[![Status: Beta](https://img.shields.io/badge/project_status-beta-f1b802)][rels]
-[![Latest release](https://img.shields.io/github/v/release/exteditor/ghostbird?include_prereleases&logo=refinedgithub&logoColor=white&logoSize=auto)][rels]<br>
+[![Supports Thunderbird ESR](https://img.shields.io/badge/supports-Thunderbird_140_ESR-0a84ff?logo=thunderbird&logoSize=auto)][tb]
 [![Github Actions Status](https://github.com/exteditor/ghostbird/actions/workflows/build.yml/badge.svg)](https://github.com/exteditor/ghostbird/actions/workflows/build.yml)
+[![Status: Beta](https://img.shields.io/badge/project_status-beta-cce165)][rels]
+[![Latest release](https://img.shields.io/github/v/release/exteditor/ghostbird?include_prereleases&logo=refinedgithub&logoColor=white&logoSize=auto)][rels]
 
 [![Download on AMO](https://raw.githubusercontent.com/thunderbird/webext-support/refs/heads/master/images/get-the-addon.svg)](#installation)
 
@@ -13,14 +13,14 @@ This repo contains an in-development Thunderbird add-on that works as a [GhostTe
 
 ## Requirements
 
-* [Thunderbird 140][tb] (We will mainly support ESR releases)
+* [Thunderbird 140][tb] (We will mainly support the latest ESR)
 * A text editor that has a GhostText server add-on installed and running:
 
   [![Sublime Text][sublimetext-svg]](https://sublime.wbond.net/packages/GhostText)
   [<img width="48" height="48" alt="VSCodium" title="VSCodium" src="https://raw.githubusercontent.com/VSCodium/vscodium.github.io/refs/heads/master/img/codium_cnl.svg" >](https://open-vsx.org/extension/fregante/ghost-text)
   [![Visual Studio Code][vscode-svg]](https://marketplace.visualstudio.com/items?itemName=fregante.ghost-text)
   [![GNU Emacs][emacs-svg]](https://melpa.org/#/atomic-chrome)
-  [![Vim][vim-svg]](https://github.com/raghur/vim-ghost)
+  [![Vim][vim-svg]][vimghost]
   [![Neovim][nvim-svg]](https://github.com/subnut/nvim-ghost.nvim)
   [<img src="https://9fans.github.io/plan9port/dist/spaceglenda100.png" width="48" height="48" alt="Acme" title="Acme">](https://github.com/fhs/Ghost)
   [<img src="https://github.com/user-attachments/assets/b0ca34ed-5508-458f-b7af-2642824bf7f7" width="48" height="48" alt="Helix" title="Helix">][helix]
@@ -56,7 +56,7 @@ Alternatively, you can:
 
 ### Build from source
 
-* Basically, `make` will do, which internally calls `yarn install && yarn build`.
+* Basically, running `make` will do, which is roughly equivalent to `yarn install && yarn build`.
 * See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started.
 
 ## Usage
@@ -68,6 +68,10 @@ Alternatively, you can:
    * If the connection fails, the button will turn red <img src="./ext/red.svg" width="24" height="24" border="1">. Make sure that the GhostText server is listening. See [Troubleshooting page of original GhostText](https://ghosttext.fregante.com/troubleshooting/#unable-to-connect).
 4. Write your email in the text editor.
 5. Close your text editor to stop Ghostbird.
+
+* Example using [Vim-Ghost][vimghost]
+
+  [vimghost.webm](https://github.com/user-attachments/assets/150ef991-10b8-45e2-bb2c-690f1b45a7ea)
 
 * Example using Notepad++ via GhostText-Any
 
@@ -133,7 +137,10 @@ gtClient -->|Updates| mailCompose
 
 ### v0.2.1 (Beta) - Current
 
-* :construction: [Fix empty host field being sent to the server](https://github.com/exteditor/ghostbird/issues/22)
+* :nest_with_eggs: [Fix empty host field being sent to the server](https://github.com/exteditor/ghostbird/issues/22)
+
+### v0.3.0 (Beta) - 2025 Q4
+
 * :construction: [Show notifications](https://github.com/exteditor/ghostbird/issues/24)
 
 ### v0.x.x (Beta) - 2025 Q4
@@ -180,14 +187,15 @@ If you like the idea, please:
 
 We need help with:
 
-* [Website](https://exteditor.github.io/ghostbird/) and materials (Please post [screenshots to the wiki](https://github.com/exteditor/ghostbird/wiki/Screenshots))
+* [Website](https://exteditor.github.io/ghostbird/) and materials (please post [screenshots to the wiki](https://github.com/exteditor/ghostbird/wiki/Screenshots))
+* Translations (check [`locales.toml`](./locales.toml) and let us know of any issues)
 * [Testing with various text editors](https://github.com/exteditor/ghostbird/wiki/TextEditorsKnownToWorkWith)
 * [Testing with various OSes](https://github.com/exteditor/ghostbird/wiki/OSesKnownToWorkWith)
 * Wiki pages for [user guides](https://github.com/exteditor/ghostbird/wiki/HowTo) and [troubleshooting](https://github.com/exteditor/ghostbird/wiki/Troubleshooting)
-* Developing the server counterpart so that this can be used as an External Editor replacement ([GhostText-Any](https://github.com/newsch/GhostText-Any/) or [Helix-Ghost][helix] can be a good starting point)
-* Creating a testing checklist for testing and debugging ([This page](https://github.com/exteditor/exteditor/wiki/Things-to-test) can be a good starting point)
-* Automating tests with the real Thunderbird (See [Testing](./doc/testing.md))
-* Organization members (I want to increase [the bus factor](https://en.wikipedia.org/wiki/Bus_factor) of [the organization](https://github.com/exteditor/))
+* Developing the server counterpart so that this can be used as a replacement for External Editor ([GhostText-Any](https://github.com/newsch/GhostText-Any/) or [Helix-Ghost][helix] can be a good starting point)
+* Creating a checklist for testing and debugging ([This page](https://github.com/exteditor/exteditor/wiki/Things-to-test) can be a good starting point)
+* Automating tests with the actual Thunderbird (See [Testing](./doc/testing.md))
+* Organization members (we want to increase [the organization](https://github.com/exteditor/)'s [bus factor](https://en.wikipedia.org/wiki/Bus_factor))
 
 ## FAQ
 
@@ -260,3 +268,4 @@ Ghostbird is [dual-licensed under (MPL-2.0 OR GPL-3.0-or-later)](./LICENSE). See
 [bird]: https://en.wikipedia.org/wiki/Grey-headed_bushshrike
 [protocol]: https://github.com/fregante/GhostText/blob/refs/heads/main/PROTOCOL.md
 [amo]: https://addons.thunderbird.net/addon/ghostbird/
+[vimghost]: https://github.com/raghur/vim-ghost

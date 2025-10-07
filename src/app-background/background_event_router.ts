@@ -20,6 +20,7 @@ export class BackgroundEventRouter {
     return this.runCommand(command, composeTab)
   }
 
+  /** Executes a command in the context of a compose tab */
   private runCommand(command: string, composeTab: IComposeWindow): Promise<void> {
     switch (command as CommandId) {
       case "start_ghostbird":

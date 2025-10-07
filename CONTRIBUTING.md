@@ -1,6 +1,7 @@
 # Contributing
 
 * Feel free to open issues and submit pull requests.
+* See [Open source etiquette](https://developer.mozilla.org/docs/MDN/Community/Open_source_etiquette) for general guidelines.
 * By contributing, you agree that your contributions will be [dual-licensed under MPL-2.0 OR GPL-3.0-or-later](./LICENSE).
 
 [![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/exteditor/ghostbird?quickstart=1)

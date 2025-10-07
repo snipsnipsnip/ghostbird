@@ -27,7 +27,7 @@ export interface IAlarmsAPI {
 /**
  * Details about the alarm.
  */
-type AlarmInfo = {
+export type AlarmInfo = {
   /** Number of minutes from the current time after which the alarm should first fire.*/ delayInMinutes: number
   /** Number of minutes after which the alarm should recur repeatedly. */
   periodInMinutes: number
@@ -36,7 +36,7 @@ type AlarmInfo = {
 }
 
 /** The alarm that has expired. */
-type Alarm = {
+export type Alarm = {
   /** Name of this alarm. */
   name: string
   /** Time when the alarm is scheduled to fire, in milliseconds past the epoch.*/

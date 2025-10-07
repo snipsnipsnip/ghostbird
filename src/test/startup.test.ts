@@ -130,13 +130,15 @@ function makeDummyMessenger(): Record<string, symbol> {
   return Object.fromEntries(namespaces.map((name) => [name, Symbol(`dummy messenger.${name}`)]))
 }
 
+/** Determine which module a name belongs to. */
 function findModule(name: string, deps: string[]): string {
   if (name.endsWith(".ts")) {
     return "root/"
   }
   let mod = Object.entries(modules).find(([_, v]) => name in v)?.[0]
   if (!mod) {
-    if (deps.length) {
+    const hasDependency = deps.length
+    if (hasDependency) {
       return "(alias)"
     } else {
       return "(const)"
@@ -145,29 +147,27 @@ function findModule(name: string, deps: string[]): string {
   return `${toKebabCase(mod)}/`
 }
 
+/** Parse the class source and return the part after the constructor */
 function sliceSourceAfterCtor(ctor: new () => unknown): string {
   let source = `${ctor}`
   let m = /\bconstructor\s*[(]\s*[{]?\s*[^{]+[{][^}]+[}]/d.exec(source)
-  if (!m || !m[0]) {
-    return ""
-  }
 
-  return source.slice(m.index + m[0].length)
+  return m?.[0] ? source.slice(m.index + m[0].length) : ""
 }
 
+/** Checks if all dependencies are used in class */
 function checkDependencyUsage(registry: Map<string, AnyEntry>): void {
-  for (const [name, v] of registry) {
-    const [method, arg] = v
+  for (const [name, [method, arg]] of registry) {
     if (method !== "prepareOne" || arg.deps.length === 0) {
       continue
     }
-    let { ctor } = arg
+    let { ctor, deps } = arg
     let body = sliceSourceAfterCtor(ctor)
     if (!body) {
-      throw Error(`Failed to parse entry [${name}]`)
+      throw Error(`Failed to parse the entry. Is it a ES class? [${name}]`)
     }
-    for (let dep of arg.deps) {
-      expect(body).to.include(`this.${dep}`, `class ${name} should use this.${dep}`)
+    for (let dep of deps) {
+      expect.soft(body).includes(`this.${dep}`, `class ${name} should use this.${dep}`)
     }
   }
 }
