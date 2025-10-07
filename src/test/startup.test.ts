@@ -42,6 +42,7 @@ describe("startup", () => {
     ["domParser", ["const", Symbol("domParser")]],
     ["selection", ["const", Symbol("selection")]],
     ["heart", ["const", Symbol("heart")]],
+    ["optionsSyncCtor", ["const", Symbol("optionsSyncCtor")]],
   ]
 
   test("All collected classes should be resolvable", () => {

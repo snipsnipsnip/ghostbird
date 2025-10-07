@@ -7,12 +7,16 @@ import * as session from "src/ghosttext-session"
 import type { WirelessInjector } from "src/root/util"
 import { makeRegistry } from "src/root/util/registry"
 import { wireless } from "src/root/util/wireless"
-import { AlarmHeart } from "src/thunderbird"
+import type { AlarmHeart } from "src/thunderbird"
 import * as thunderbirdBackground from "src/thunderbird/background_util"
+import type OptionsSync from "webext-options-sync"
+
+export { AlarmHeart } from "src/thunderbird/background_util/alarm_heart"
 
 export type BackgroundConstants = {
   messenger: typeof globalThis.messenger
   heart: AlarmHeart
+  optionsSyncCtor: typeof OptionsSync
 }
 
 export type BackgroundCatalog = BackgroundConstants & {
@@ -24,12 +28,11 @@ export type BackgroundCatalog = BackgroundConstants & {
 export const startupBackground = (consts: BackgroundConstants): WirelessInjector<BackgroundCatalog> =>
   wireless([thunderbirdBackground, appBackground, adaptor, runner, session], makeRegistry(consts as BackgroundCatalog))
 
-export function prepareBackgroundRouter(): BackgroundEventRouter {
-  let heart = new AlarmHeart(messenger)
-  let startup = startupBackground({ messenger, heart })
+export function prepareBackgroundRouter(consts: BackgroundConstants): BackgroundEventRouter {
+  let startup = startupBackground(consts)
 
   // Set the ready flag that promises the alarm event handler is registered
-  heart.assumeReady()
+  consts.heart.assumeReady()
 
   return startup(BackgroundEventRouter)
 }

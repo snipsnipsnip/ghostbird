@@ -4,8 +4,11 @@ import type { WirelessInjector } from "src/root/util"
 import { makeRegistry } from "src/root/util/registry"
 import { wireless } from "src/root/util/wireless"
 import * as thunderbirdOptions from "src/thunderbird/options_util"
+import type OptionsSync from "webext-options-sync"
 
-export type OptionsConstants = object
+export type OptionsConstants = {
+  optionsSyncCtor: typeof OptionsSync
+}
 
 export type OptionsCatalog = OptionsConstants & {
   optionsStore: IOptionsStore

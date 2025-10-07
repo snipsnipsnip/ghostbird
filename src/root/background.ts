@@ -9,9 +9,13 @@ import { type LazyThen, makeLazyThen } from "src/util/lazy_then"
 console.info("starting", import.meta.url)
 
 const prepareThen: LazyThen<BackgroundEventRouter> = makeLazyThen(async () => {
-  let { prepareBackgroundRouter } = await import("./startup/startup_background")
+  let [{ prepareBackgroundRouter, AlarmHeart }, { default: optionsSyncCtor }] = await Promise.all([
+    import("./startup/startup_background"),
+    import("webext-options-sync"),
+  ])
+  let heart = new AlarmHeart(messenger)
 
-  return prepareBackgroundRouter()
+  return prepareBackgroundRouter({ messenger, heart, optionsSyncCtor })
 })
 
 messenger.composeAction.onClicked.addListener((tab, _info): Promise<void> | void =>
