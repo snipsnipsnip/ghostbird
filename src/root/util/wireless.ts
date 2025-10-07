@@ -36,7 +36,11 @@ export type WirelessInjector<TCatalog> = <TCtor>(
 ) => Resolved<TCatalog, TCtor>
 
 /**
- * Collects available classes from given module objects to make a factory.
+ * Creates a convention-based injector by scanning modules for startup classes and wiring constructors with resolved dependencies.
+ *
+ * @param modules - Iterable of module objects to scan for startup classes and their metadata
+ * @param registry - Registry used to resolve dependencies and that will receive the created injector under the key `"$injector"`
+ * @returns A `WirelessInjector` function that, given a constructor and optional dependency keys, returns a resolved instance for the catalog
  */
 export function wireless<TCatalog>(
   modules: Iterable<Record<string, unknown>>,

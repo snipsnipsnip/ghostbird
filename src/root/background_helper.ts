@@ -10,10 +10,10 @@ let routerCache: BackgroundEventRouter | undefined
 let routerPromise: Promise<BackgroundEventRouter> | undefined
 
 /**
- * Executes a handler function with the background event router.
+ * Ensure a BackgroundEventRouter is available and invoke the given handler with it.
  *
- * @param handler The function to execute with the router
- * @returns A promise that resolves when the handler completes, or undefined if an error occurs
+ * @param handler - Function invoked with the prepared BackgroundEventRouter
+ * @returns a promise when the handler is running async or the BackgroundEventRouter has been initialized, or `undefined` if finished synchronously
  */
 export function withRouter(handler: RouterHandler): Promise<void> | undefined {
   if (routerCache) {
@@ -31,11 +31,11 @@ export function withRouter(handler: RouterHandler): Promise<void> | undefined {
 }
 
 /**
- * Executes a handler function synchronously with the provided router.
+ * Invokes the provided handler with the given BackgroundEventRouter and returns the handler's result.
  *
- * @param handler The function to execute with the router
- * @param router The background event router to use
- * @returns A promise that resolves when the handler completes, or undefined if an error occurs
+ * @param handler - The function to execute with the router
+ * @param router - The background event router to pass to `handler`
+ * @returns A promise or an undefined returned by `handler`
  */
 function runHandler(handler: RouterHandler, router: BackgroundEventRouter): Promise<void> | undefined {
   try {
