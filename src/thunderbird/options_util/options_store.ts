@@ -1,18 +1,27 @@
+import type { IOptionsStore } from "src/app-options"
 import type { IStoredOptionsLoader, StoredOptions } from "src/ghosttext-adaptor"
 import { PromisifyingQueue } from "src/util"
-import OptionsSync from "webext-options-sync"
+import type OptionsSync from "webext-options-sync"
 
 /** A wrapper of OptionsSync responsible for loading and saving options from storage */
-export class OptionsStore implements IStoredOptionsLoader {
+export class OptionsStore implements IStoredOptionsLoader, IOptionsStore {
   static isSingleton = true
   static aliases = ["StoredOptionsLoader"]
 
-  private readonly options = new OptionsSync<StoredOptions>({
-    storageType: "local",
-    defaults: {
-      serverPort: 4001,
-    },
-  })
+  private optionsSync: OptionsSync<StoredOptions> | undefined
+
+  constructor(private readonly optionsSyncCtor: typeof OptionsSync) {}
+
+  private get options(): OptionsSync<StoredOptions> {
+    this.optionsSync ??= new this.optionsSyncCtor({
+      storageType: "local",
+      defaults: {
+        serverPort: 4001,
+        enableNotifications: true,
+      },
+    })
+    return this.optionsSync
+  }
 
   load(): Promise<StoredOptions> {
     return this.options.getAll()
@@ -24,10 +33,11 @@ export class OptionsStore implements IStoredOptionsLoader {
       try {
         e.preventDefault()
         await this.options.setAll(this.options.defaults)
-        q.pushReceived("saved")
 
         // Restart sync to let OptionsStore update the form
         await this.options.syncForm(form)
+
+        q.pushReceived("saved")
       } catch {
         q.pushReceived("error")
       }

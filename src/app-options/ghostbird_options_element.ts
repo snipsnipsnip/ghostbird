@@ -10,24 +10,32 @@ export class GhostbirdOptionsElement extends HTMLElement {
   }
 
   async startSync(optionsStore: IOptionsStore): Promise<never> {
-    let q = await optionsStore.syncForm(this.optionForm)
-
+    let form = this.optionForm
     let progress = this.progress
+    let q = await optionsStore.syncForm(form)
+
     for (;;) {
       await q.waitReady()
+      let msg = q.dequeueReceived()
 
       progress.classList.remove("saved", "error")
 
-      // Yield to separate tasks for removing and adding of the class
+      // Yield to reflect the change to DOM
       await Promise.resolve()
 
-      let msg = q.dequeueReceived()
       switch (msg) {
         case "saved":
-          progress.classList.add("saved")
-          break
         case "error":
-          progress.classList.add("error")
+          if (!form.checkValidity()) {
+            // When the form is invalid, OptionsSync keeps the last valid value
+            // which results in "saved". We want to show error instead
+            msg = "error"
+          }
+
+          progress.classList.add(msg)
+          break
+        default:
+          console.warn("unknown message", msg)
           break
       }
     }

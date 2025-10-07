@@ -8,6 +8,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises"
 import { dirname, join } from "node:path"
 import { env } from "node:process"
 import { parse } from "@std/toml"
+import { globIterate } from "glob"
 import type { LocalesTomlContent } from "src/util/types"
 
 /**
@@ -29,10 +30,10 @@ export async function writeText(path: string, data: string): Promise<void> {
 
 /**
  * Loads a text file
- * @param path Relative path to the directory containing this module.
+ * @param path Absolute path to the text file
  */
 export function loadText(path: string): Promise<string> {
-  return readFile(join(__dirname, path), { encoding: "utf8" })
+  return readFile(path, { encoding: "utf8" })
 }
 
 /**
@@ -40,7 +41,7 @@ export function loadText(path: string): Promise<string> {
  * @param tomlPath Relative path to the directory containing this module.
  */
 async function loadToml(tomlPath: string): Promise<Record<string, unknown>> {
-  let tomlText = await loadText(tomlPath)
+  let tomlText = await loadText(join(__dirname, tomlPath))
   return parse(tomlText)
 }
 
@@ -55,5 +56,14 @@ export function loadLocalesToml(): Promise<LocalesTomlContent> {
  * Loads `options.css`
  */
 export function loadOptionsCss(): Promise<string> {
-  return loadText("../../ext/options.css")
+  return loadText(join(__dirname, "../../ext/options.css"))
+}
+/**
+ * Loads source files recursively under the directory
+ * @param glob Glob pattern relative to the directory containing this module.
+ */
+export async function* loadSourceTexts(glob: string): AsyncIterable<string> {
+  for await (let path of globIterate(join(__dirname, glob))) {
+    yield loadText(path)
+  }
 }
