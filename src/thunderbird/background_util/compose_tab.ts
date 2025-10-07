@@ -6,16 +6,12 @@ import { PromisifiedPort } from "src/thunderbird/util/promisified_port"
 
 export class ComposeTab implements IComposeWindow {
   constructor(
-    private readonly id: number,
+    readonly tabId: number,
     private readonly tabs: typeof messenger.tabs,
     private readonly scripting: IScriptingAPI,
     private readonly compose: typeof messenger.compose,
     private readonly composeAction: typeof messenger.composeAction,
   ) {}
-
-  get tabId(): number {
-    return this.id
-  }
 
   async prepareContentScript(): Promise<boolean> {
     console.info("Pinging the content script...")
@@ -28,7 +24,7 @@ export class ComposeTab implements IComposeWindow {
     console.info("No pong. initializing...")
 
     const result = await this.scripting.executeScript({
-      target: { tabId: this.id },
+      target: { tabId: this.tabId },
       injectImmediately: true,
       files: ["js/compose.js"],
     })
@@ -38,7 +34,7 @@ export class ComposeTab implements IComposeWindow {
   }
 
   async getDetails(): Promise<ComposeDetails> {
-    let orig = await this.compose.getComposeDetails(this.id)
+    let orig = await this.compose.getComposeDetails(this.tabId)
     let { isPlainText, subject, plainTextBody, body } = orig
     console.log({ orig })
     body = isPlainText ? plainTextBody : body
@@ -51,22 +47,26 @@ export class ComposeTab implements IComposeWindow {
     // TODO edit address lines
     let details: messenger.compose.ComposeDetails = { subject }
 
-    return this.compose.setComposeDetails(this.id, details)
+    return this.compose.setComposeDetails(this.tabId, details)
   }
 
   private send<const TType extends keyof MessagesFromBackground>(
     message: TType,
   ): Promise<MessagesFromBackground[TType]> {
-    return this.tabs.sendMessage(this.id, message)
+    return this.tabs.sendMessage(this.tabId, message)
   }
 
   openPort(): IGhostServerPort {
-    return PromisifiedPort.listenTo(this.tabs.connect(this.id))
+    return PromisifiedPort.listenTo(
+      this.tabs.connect(this.tabId, {
+        name: import.meta.url,
+      }),
+    )
   }
 
   setIcon(path: string): Promise<void> {
     return this.composeAction.setIcon({
-      tabId: this.id,
+      tabId: this.tabId,
       path,
     })
   }
