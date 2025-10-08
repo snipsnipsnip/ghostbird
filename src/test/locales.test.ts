@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest"
 import * as manifest from "../../manifest_template.json"
-import { loadLocalesToml, loadOptionsCss, loadSourceTexts } from "./testutil"
+import { loadLocalesToml, loadOptionsCss, loadSourceTexts } from "./util/io"
 
 describe("locales.toml", () => {
   it("should not have any unused message ids and vice versa", async () => {
@@ -20,7 +20,7 @@ describe("locales.toml", () => {
 
 async function loadIdsUsedInSource(): Promise<Set<string>> {
   let ids = new Set<string>()
-  for await (const id of collectIds(loadSourceTexts("../{root,ghosttext-adaptor}/**/*.ts"))) {
+  for await (const id of collectIds(loadSourceTexts("src/{root,ghosttext-adaptor}/**/*.ts"))) {
     ids.add(id)
   }
   return ids

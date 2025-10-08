@@ -11,7 +11,7 @@ import * as thunderbird from "src/thunderbird"
 import * as util from "src/util"
 import { CaseFoldingSet } from "src/util"
 import { describe, expect, test } from "vitest"
-import { writeText } from "./testutil"
+import { writeText } from "./util/io"
 
 type AnyEntry = ResolveQuery<Record<string, unknown>>
 
