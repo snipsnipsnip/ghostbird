@@ -1,6 +1,6 @@
 /**
  * @file Utility functions for tests.
- * Use of node.js functions should be limited to this module so that test cases can concentrate on the logic being
+ * Use of node.js functions should be limited under test/util/ so that test cases can concentrate on the logic being
  * tested rather than on dealing with the environment.
  */
 
@@ -38,10 +38,10 @@ export function loadText(path: string): Promise<string> {
 
 /**
  * Loads a TOML file
- * @param tomlPath Relative path to the directory containing this module.
+ * @param tomlPath Absolute path to the toml file
  */
 async function loadToml(tomlPath: string): Promise<Record<string, unknown>> {
-  let tomlText = await loadText(join(__dirname, tomlPath))
+  let tomlText = await loadText(tomlPath)
   return parse(tomlText)
 }
 
@@ -49,21 +49,22 @@ async function loadToml(tomlPath: string): Promise<Record<string, unknown>> {
  * Loads `locales.toml`
  */
 export function loadLocalesToml(): Promise<LocalesTomlContent> {
-  return loadToml("../../locales.toml") as Promise<LocalesTomlContent>
+  return loadToml(join(__dirname, "../../../locales.toml")) as Promise<LocalesTomlContent>
 }
 
 /**
  * Loads `options.css`
  */
 export function loadOptionsCss(): Promise<string> {
-  return loadText(join(__dirname, "../../ext/options.css"))
+  return loadText(join(__dirname, "../../../ext/options.css"))
 }
+
 /**
  * Loads source files recursively under the directory
- * @param glob Glob pattern relative to the directory containing this module.
+ * @param glob Glob pattern relative to the `package.json`.
  */
 export async function* loadSourceTexts(glob: string): AsyncIterable<string> {
-  for await (let path of globIterate(join(__dirname, glob))) {
+  for await (let path of globIterate(join(__dirname, "../../..", glob))) {
     yield loadText(path)
   }
 }

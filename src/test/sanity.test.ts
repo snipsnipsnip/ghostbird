@@ -10,11 +10,11 @@ import { BackgroundEventRouter } from "src/app-background/background_event_route
 import { ComposeEventRouter } from "src/app-compose/compose_event_router"
 import { OptionsEventRouter } from "src/app-options/options_event_router"
 import { AlarmHeart, prepareBackgroundRouter, startupCompose, startupOptions } from "src/root/startup"
-import { describe, expect, it } from "vitest"
+import { describe, it } from "vitest"
 import type OptionsSync from "webext-options-sync"
 
 describe(prepareBackgroundRouter, () => {
-  it("should resolve BackgroundEventRouter successfully", () => {
+  it("should resolve BackgroundEventRouter successfully", ({ expect }) => {
     let messenger = Symbol("messenger") as unknown as typeof globalThis.messenger
     let router = prepareBackgroundRouter({
       messenger,
@@ -26,7 +26,7 @@ describe(prepareBackgroundRouter, () => {
 })
 
 describe(startupCompose, () => {
-  it("should resolve ComposeEventRouter successfully", () => {
+  it("should resolve ComposeEventRouter successfully", ({ expect }) => {
     let startup = startupCompose({
       messenger: Symbol("messenger") as unknown as typeof messenger,
       body: Symbol("body"),
@@ -38,7 +38,7 @@ describe(startupCompose, () => {
 })
 
 describe(startupOptions, () => {
-  it("should resolve OptionsEventRouter successfully", () => {
+  it("should resolve OptionsEventRouter successfully", ({ expect }) => {
     let startup = startupOptions({
       optionsSyncCtor: Symbol("optionsSyncCtor") as unknown as typeof OptionsSync,
     })

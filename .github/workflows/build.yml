@@ -49,6 +49,14 @@ jobs:
     - name: Bundle
       run: corepack yarn build-js
 
+    - name: Add test result to artifact
+      run: |
+        if [ -d build/test/ ]; then
+          mv build/test/ dist/ext/test-result
+        else
+          echo "Warning: build/test/ directory not found, skipping test result artifact"
+        fi
+
     - name: Upload artifact
       uses: actions/upload-artifact@v4
       with:

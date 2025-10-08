@@ -74,6 +74,7 @@
     "glob": "^10",
     "jsdom": "^26.1.0",
     "rolldown": "latest",
+    "toposort-class": "^1.0.1",
     "tsdown": "^0.15.5",
     "typedoc": "^0.28.12",
     "typedoc-plugin-mdn-links": "^5.0.9",

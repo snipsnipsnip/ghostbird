@@ -1,19 +1,15 @@
-import { toKebabCase } from "@std/text"
 import * as appBackground from "src/app-background"
 import * as appCompose from "src/app-compose"
 import * as appOptions from "src/app-options"
 import * as ghosttextAdaptor from "src/ghosttext-adaptor"
 import * as ghosttextRunner from "src/ghosttext-runner"
 import * as ghosttextSession from "src/ghosttext-session"
-import type { ResolveQuery } from "src/root"
 import { wireless } from "src/root/util"
 import * as thunderbird from "src/thunderbird"
 import * as util from "src/util"
-import { CaseFoldingSet } from "src/util"
-import { describe, expect, test } from "vitest"
-import { writeText } from "./testutil"
-
-type AnyEntry = ResolveQuery<Record<string, unknown>>
+import { describe, type ExpectStatic, test } from "vitest"
+import { type AnyEntry, type AnyModules, collectDependencies, dumpDependencies } from "./util/dependency_reporter"
+import { writeText } from "./util/io"
 
 class TestRegistry extends util.CaseFoldingMap<AnyEntry> {
   override set(key: string, value: AnyEntry): this {
@@ -25,7 +21,7 @@ class TestRegistry extends util.CaseFoldingMap<AnyEntry> {
   }
 }
 
-const modules: Record<string, Record<string, unknown>> = {
+const modules: AnyModules = {
   appOptions,
   ghosttextSession,
   appBackground,
@@ -45,7 +41,7 @@ describe("startup", () => {
     ["optionsSyncCtor", ["const", Symbol("optionsSyncCtor")]],
   ]
 
-  test("All collected classes should be resolvable", () => {
+  test("All collected classes should be resolvable", ({ expect }) => {
     const registry = new TestRegistry(constants)
     const wire = wireless(Object.values(modules), registry)
 
@@ -56,96 +52,25 @@ describe("startup", () => {
     expect(all.every((x) => x)).toBeTruthy()
   })
 
-  test("All collected classes won't use given dependency in constructor immediately, but refers to it later", async () => {
+  test("All collected classes refers to given dependencies", async ({ expect }) => {
     const registry = new Map(constants)
     wireless(Object.values(modules), registry)
 
-    checkDependencyUsage(registry)
+    checkDependencyUsage(expect, registry)
 
-    // Adjacency list with some non-class entry for starting points
-    const depList = [
-      ["background.ts", "BackgroundEventRouter"],
-      ["compose.ts", "ComposeEventRouter"],
-      ["options.ts", "OptionsEventRouter"],
-      ...collectDeps(registry),
-    ] as [string, ...string[]][]
+    // Adjacency list
+    let deps = [...collectDependencies(registry)].sort()
 
-    await dumpTree("dependency_tree.mermaid", depList)
+    const dump = dumpDependencies(deps, registry, modules)
+
+    await writeText("dependency_tree.md", dump)
   })
 })
-
-/** Collect dependencies by inspecting the registry entries. */
-function* collectDeps(registry: Map<string, AnyEntry>): Generator<[string, ...string[]]> {
-  let knownNames = new CaseFoldingSet()
-  let requiredNames = new CaseFoldingSet()
-  for (let [k, v] of registry) {
-    const [method, arg] = v
-
-    knownNames.add(k)
-
-    switch (method) {
-      case "const":
-        yield [k]
-        break
-      case "prepareOne":
-        yield [k, ...arg.deps]
-        for (let dep of arg.deps) {
-          requiredNames.add(dep)
-        }
-        break
-      case "resolveAll":
-        yield [k, ...arg]
-        for (let dep of arg) {
-          requiredNames.add(dep)
-        }
-        break
-      case "resolveOne":
-        yield [k, arg]
-        requiredNames.add(arg)
-        break
-      default:
-        throw Error("unexpected command name")
-    }
-  }
-
-  let missingNames = requiredNames.difference(knownNames)
-  if (missingNames.size) {
-    throw Error(`Missing definitions: ${Array.from(missingNames)}`)
-  }
-}
-
-/**
- * Write out the dependency tree to the file in mermaid syntax.
- */
-async function dumpTree(fileName: string, deps: [string, ...string[]][]): Promise<void> {
-  let nodeLines = deps.map(([name, ...deps]) => `${name.toLowerCase()}["${findModule(name, deps)}<br>${name}"]`)
-  let graphLines = deps.flatMap(([name, ...deps]) => (deps.length === 0 ? [] : [`${name} --> ${deps.join(" & ")}`]))
-  let text = ["flowchart LR", ...nodeLines.sort(), graphLines.sort().join("\n").toLowerCase()].join("\n")
-
-  await writeText(fileName, text)
-}
 
 function makeDummyMessenger(): Record<string, symbol> {
   const namespaces = ["runtime", "tabs", "commands", "composeAction", "scripting"] as const
 
   return Object.fromEntries(namespaces.map((name) => [name, Symbol(`dummy messenger.${name}`)]))
-}
-
-/** Determine which module a name belongs to. */
-function findModule(name: string, deps: string[]): string {
-  if (name.endsWith(".ts")) {
-    return "root/"
-  }
-  let mod = Object.entries(modules).find(([_, v]) => name in v)?.[0]
-  if (!mod) {
-    const hasDependency = deps.length
-    if (hasDependency) {
-      return "(alias)"
-    } else {
-      return "(const)"
-    }
-  }
-  return `${toKebabCase(mod)}/`
 }
 
 /** Parse the class source and return the part after the constructor */
@@ -157,7 +82,7 @@ function sliceSourceAfterCtor(ctor: new () => unknown): string {
 }
 
 /** Checks if all dependencies are used in class */
-function checkDependencyUsage(registry: Map<string, AnyEntry>): void {
+function checkDependencyUsage(expect: ExpectStatic, registry: Map<string, AnyEntry>): void {
   for (const [name, [method, arg]] of registry) {
     if (method !== "prepareOne" || arg.deps.length === 0) {
       continue
