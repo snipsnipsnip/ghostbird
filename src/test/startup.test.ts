@@ -10,7 +10,7 @@ import { wireless } from "src/root/util"
 import * as thunderbird from "src/thunderbird"
 import * as util from "src/util"
 import { CaseFoldingSet } from "src/util"
-import { describe, expect, test } from "vitest"
+import { describe, type ExpectStatic, test } from "vitest"
 import { caseInsensitiveToposort } from "./util/case_insensitive_toposort"
 import { writeText } from "./util/io"
 
@@ -46,7 +46,7 @@ describe("startup", () => {
     ["optionsSyncCtor", ["const", Symbol("optionsSyncCtor")]],
   ]
 
-  test("All collected classes should be resolvable", () => {
+  test("All collected classes should be resolvable", ({ expect }) => {
     const registry = new TestRegistry(constants)
     const wire = wireless(Object.values(modules), registry)
 
@@ -57,11 +57,11 @@ describe("startup", () => {
     expect(all.every((x) => x)).toBeTruthy()
   })
 
-  test("All collected classes won't use given dependency in constructor immediately, but refers to it later", async () => {
+  test("All collected classes refers to given dependencies", async ({ expect }) => {
     const registry = new Map(constants)
     wireless(Object.values(modules), registry)
 
-    checkDependencyUsage(registry)
+    checkDependencyUsage(expect, registry)
 
     // Adjacency list
     let deps = [...collectDeps(registry)].sort()
@@ -184,7 +184,7 @@ function sliceSourceAfterCtor(ctor: new () => unknown): string {
 }
 
 /** Checks if all dependencies are used in class */
-function checkDependencyUsage(registry: Map<string, AnyEntry>): void {
+function checkDependencyUsage(expect: ExpectStatic, registry: Map<string, AnyEntry>): void {
   for (const [name, [method, arg]] of registry) {
     if (method !== "prepareOne" || arg.deps.length === 0) {
       continue

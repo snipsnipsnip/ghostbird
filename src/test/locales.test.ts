@@ -1,9 +1,9 @@
-import { describe, expect, it } from "vitest"
+import { describe, it } from "vitest"
 import * as manifest from "../../manifest_template.json"
 import { loadLocalesToml, loadOptionsCss, loadSourceTexts } from "./util/io"
 
 describe("locales.toml", () => {
-  it("should not have any unused message ids and vice versa", async () => {
+  it("should not have any unused message ids and vice versa", async ({ expect }) => {
     let [localeIds, cssIds, manifestIds, srcIds] = await Promise.all([
       loadIdsDefinedInLocales(),
       loadIdsUsedInCss(),
