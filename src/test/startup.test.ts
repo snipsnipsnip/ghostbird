@@ -62,20 +62,23 @@ describe("startup", () => {
 
     checkDependencyUsage(registry)
 
-    // Adjacency list with some non-class entry for starting points
+    // Adjacency list
+    let deps = [...collectDeps(registry)].sort()
+
+    // Add some non-class entry for starting points
     const depList = [
-      ["background.ts", "BackgroundEventRouter"],
-      ["compose.ts", "ComposeEventRouter"],
-      ["options.ts", "OptionsEventRouter"],
-      ...collectDeps(registry),
-    ] as [string, ...string[]][]
+      ["background.ts", ["BackgroundEventRouter"]],
+      ["compose.ts", ["ComposeEventRouter"]],
+      ["options.ts", ["OptionsEventRouter"]],
+      ...deps,
+    ] as [string, string[]][]
 
     await dumpTree("dependency_tree.mermaid", depList)
   })
 })
 
 /** Collect dependencies by inspecting the registry entries. */
-function* collectDeps(registry: Map<string, AnyEntry>): Generator<[string, ...string[]]> {
+function* collectDeps(registry: Map<string, AnyEntry>): Generator<[string, string[]]> {
   let knownNames = new CaseFoldingSet()
   let requiredNames = new CaseFoldingSet()
   for (let [k, v] of registry) {
@@ -85,22 +88,22 @@ function* collectDeps(registry: Map<string, AnyEntry>): Generator<[string, ...st
 
     switch (method) {
       case "const":
-        yield [k]
+        yield [k, []]
         break
       case "prepareOne":
-        yield [k, ...arg.deps]
+        yield [k, arg.deps]
         for (let dep of arg.deps) {
           requiredNames.add(dep)
         }
         break
       case "resolveAll":
-        yield [k, ...arg]
+        yield [k, [...arg]]
         for (let dep of arg) {
           requiredNames.add(dep)
         }
         break
       case "resolveOne":
-        yield [k, arg]
+        yield [k, [arg]]
         requiredNames.add(arg)
         break
       default:
@@ -117,9 +120,9 @@ function* collectDeps(registry: Map<string, AnyEntry>): Generator<[string, ...st
 /**
  * Write out the dependency tree to the file in mermaid syntax.
  */
-async function dumpTree(fileName: string, deps: [string, ...string[]][]): Promise<void> {
-  let nodeLines = deps.map(([name, ...deps]) => `${name.toLowerCase()}["${findModule(name, deps)}<br>${name}"]`)
-  let graphLines = deps.flatMap(([name, ...deps]) => (deps.length === 0 ? [] : [`${name} --> ${deps.join(" & ")}`]))
+async function dumpTree(fileName: string, deps: [string, string[]][]): Promise<void> {
+  let nodeLines = deps.map(([name, deps]) => `${name.toLowerCase()}["${findModule(name, deps)}<br>${name}"]`)
+  let graphLines = deps.flatMap(([name, deps]) => (deps.length === 0 ? [] : [`${name} --> ${deps.join(" & ")}`]))
   let text = ["flowchart LR", ...nodeLines.sort(), graphLines.sort().join("\n").toLowerCase()].join("\n")
 
   await writeText(fileName, text)
