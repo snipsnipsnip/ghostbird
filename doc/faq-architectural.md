@@ -10,17 +10,24 @@
 * Maybe, but it only automates the `new` calls. Constructors are still explicit about their dependencies.
 * You can still search for type names mentioned in constructor parameters.
 
+### Automates the `new`? Don't you lose type safety?
+
+* Yes. We handle this partially by running tests that verify that all dependencies can be instantiated.
+  * You can run them by `yarn test sanity`, but `yarn build` also runs them.
+  * See [`sanity.test.ts`](../src/test/sanity.test.ts).
+
 ### Isn't it a bit hacky to use `static` properties?
 
 * Yes. We might switch to decorators in the future when they become natively supported in Thunderbird.
 
 ### How do you find out what classes are instantiated?
 
-* After running `yarn test`, `build/test/dependency_tree.mermaid` is generated, which shows the dependency tree of all classes with `static isSingleton` defined.
+* After running `yarn test`, `build/test/dependency_tree.md` is generated, which shows the dependency tree of all classes with `static isSingleton` defined.
 
 ### How does automatic instantiation help with maintainability?
 
-* It makes coding less boring by automating a necessary coding task that occurs often: passing objects around to call their methods. I like to think of it as being similar to generating a Makefile. It's not a panacea, but I think it has some effect to extend lifespan of the code until it becomes unmaintainable due to the scale.
+* It makes coding less boring by automating a necessary coding task that occurs often: passing objects around to call their methods.
+  * I like to think of it as being similar to generating a Makefile. It's not a panacea, but I think it has some effect to extend lifespan of the code until it becomes unmaintainable due to the scale.
 * It nudges us to adhere to the [Dependency Inversion Principle][dip].
 
 ### How does DIP help with maintainability?

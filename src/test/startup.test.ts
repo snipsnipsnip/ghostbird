@@ -1,4 +1,4 @@
-import { toKebabCase } from "@std/text"
+import { toCamelCase, toKebabCase } from "@std/text"
 import * as appBackground from "src/app-background"
 import * as appCompose from "src/app-compose"
 import * as appOptions from "src/app-options"
@@ -11,6 +11,7 @@ import * as thunderbird from "src/thunderbird"
 import * as util from "src/util"
 import { CaseFoldingSet } from "src/util"
 import { describe, expect, test } from "vitest"
+import { caseInsensitiveToposort } from "./util/case_insensitive_toposort"
 import { writeText } from "./util/io"
 
 type AnyEntry = ResolveQuery<Record<string, unknown>>
@@ -73,7 +74,10 @@ describe("startup", () => {
       ...deps,
     ] as [string, string[]][]
 
-    await dumpTree("dependency_tree.mermaid", depList)
+    let mermaid = makeMermaid(depList)
+    let startupCode = dumpStartupCode(deps, registry)
+
+    await dumpTree("dependency_tree.md", mermaid, startupCode)
   })
 })
 
@@ -120,12 +124,32 @@ function* collectDeps(registry: Map<string, AnyEntry>): Generator<[string, strin
 /**
  * Write out the dependency tree to the file in mermaid syntax.
  */
-async function dumpTree(fileName: string, deps: [string, string[]][]): Promise<void> {
-  let nodeLines = deps.map(([name, deps]) => `${name.toLowerCase()}["${findModule(name, deps)}<br>${name}"]`)
-  let graphLines = deps.flatMap(([name, deps]) => (deps.length === 0 ? [] : [`${name} --> ${deps.join(" & ")}`]))
-  let text = ["flowchart LR", ...nodeLines.sort(), graphLines.sort().join("\n").toLowerCase()].join("\n")
+async function dumpTree(fileName: string, mermaid: Iterable<string>, startupCode: Iterable<string>): Promise<void> {
+  await writeText(
+    fileName,
+    [
+      "## Dependency Graph",
+      "",
+      "```mermaid",
+      ...mermaid,
+      "```",
+      "",
+      "## Startup Example",
+      "",
+      "```typescript",
+      ...startupCode,
+      "```",
+    ].join("\n"),
+  )
+}
 
-  await writeText(fileName, text)
+/**
+ * Write out the dependency tree to the file in mermaid syntax.
+ */
+function* makeMermaid(deps: [string, string[]][]): Generator<string> {
+  yield "flowchart LR"
+  yield* deps.map(([name, deps]) => `${name.toLowerCase()}["${findModule(name, deps)}<br>${name}"]`)
+  yield* deps.flatMap(([name, deps]) => (deps.length === 0 ? [] : [`${name} --> ${deps.join(" & ")}`.toLowerCase()]))
 }
 
 function makeDummyMessenger(): Record<string, symbol> {
@@ -135,13 +159,13 @@ function makeDummyMessenger(): Record<string, symbol> {
 }
 
 /** Determine which module a name belongs to. */
-function findModule(name: string, deps: string[]): string {
+function findModule(name: string, deps: string[] | undefined): string {
   if (name.endsWith(".ts")) {
     return "root/"
   }
   let mod = Object.entries(modules).find(([_, v]) => name in v)?.[0]
   if (!mod) {
-    const hasDependency = deps.length
+    const hasDependency = deps?.length
     if (hasDependency) {
       return "(alias)"
     } else {
@@ -172,6 +196,56 @@ function checkDependencyUsage(registry: Map<string, AnyEntry>): void {
     }
     for (let dep of deps) {
       expect.soft(body).includes(`this.${dep}`, `class ${name} should use this.${dep}`)
+    }
+  }
+}
+
+/** Generates an example TypeScript code for startup */
+function* dumpStartupCode(depList: [string, string[]][], registry: Map<string, AnyEntry>): Generator<string> {
+  const catalog: [string, string][] = depList.flatMap(([name]) =>
+    registry.get(name)?.[0] === "prepareOne" ? [[toCamelCase(name), name]] : [],
+  )
+  const moduleNames = Object.groupBy(catalog, ([, depName]) => findModule(depName, undefined))
+
+  for (const [mod, subcatalog] of Object.entries(moduleNames)) {
+    yield `import { ${subcatalog?.map(([, t]) => t).join(", ")} } from "src/${mod}"`
+  }
+
+  yield ""
+  yield "export type Catalog = {"
+  yield* catalog.map(([name, t]) => `  ${name}: ${t}`)
+  yield "}"
+  yield ""
+  yield "export function startup(consts: BackgroundConstants & ComposeConstants & OptionsConstants): Catalog {"
+  yield* dumpStartupBody(depList, registry)
+  yield ""
+  yield `  return {${catalog.map(([name]) => name).join(", ")}}`
+  yield "}"
+}
+
+/** Generates TypeScript body for startup */
+function* dumpStartupBody(depList: [string, string[]][], registry: Map<string, AnyEntry>): Generator<string> {
+  let depMap = new Map(depList)
+  for (const name of caseInsensitiveToposort(depList).reverse()) {
+    let [method] = registry.get(name) ?? []
+    let required = depMap.get(name) ?? []
+    let camel = toCamelCase(name)
+
+    switch (method) {
+      case "const":
+        yield `  const ${camel} = consts.${camel}`
+        break
+      case "prepareOne":
+        yield `  const ${camel} = new ${name}(${required.join(", ")})`
+        break
+      case "resolveAll":
+        yield `  const ${camel} = [${required.map(toCamelCase).join(", ")}]`
+        break
+      case "resolveOne":
+        yield `  const ${camel} = ${toCamelCase(required[0] ?? "")}`
+        break
+      default:
+        throw Error("unexpected command name")
     }
   }
 }
