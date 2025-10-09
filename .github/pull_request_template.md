@@ -1,11 +1,13 @@
-* [ ] I agree that my contributions will be [dual-licensed under MPL-2.0 OR GPL-3.0-or-later](https://github.com/exteditor/ghostbird/blob/main/LICENSE).
+
+
+* [ ] I agree that my contributions will be [dual-licensed under (MPL-2.0 OR GPL-3.0-or-later)](https://github.com/exteditor/ghostbird/blob/main/LICENSE).
 
 ## What kind of change does this PR introduce?
 
-- [ ] Documentations
-- [ ] Bugfix
 - [ ] New feature
-- [ ] Typo
+- [ ] Bugfix
+- [ ] Documentation
+- [ ] Typo fix
 - [ ] Other
 
 ## What is the current behavior?
