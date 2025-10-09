@@ -257,15 +257,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@codecov/rollup-plugin@npm:^1.9.1":
+"@codecov/vite-plugin@npm:^1.9.1":
   version: 1.9.1
-  resolution: "@codecov/rollup-plugin@npm:1.9.1"
+  resolution: "@codecov/vite-plugin@npm:1.9.1"
   dependencies:
     "@codecov/bundler-plugin-core": "npm:^1.9.1"
     unplugin: "npm:^1.10.1"
   peerDependencies:
-    rollup: 3.x || 4.x
-  checksum: 10c0/5d84fda0e7a7d7b924500f40bc26c6e780b33131000b89ea4f03185e8930e994750633fec8f038601aab7d9bfe012127f2180d3afd1dd466e453fcfb201208be
+    vite: 4.x || 5.x || 6.x
+  checksum: 10c0/b4e640a23f4af4a140038a68a1fbc8d4de555d7064c68d8f5dbd0d99c983a66113f9262035f98f4fd8ecadf93f4d7daf1aafd1f138f947edf4f6c24c26475571
   languageName: node
   linkType: hard
 
@@ -603,7 +603,7 @@ __metadata:
   resolution: "@exteditor/ghostbird@workspace:."
   dependencies:
     "@biomejs/biome": "npm:^2.2.5"
-    "@codecov/rollup-plugin": "npm:^1.9.1"
+    "@codecov/vite-plugin": "npm:^1.9.1"
     "@std/text": "jsr:^1.0.16"
     "@std/toml": "jsr:^1.0.10"
     "@types/node": "npm:^24.3.0"

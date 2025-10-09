@@ -9,14 +9,14 @@ export type CodecovOptions = {
 
 /** Uploads bundle size information to Codecov if the API token is available in the environment */
 export async function codecov({ bundleName, env: { CODECOV_TOKEN: uploadToken } }: CodecovOptions): Promise<Plugin[]> {
-  if (!bundleName || !uploadToken) {
+  if (!uploadToken) {
     return []
   }
 
-  // lazy load the plugin to avoid loading it except when needed
-  let { codecovRollupPlugin } = await import("@codecov/rollup-plugin")
+  // avoid loading it except when needed
+  let { codecovVitePlugin } = await import("@codecov/vite-plugin")
 
-  return codecovRollupPlugin({
+  return codecovVitePlugin({
     enableBundleAnalysis: true,
     bundleName,
     uploadToken,
