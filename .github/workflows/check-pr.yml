@@ -1,5 +1,5 @@
 name: Check PR
-
+run-name: Check PR from ${{ github.actor }}
 on:
   pull_request:
   merge_group:
@@ -44,4 +44,9 @@ jobs:
       run: corepack yarn run check-type
 
     - name: Test
-      run: corepack yarn run test --reporter=github-actions
+      run: corepack yarn run test:coverage --reporter=github-actions
+
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}

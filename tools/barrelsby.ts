@@ -16,7 +16,9 @@ export const barrelsby = (opts: Arguments = {}): Plugin => ({
     Barrelsby(args)
 
     // We don't want src/index.ts
-    return rm(join(args.directory, args.name)).catch(() => {})
+    return rm(join(args.directory, args.name)).catch((e) => {
+      this.warn(`Failed to remove ${args.directory}/${args.name}: ${e}`)
+    })
   },
 })
 

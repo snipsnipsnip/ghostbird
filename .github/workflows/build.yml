@@ -44,7 +44,7 @@ jobs:
       run: corepack yarn run check-type
 
     - name: Test
-      run: corepack yarn test --reporter=github-actions
+      run: corepack yarn test:coverage --reporter=github-actions
 
     - name: Bundle
       run: corepack yarn build-js
@@ -64,3 +64,7 @@ jobs:
         path: dist/ext/
         compression-level: 9
 
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v5
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}

@@ -79,6 +79,8 @@ function dumpTree(mermaid: Iterable<string>, startupCode: Iterable<string>): str
     "",
     "## Startup Example",
     "",
+    "Try adding the following as `src/test/startup.ignoreme.nolint.test-d.ts`",
+    "",
     "```typescript",
     ...startupCode,
     "```",
