@@ -41,7 +41,7 @@ export const config: ViteUserConfig = {
     },
     reporters: ["default", "junit"],
     outputFile: {
-      junit: join(OUTPUT_DIR, "result.xml"),
+      junit: join(OUTPUT_DIR, "result.junit.xml"),
     },
     testTimeout: 20000,
     environment: "jsdom",

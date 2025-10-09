@@ -1,0 +1,10 @@
+coverage:
+  status:
+    project:
+      src:
+        informational: true
+        paths: ["src/**/*", "!src/test/**/*"]
+    patch:
+      src:
+        informational: true
+        paths: ["src/**/*", "!src/test/**/*"]

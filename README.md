@@ -1,8 +1,7 @@
 # Ghostbird: GhostText for Thunderbird :nest_with_eggs::mailbox::ghost:
 
 [![Supports Thunderbird ESR](https://img.shields.io/badge/supports-Thunderbird_140_ESR-0a84ff?logo=thunderbird&logoSize=auto)][tb]
-[![Github Actions Status](https://github.com/exteditor/ghostbird/actions/workflows/build.yml/badge.svg)](https://github.com/exteditor/ghostbird/actions/workflows/build.yml)
-[![Status: Beta](https://img.shields.io/badge/project_status-beta-cce165)][rels]
+[![Status: Beta](https://img.shields.io/badge/project_status-beta-d2f641)][rels]
 [![Latest release](https://img.shields.io/github/v/release/exteditor/ghostbird?include_prereleases&logo=refinedgithub&logoColor=white&logoSize=auto)][rels]
 
 [![Download on AMO](https://raw.githubusercontent.com/thunderbird/webext-support/refs/heads/master/images/get-the-addon.svg)](#installation)
@@ -256,8 +255,14 @@ If you've looked at the options above and still want to motivate the maintainer 
 [![Tested with Vitest](https://img.shields.io/badge/tested_with-Vitest-6e9f18?logo=vitest&logoSize=auto)](https://vitest.dev)
 [![Bundled with tsdown](https://img.shields.io/badge/bundled_with-tsdown-ff7e17?logo=rolldown)](https://tsdown.dev)
 [![Packaged with web-ext](https://img.shields.io/badge/packaged_with-web--ext-00d230?logo=mozilla)](https://github.com/mozilla/web-ext#web-ext)
-[![Reviewed by coderabbit](https://img.shields.io/badge/reviewed_by-coderabbit-ff570a?logo=coderabbit)](https://github.com/search?q=repo%3Aexteditor%2Fghostbird&type=pullrequests&s=created&o=desc)
-[![Measured with codecov](https://codecov.io/github/exteditor/ghostbird/graph/badge.svg?token=NDWAK8NEC6)](https://codecov.io/github/exteditor/ghostbird)
+
+### Services
+
+[![Github Actions Status](https://github.com/exteditor/ghostbird/actions/workflows/build.yml/badge.svg)](https://github.com/exteditor/ghostbird/actions/workflows/build.yml)
+[![Reviewed by CodeRabbit](https://img.shields.io/badge/reviewed_by-CodeRabbit-ff570a?logo=coderabbit)](https://github.com/search?q=repo%3Aexteditor%2Fghostbird&type=pullrequests&s=created&o=desc)
+[![Test coverage tracked with Codecov](https://codecov.io/github/exteditor/ghostbird/graph/badge.svg?token=NDWAK8NEC6)](https://codecov.io/github/exteditor/ghostbird)
+[![Bundle size tracked with Codecov (esm)](https://codecov.io/github/exteditor/ghostbird/graph/bundle/esm/badge.svg?token=NDWAK8NEC6)](https://codecov.io/github/exteditor/ghostbird/bundles/background)
+[![Bundle size tracked with Codecov (iife)](https://codecov.io/github/exteditor/ghostbird/graph/bundle/iife/badge.svg?token=NDWAK8NEC6)](https://codecov.io/github/exteditor/ghostbird/bundles/compose)
 
 ## License
 
