@@ -1,6 +1,8 @@
 # Building Ghostbird
 
-[`tools/tsdown_config.ts`](../tools/tsdown_config.ts) serves as the build script of Ghostbird. It makes heavy use of custom plugins, which would have resulted in very long comments, so I felt they deserved separate documentation.
+[`tools/tsdown_config.ts`](../tools/tsdown_config.ts), which is a configuration file for tsdown, serves as the build script of Ghostbird. It makes heavy use of custom plugins, which would have resulted in very long comments, so I felt they deserved separate documentation.
+
+[tsdown](https://tsdown.dev) is a descendant of the [Rollup](https://rollupjs.org/) and [tsup](https://tsup.egoist.dev/) bundler that wraps [Rolldown](https://rolldown.rs/) and [Oxc](https://oxc.rs/) with sensible default configuration and many built-in plugins.
 
 ## Inputs and Outputs
 
@@ -22,13 +24,15 @@ subgraph "tsdown"
   tsdown_builtin[["copy plugin<br>(tsdown built-in)"]]
   generate_locale_messages[[generate_locale_messages.ts]]
   generate_manifest[[generate_manifest.ts]]
+  codecov[[codecov.ts]]
 end
 
 index_ts --o barrelsby
 index_ts --> ts
-ts --> test_sanity & tsc --> fail((build failure))
+ts --> test_sanity & tsc -.-> fail((build failure))
 tsc --> tsc_cache["tsc cache<br>build/"]
 ts --> rolldown --> js["Bundled js files<br>dist/ext/js/*.js"]
+ts --> codecov -.-> codecovio((Web service<br>codecov.io))
 ext_files --> tsdown_builtin --> copied_ext_files["Assets<br>dist/ext/*"]
 locales --> generate_locale_messages --> messages["Localized messages<br>dist/ext/_locales/*/messages.json"]
 manifest_template & version --> generate_manifest --> manifest["MailExtension Manifest<br>dist/ext/manifest.json"]
@@ -80,6 +84,8 @@ The build script uses several custom plugins, each serving a different purpose:
    - This is skipped in a release build since a full `yarn check-type` is run as a pre-build step.
 1. [`tools/generate_manifest.ts`](../tools/generate_manifest.ts) prepares `manifest.json` by filling in placeholders in [`manifest_template.json`](../manifest_template.json).
 1. [`tools/generate_locale_messages.ts`](../tools/generate_locale_messages.ts) generates [message files](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Internationalization) from the definition in [`locales.toml`](../locales.toml).
+1. [`tools/codecov.ts`](../tools/codecov.ts) uploads bundle size information to Codecov for analysis.
+   - This is only active during a release build and an API key is available.
 
 ### Version number calculation in `generate_manifest.ts`
 

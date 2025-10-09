@@ -26,6 +26,7 @@ import { join } from "node:path"
 import { env } from "node:process"
 import type { Options, UserConfig } from "tsdown"
 import { barrelsby } from "./barrelsby"
+import { codecov } from "./codecov"
 import { generateLocaleMessages } from "./generate_locale_messages"
 import { generateManifest } from "./generate_manifest"
 import { testSanity } from "./test_sanity"
@@ -99,6 +100,8 @@ const esmConfig = {
     generateManifest({ env: isRelease ? (env as Record<string, string>) : {} }),
     // Generate _locales/*/messages.json
     generateLocaleMessages({ path: "./locales.toml" }),
+    // Upload bundle size info to Codecov
+    isRelease && codecov({ env, bundleName: "background" }),
   ],
 } satisfies Options
 
@@ -110,6 +113,10 @@ const iifeConfig = {
     "src/root/compose.ts",
   ],
   format: "iife",
+  plugins: [
+    // Upload bundle size info to Codecov
+    isRelease && codecov({ env, bundleName: "compose" }),
+  ],
 } satisfies Options
 
 // Check that the keys are disjoint
