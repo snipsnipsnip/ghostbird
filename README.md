@@ -103,6 +103,8 @@ gtClient -->|Updates| mailCompose
 
 ## Roadmap
 
+See also [a list of milestones][milestones].
+
 ### Legend
 
 |Mark|Meaning|Description|
@@ -119,7 +121,7 @@ gtClient -->|Updates| mailCompose
 * :white_check_mark: Start button on the toolbar
 * :white_check_mark: Edit plain text emails
 * :white_check_mark: Keyboard shortcuts
-* :white_check_mark: Roadmap and [Project board][proj]
+* :white_check_mark: [Milestones][milestones] and [Project board][proj]
 * :no_entry: Non-bidirectional: Thunderbird becomes read-only while Ghostbird is active
 * :no_entry: No i18n: the UI is only in English*
 * :no_entry: Quirky when editing HTML emails
@@ -135,18 +137,22 @@ gtClient -->|Updates| mailCompose
 * :nest_with_eggs: [Basic option (at minimum, the port of the GhostText server)](https://github.com/exteditor/ghostbird/issues/3)
 * :nest_with_eggs: [Prepare for i18n (Make texts translatable)](https://github.com/exteditor/ghostbird/issues/4)
 
-### v0.2.1 (Beta) - Current
+### v0.2.1 (Beta) - Released
 
 * :nest_with_eggs: [Fix empty host field being sent to the server](https://github.com/exteditor/ghostbird/issues/22)
 
-### v0.3.0 (Beta) - 2025 Q4
+### v0.3.0 (Beta) - Current
 
-* :construction: [Show notifications](https://github.com/exteditor/ghostbird/issues/24)
+* :nest_with_eggs: [Show notifications](https://github.com/exteditor/ghostbird/issues/24)
+
+### v0.4.0 (Beta) - 2025 Q4
+
+* :construction: [Add a way to disconnect using only a mouse](https://github.com/exteditor/ghostbird/issues/30)
 
 ### v0.x.x (Beta) - 2025 Q4
 
 * :construction: [Website with some screenshots](https://github.com/exteditor/ghostbird/issues/5)
-* :construction: [Smoother editing of HTML emails](https://github.com/exteditor/ghostbird/issues/6)
+* :construction: [Edit a HTML email as if it were a plain text email](https://github.com/exteditor/ghostbird/issues/6)
 
 ### v1.0.0 (Stable) - 2026 Q2
 
@@ -155,9 +161,8 @@ gtClient -->|Updates| mailCompose
 ### v1.x.x (Stable) - 2026 Q4
 
 * :white_large_square: [Edit Address and Subject fields](https://github.com/exteditor/ghostbird/issues/8)
-* :white_large_square: [Continue i18n (Add more languages)](https://github.com/exteditor/ghostbird/issues/26)
+* :nest_with_eggs: [Continue i18n (Add more languages)](https://github.com/exteditor/ghostbird/issues/26)
 * :white_large_square: [Support text editors that lack a GhostText add-on (e.g., Notepad)*](https://github.com/exteditor/ghostbird/issues/25)
-* :white_large_square: [Automate AMO release on GitHub Action](https://github.com/exteditor/ghostbird/issues/27)
 
 > \*Requires protocol extension and server-side support. I intend to develop one by forking [GhostText-Any](https://github.com/newsch/GhostText-Any/).
 
@@ -168,6 +173,7 @@ gtClient -->|Updates| mailCompose
   * :white_large_square: Bidirectional editing; changes in Thunderbird are reflected in the text editor
 
 * :white_large_square: Better handling of conflicts, disconnection, and reconnection (possibly extending the protocol)
+* :white_large_square: [Automate AMO release on GitHub Action](https://github.com/exteditor/ghostbird/issues/27)
 
 ### Non-goals
 
@@ -180,8 +186,9 @@ gtClient -->|Updates| mailCompose
 If you like the idea, please:
 
 * [Star the repo](#repository-container-header).
+* [Rate the add-on][review].
 * Feel free to open issues and submit pull requests. See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started.
-* See our [project board][proj] or [issues](https://github.com/exteditor/ghostbird/issues) for tasks you can contribute to, and use the [Discussions](https://github.com/exteditor/ghostbird/discussions) page for general discussions.
+* See our [milestones page][milestones] or [issues](https://github.com/exteditor/ghostbird/issues) for tasks you can contribute to, and use the [Discussions](https://github.com/exteditor/ghostbird/discussions) page for general discussions.
 
 ### Help wanted
 
@@ -227,6 +234,7 @@ We need help with:
 Please consider the following options:
 
 * [Star the repo](#repository-container-header)
+* [Rate the add-on][review]
 * [Donate to Thunderbird](https://www.thunderbird.net/en-US/donate/) (It's financially separate from Firefox)
 * [Donate to @fregante, the author of the original GhostText](https://github.com/sponsors/fregante)
 * [Contribute to the development](#help-wanted)
@@ -248,6 +256,8 @@ If you've looked at the options above and still want to motivate the maintainer 
 [![Tested with Vitest](https://img.shields.io/badge/tested_with-Vitest-6e9f18?logo=vitest&logoSize=auto)](https://vitest.dev)
 [![Bundled with tsdown](https://img.shields.io/badge/bundled_with-tsdown-ff7e17?logo=rolldown)](https://tsdown.dev)
 [![Packaged with web-ext](https://img.shields.io/badge/packaged_with-web--ext-00d230?logo=mozilla)](https://github.com/mozilla/web-ext#web-ext)
+[![Reviewed by coderabbit](https://img.shields.io/badge/reviewed_by-coderabbit-ff570a?logo=coderabbit)](https://github.com/search?q=repo%3Aexteditor%2Fghostbird&type=pullrequests&s=created&o=desc)
+[![Measured with codecov](https://codecov.io/github/exteditor/ghostbird/graph/badge.svg?token=NDWAK8NEC6)](https://codecov.io/github/exteditor/ghostbird)
 
 ## License
 
@@ -256,6 +266,7 @@ If you've looked at the options above and still want to motivate the maintainer 
 Ghostbird is [dual-licensed under (MPL-2.0 OR GPL-3.0-or-later)](./LICENSE). See also [NOTICE](./ext/NOTICE.md).
 
 [proj]: https://github.com/exteditor/ghostbird/projects
+[milestones]: https://github.com/exteditor/ghostbird/milestones
 [tb]: https://thunderbird.net/
 [gt]: https://ghosttext.fregante.com/
 [helix]: https://github.com/rahji/helix-ghost
@@ -269,3 +280,4 @@ Ghostbird is [dual-licensed under (MPL-2.0 OR GPL-3.0-or-later)](./LICENSE). See
 [protocol]: https://github.com/fregante/GhostText/blob/refs/heads/main/PROTOCOL.md
 [amo]: https://addons.thunderbird.net/addon/ghostbird/
 [vimghost]: https://github.com/raghur/vim-ghost
+[review]: https://addons.thunderbird.net/en-US/thunderbird/addon/ghostbird/reviews/add
