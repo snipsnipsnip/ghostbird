@@ -43,7 +43,7 @@ input {
   height: 100%;
 
   &[type="number"] {
-    text-align: var(--align-end);
+    text-align: right;
   }
   &[type="reset"] {
     height: var(--in-content-button-height);
