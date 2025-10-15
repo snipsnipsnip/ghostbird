@@ -23,6 +23,7 @@
     "alarms",
     "compose",
     "notifications",
+    "menus",
     "scripting",
     "storage"
   ],

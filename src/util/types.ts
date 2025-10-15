@@ -20,6 +20,7 @@ export type LocaleId = string
  * example: `options_enable_notifications`
  */
 export type MessageId = string
+// We could enumerate the ids here to let TypeScript check them, but it's covered by the unit test already.
 
 /** A translated message text shown to the user. example: `Enable notifications` */
 export type MessageLabel = string

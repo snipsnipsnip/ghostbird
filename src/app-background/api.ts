@@ -1,4 +1,5 @@
 import type { IComposeWindow } from "src/ghosttext-adaptor/api"
+import type { MessageId } from "src/util"
 
 export type { IGhostServerPort } from "src/ghosttext-adaptor/api"
 
@@ -39,4 +40,33 @@ export interface IComposeWindowDetector {
    * @returns a wrapped instance if the tab is a compose window, otherwise `undefined`
    */
   tryWrap(tab: ITab): IComposeWindow | undefined
+}
+
+/** Controls the context menu on the toolbar button */
+export interface IButtonMenu {
+  /** @returns whether the menu has been initialized */
+  isInitialized(): boolean
+
+  /**
+   * Creates a context menu shown when the toolbar button is right clicked.
+   * @param menuItems Items to show in the menu
+   * @param currentShown Information about the menu currently shown
+   */
+  initItems(menuItems: ReadonlyArray<MenuItem>, currentShown: MenuShownInfo | undefined): Promise<void>
+}
+
+/** Information about a menu that is about to be shown */
+export type MenuShownInfo = {
+  /** A list of IDs of the menu items that is about to be shown */
+  menuIds: ReadonlyArray<string>
+}
+
+/** An item in a context menu */
+export type MenuItem = {
+  /** ID of the text to be displayed in the item */
+  label: MessageId
+  /** The command to execute when the menu item is clicked */
+  id: CommandId
+  /** path to the icon to display in the menu item */
+  icon: string
 }
