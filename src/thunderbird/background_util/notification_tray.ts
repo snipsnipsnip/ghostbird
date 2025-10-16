@@ -2,9 +2,13 @@ import type { INotificationTray } from "src/ghosttext-adaptor"
 import type { MessageId } from "src/util"
 import type { ManifestInfo } from "."
 
+/** Wraps the Notification API */
 export class NotificationTray implements INotificationTray {
   static isSingleton = true
 
+  /** Maximum number of notifications to show simultaneously */
+  private readonly slotCount = 5
+  private lastId = 0
   private title: string | undefined
 
   constructor(
@@ -13,7 +17,8 @@ export class NotificationTray implements INotificationTray {
   ) {}
 
   async showNotification(iconUrl: string, messageId: MessageId): Promise<void> {
-    await this.messenger.notifications.create(this.makeNotification(iconUrl, messageId))
+    const opts = this.makeNotification(iconUrl, messageId)
+    await this.messenger.notifications.create(this.makeId(), opts)
   }
 
   private makeNotification(iconUrl: string, messageId: MessageId): messenger.notifications.CreateNotificationOptions {
@@ -24,5 +29,10 @@ export class NotificationTray implements INotificationTray {
       iconUrl,
       message: this.messenger.i18n.getMessage(messageId),
     }
+  }
+
+  private makeId(): string {
+    this.lastId = (this.lastId + 1) % this.slotCount
+    return `NotificationTray-${this.lastId}`
   }
 }

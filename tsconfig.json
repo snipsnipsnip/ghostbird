@@ -31,19 +31,31 @@
     "favicon": "ext/blue.svg",
     "router": "structure",
     "searchInDocuments": true,
+    "readme": "none",
     "githubPages": false,
     "customJs": "doc/res/typedoc.cjs",
+    "excludePrivate": false,
+    "includeHierarchySummary": false,
+    "excludeReferences": true,
+    "modifierTags": [
+      "@file"
+    ],
+    "sluggerConfiguration": {
+      "lowercase": true
+    },
     "ignoredHighlightLanguages": [
       "mermaid"
     ],
     "entryPoints": [
+      "./src/*/*/index.ts",
       "./src/*/index.ts"
     ],
     "projectDocuments": [
       "doc/*.md",
       "ext/*.md",
       "CONTRIBUTING.md",
-      "BUILDING.md"
+      "BUILDING.md",
+      "README.md"
     ],
     "plugin": [
       "typedoc-plugin-mdn-links"

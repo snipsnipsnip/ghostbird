@@ -2,5 +2,6 @@
 /* @see https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Internationalization#predefined_messages */
 :root {
   --direction: __MSG_@@bidi_dir__;
+  --align-start: __MSG_@@bidi_start_edge__;
   --align-end: __MSG_@@bidi_end_edge__;
 }

@@ -20,15 +20,16 @@ export class EmailEditor implements IClientEditor, IStatusIndicator {
     private readonly options: ClientOptions,
   ) {}
 
-  update(status: ClientStatus): Promise<void> {
+  async update(status: ClientStatus): Promise<void> {
     const icon = imageForStatus(status)
+    const isNewStatus = status !== (this.lastStatus ?? "inactive")
 
-    if (status !== (this.lastStatus ?? "inactive")) {
-      this.notificationTray.showNotification(icon, messageForStatus(status))
-    }
     this.lastStatus = status
 
-    return this.composeWindow.setIcon(icon)
+    await Promise.all([
+      isNewStatus && this.notificationTray.showNotification(icon, messageForStatus(status)),
+      this.composeWindow.setIcon(icon),
+    ])
   }
 
   async getState(): Promise<EmailState> {
