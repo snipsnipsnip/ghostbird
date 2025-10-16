@@ -20,6 +20,7 @@ describe(prepareBackgroundRouter, () => {
       messenger,
       heart: new AlarmHeart(messenger),
       optionsSyncCtor: Symbol("optionsSyncCtor") as unknown as typeof OptionsSync,
+      menuItems: [],
     })
     expect(router).instanceOf(BackgroundEventRouter)
   })

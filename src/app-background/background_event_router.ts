@@ -1,13 +1,15 @@
-import type { IComposeWindow } from "src/ghosttext-adaptor/api"
+import type { MenuHandler, MenuShownInfo } from "."
 import type { CommandId, IComposeWindowDetector, ITab } from "./api"
-import type { ComposeActionNotifier } from "./compose_action_notifier"
+import type { CommandHandler } from "./command_handler"
 
+/** Redirects events from Thunderbird to the appropriate handlers */
 export class BackgroundEventRouter {
   static isSingleton = true
 
   constructor(
-    private readonly composeActionNotifier: ComposeActionNotifier,
     private readonly composeTabDetector: IComposeWindowDetector,
+    private readonly commandHandler: CommandHandler,
+    private readonly menuHandler: MenuHandler,
   ) {}
 
   /** Handles shortcut key presses defined in the manifest.json */
@@ -17,20 +19,7 @@ export class BackgroundEventRouter {
       return Promise.reject(Error("Event dropped"))
     }
 
-    return this.runCommand(command, composeTab)
-  }
-
-  /** Executes a command in the context of a compose tab */
-  private runCommand(command: string, composeTab: IComposeWindow): Promise<void> {
-    switch (command as CommandId) {
-      case "start_ghostbird":
-        return this.composeActionNotifier.start(composeTab)
-      case "stop_ghostbird":
-        return this.composeActionNotifier.stop(composeTab)
-      case "toggle_ghostbird":
-        return this.composeActionNotifier.toggle(composeTab)
-    }
-    // We don't handle default here so that tsc checks for exhaustiveness
+    return this.commandHandler.runCommand(command as CommandId, composeTab)
   }
 
   /** Handles the toolbar button press */
@@ -42,7 +31,22 @@ export class BackgroundEventRouter {
       return Promise.reject(Error("Event dropped"))
     }
 
-    return this.composeActionNotifier.start(composeTab)
+    return this.commandHandler.runCommand("start_ghostbird", composeTab)
+  }
+
+  /** Handles right-click on the toolbar button */
+  handleMenuShown(info: MenuShownInfo, _tab: ITab): void | Promise<void> {
+    return this.menuHandler.handleMenuShown(info)
+  }
+
+  /** Handles clicks on the item in the toolbar button's context menu */
+  handleMenuClick(menuItemId: string, tab: ITab): Promise<void> {
+    let composeTab = this.composeTabDetector.tryWrap(tab)
+    if (!composeTab) {
+      return Promise.reject(Error("Event dropped"))
+    }
+
+    return this.menuHandler.handleMenuItemClicked(menuItemId, composeTab)
   }
 
   /** handles one-off messages from content scripts */

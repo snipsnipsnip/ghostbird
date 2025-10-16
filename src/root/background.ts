@@ -3,7 +3,7 @@
  * This script may be suspended and reloaded occasionally by Thunderbird.
  */
 
-import type { BackgroundEventRouter } from "src/app-background"
+import type { BackgroundEventRouter, MenuItem, MenuShownInfo } from "src/app-background"
 import { type LazyThen, makeLazyThen } from "src/util/lazy_then"
 
 console.info("starting", import.meta.url)
@@ -13,9 +13,17 @@ const prepareThen: LazyThen<BackgroundEventRouter> = makeLazyThen(async () => {
     import("./startup/startup_background"),
     import("webext-options-sync"),
   ])
+  /** Menu items to be shown in the context menu. */
+  let menuItems: ReadonlyArray<MenuItem> = [
+    {
+      label: "manifest_commands_stop_ghostbird_description",
+      id: "stop_ghostbird",
+      icon: "gray.svg",
+    },
+  ]
   let heart = new AlarmHeart(messenger)
 
-  return prepareBackgroundRouter({ messenger, heart, optionsSyncCtor })
+  return prepareBackgroundRouter({ messenger, heart, optionsSyncCtor, menuItems })
 })
 
 messenger.composeAction.onClicked.addListener((tab, _info): Promise<void> | void =>
@@ -41,5 +49,25 @@ messenger.runtime.onMessage.addListener((msg, sender, sendResponse): Promise<voi
 messenger.alarms.onAlarm.addListener((alarm) => {
   console.debug("beep", alarm)
 })
+
+messenger.menus.onShown.addListener((info, tab) =>
+  prepareThen((router) => {
+    console.debug({ info, tab })
+
+    return router.handleMenuShown(info as MenuShownInfo, tab)
+  }),
+)
+
+messenger.menus.onClicked.addListener(({ menuItemId }, tab): Promise<void> | void =>
+  prepareThen((router) => {
+    console.debug({ menuItemId, tab })
+    if (!tab || typeof menuItemId !== "string") {
+      return Promise.reject(Error(`event dropped`))
+    }
+    let p = router.handleMenuClick(menuItemId, tab)
+
+    return p ?? Promise.reject(Error(`unknown command ${menuItemId}`))
+  }),
+)
 
 console.info("started", import.meta.url)

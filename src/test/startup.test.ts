@@ -34,6 +34,7 @@ const modules: AnyModules = {
 describe("startup", () => {
   const constants: [string, AnyEntry][] = [
     ["messenger", ["const", makeDummyMessenger()]],
+    ["menuItems", ["const", Symbol("menuItems")]],
     ["body", ["const", Symbol("body")]],
     ["domParser", ["const", Symbol("domParser")]],
     ["selection", ["const", Symbol("selection")]],
