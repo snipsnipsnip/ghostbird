@@ -1,6 +1,6 @@
 /**
  * @file `messenger.scripting` API added at Thunderbird 128 ESR
- * @see https://webextension-api.thunderbird.net/en/128-esr-mv3/scripting.html
+ * @see https://webextension-api.thunderbird.net/en/esr-mv3/scripting.html
  */
 
 import type { PlainJSONValue } from "./"

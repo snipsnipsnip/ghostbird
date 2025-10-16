@@ -1,6 +1,6 @@
 /**
  * @file `messenger.alarms` API somehow missing in the type lib
- * @see https://webextension-api.thunderbird.net/en/128-esr-mv3/alarms.html
+ * @see https://webextension-api.thunderbird.net/en/esr-mv3/alarms.html
  */
 
 /** Use the scripting API to execute script in different contexts. */
