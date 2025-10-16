@@ -79,13 +79,15 @@ export interface IManifestInfo {
 
 /** Options stored in local storage  */
 export type StoredOptions = {
+  /** The port of the GhostText server to connect to */
   serverPort: number
+  /** Shows notifications when connecting or disconnecting from GhostText if true */
   enableNotifications: boolean
 }
 
-/** * Loads options from storage */
+/** Manages access to options */
 export interface IStoredOptionsLoader {
-  /** * Loads options from storage */
+  /** Loads options from storage */
   load(): Promise<StoredOptions>
 }
 

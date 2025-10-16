@@ -259,10 +259,8 @@ If you've looked at the options above and still want to motivate the maintainer 
 ### Services
 
 [![Github Actions Status](https://github.com/exteditor/ghostbird/actions/workflows/build.yml/badge.svg)](https://github.com/exteditor/ghostbird/actions/workflows/build.yml)
-[![Reviewed by CodeRabbit](https://img.shields.io/badge/reviewed_by-CodeRabbit-ff570a?logo=coderabbit)](https://github.com/search?q=repo%3Aexteditor%2Fghostbird&type=pullrequests&s=created&o=desc)
-[![Test coverage tracked with Codecov](https://codecov.io/github/exteditor/ghostbird/graph/badge.svg?token=NDWAK8NEC6)](https://codecov.io/github/exteditor/ghostbird)
-[![Bundle size tracked with Codecov (esm)](https://codecov.io/github/exteditor/ghostbird/graph/bundle/esm/badge.svg?token=NDWAK8NEC6)](https://codecov.io/github/exteditor/ghostbird/bundles/background)
-[![Bundle size tracked with Codecov (iife)](https://codecov.io/github/exteditor/ghostbird/graph/bundle/iife/badge.svg?token=NDWAK8NEC6)](https://codecov.io/github/exteditor/ghostbird/bundles/compose)
+[![Reviewed by CodeRabbit](https://img.shields.io/coderabbit/prs/github/exteditor/ghostbird?utm_source=oss&utm_medium=github&utm_campaign=exteditor%2Fghostbird&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews&logo=coderabbit&logoSize=auto)](https://github.com/search?q=repo%3Aexteditor%2Fghostbird&type=pullrequests&s=created&o=desc)
+[![Covered by Codecov](https://codecov.io/github/exteditor/ghostbird/graph/badge.svg?token=NDWAK8NEC6)](https://app.codecov.io/github/exteditor/ghostbird/commits)
 
 ## License
 

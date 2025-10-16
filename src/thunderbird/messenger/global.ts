@@ -1,6 +1,6 @@
 /**
  * @file Functions added in Thunderbird 128 ESR
- * @see https://webextension-api.thunderbird.net/en/128-esr-mv3/
+ * @see https://webextension-api.thunderbird.net/en/esr-mv3/
  */
 
 import type { IAlarmsAPI } from "./alarms"
