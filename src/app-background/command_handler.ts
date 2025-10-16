@@ -1,12 +1,15 @@
 import type { IComposeWindow } from "src/ghosttext-adaptor"
-import type { CommandId } from "./api"
+import type { CommandId, IUiUtil } from "./api"
 import type { ComposeActionNotifier } from "./compose_action_notifier"
 
 /** Handles execution of commands in the context a compose tab */
 
 export class CommandHandler {
   static isSingleton = true
-  constructor(private readonly composeActionNotifier: ComposeActionNotifier) {}
+  constructor(
+    private readonly composeActionNotifier: ComposeActionNotifier,
+    private readonly uiUtil: IUiUtil,
+  ) {}
 
   /** Executes a command in the context of a compose tab */
   runCommand(command: CommandId, composeTab: IComposeWindow): Promise<void> {
@@ -17,6 +20,8 @@ export class CommandHandler {
         return this.composeActionNotifier.stop(composeTab)
       case "toggle_ghostbird":
         return this.composeActionNotifier.toggle(composeTab)
+      case "open_options":
+        return this.uiUtil.openOptionsPage()
     }
     // We don't handle default here so that tsc checks for exhaustiveness
   }

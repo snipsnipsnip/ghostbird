@@ -4,7 +4,7 @@ import type { MessageId } from "src/util"
 export type { IGhostServerPort } from "src/ghosttext-adaptor/api"
 
 /** IDs of shortcut keys. Must be in sync with ones in manifest.json */
-export type CommandId = "start_ghostbird" | "stop_ghostbird" | "toggle_ghostbird"
+export type CommandId = "start_ghostbird" | "stop_ghostbird" | "toggle_ghostbird" | "open_options"
 
 /** Queries current shortcut key config */
 export interface ICommandConfig {
@@ -12,6 +12,12 @@ export interface ICommandConfig {
    * @returns all commands defined in manifest.json
    */
   getAll(): PromiseLike<Readonly<CommandInfo>[]>
+}
+
+/** Miscellaneous UI utilities */
+export interface IUiUtil {
+  /** Opens the options page for the extension */
+  openOptionsPage(): Promise<void>
 }
 
 /**

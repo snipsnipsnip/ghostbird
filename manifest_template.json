@@ -49,6 +49,9 @@
     },
     "toggle_ghostbird": {
       "description": "__MSG_manifest_commands_toggle_ghostbird_description__"
+    },
+    "open_options": {
+      "description": "__MSG_manifest_commands_open_options_description__"
     }
   },
   "background": {

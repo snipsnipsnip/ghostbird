@@ -20,6 +20,11 @@ const prepareThen: LazyThen<BackgroundEventRouter> = makeLazyThen(async () => {
       id: "stop_ghostbird",
       icon: "gray.svg",
     },
+    {
+      label: "manifest_commands_open_options_description",
+      id: "open_options",
+      icon: "gray.svg",
+    },
   ]
   let heart = new AlarmHeart(messenger)
 

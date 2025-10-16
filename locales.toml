@@ -98,7 +98,7 @@ zh = "连接到文本编辑器"
 zh-tw = "連接到文本編輯器"
 
 [manifest_commands_stop_ghostbird_description]
-# Description of the shortcut key to stop Ghostbird.
+# Description of the shortcut key to stop Ghostbird. Also used as a context menu item.
 ar = "قطع الاتصال بمحرر النصوص"
 be = "Адключыцца ад тэкставага рэдактара"
 ca = "Desconnecta de l'editor de text"
@@ -158,6 +158,37 @@ uk = "Перемкнути підключення до текстового ре
 vi = "Chuyển đổi kết nối với trình soạn thảo văn bản"
 zh = "切换与文本编辑器的连接"
 zh-tw = "切換與文本編輯器的連接"
+
+[manifest_commands_open_options_description]
+# Description of the shortcut key to open the options. Also used as a context menu item.
+ar = "خيارات"
+be = "Параметры"
+ca = "Opcions"
+cs = "Možnosti"
+de = "Optionen"
+el = "Επιλογές"
+en = "Options"
+es = "Opciones"
+fi = "Asetukset"
+fr = "Options"
+hu = "Beállítások"
+id = "Opsi"
+it = "Opzioni"
+ja = "オプション"
+ko = "옵션"
+nl = "Opties"
+pl = "Opcje"
+pt = "Opções"
+pt-br = "Opções"
+ro = "Opțiuni"
+ru = "Настройки"
+sk = "Možnosti"
+th = "ตัวเลือก"
+tr = "Seçenekler"
+uk = "Параметри"
+vi = "Tùy chọn"
+zh = "选项"
+zh-tw = "選項"
 
 [options_server_port]
 # Description of the option item for the server port.
