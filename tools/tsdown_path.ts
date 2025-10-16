@@ -26,12 +26,12 @@ export function makeRelativeSourcePath(relativeSourcePath: string): string {
   // For release builds, we strip the path to make it easier to navigate in Thunderbird devtools
   let libPath = findPrefix("/node_modules/", relativeSourcePath)
   if (libPath) {
-    return libPath.slice(1)
+    return `.${libPath}`
   }
   let srcPath = findPrefix("/src/", relativeSourcePath)
   if (srcPath) {
     // Make it relative to the root
-    return `../${srcPath.slice(1)}`
+    return `..${srcPath}`
   }
   throw Error(`unexpected source path: ${relativeSourcePath}`)
 }
