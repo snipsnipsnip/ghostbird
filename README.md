@@ -133,25 +133,29 @@ See also [a list of milestones][milestones].
 
 ### v0.2.0 (Beta) - Released
 
-* :nest_with_eggs: [Basic option (at minimum, the port of the GhostText server)](https://github.com/exteditor/ghostbird/issues/3)
-* :nest_with_eggs: [Prepare for i18n (Make texts translatable)](https://github.com/exteditor/ghostbird/issues/4)
+* :white_check_mark: [Basic option (at minimum, the port of the GhostText server)](https://github.com/exteditor/ghostbird/issues/3)
+* :white_check_mark: [Prepare for i18n (Make texts translatable)](https://github.com/exteditor/ghostbird/issues/4)
 
 ### v0.2.1 (Beta) - Released
 
-* :nest_with_eggs: [Fix empty host field being sent to the server](https://github.com/exteditor/ghostbird/issues/22)
+* :white_check_mark: [Fix empty host field being sent to the server](https://github.com/exteditor/ghostbird/issues/22)
 
-### v0.3.0 (Beta) - Current
+### v0.3.0 (Beta) - Released
 
 * :nest_with_eggs: [Show notifications](https://github.com/exteditor/ghostbird/issues/24)
+* :nest_with_eggs: [Continue i18n (Add more languages)](https://github.com/exteditor/ghostbird/issues/26)
 
-### v0.4.0 (Beta) - 2025 Q4
+### v0.4.0 (Beta) - Current
 
-* :construction: [Add a way to disconnect using only a mouse](https://github.com/exteditor/ghostbird/issues/30)
+* :nest_with_eggs: [Add a way to disconnect using only a mouse](https://github.com/exteditor/ghostbird/issues/30)
+
+### v0.5.0 (Beta) - 2025 Q4
+
+* :construction: [Edit a HTML email as if it were a plain text email](https://github.com/exteditor/ghostbird/issues/6)
 
 ### v0.x.x (Beta) - 2025 Q4
 
 * :construction: [Website with some screenshots](https://github.com/exteditor/ghostbird/issues/5)
-* :construction: [Edit a HTML email as if it were a plain text email](https://github.com/exteditor/ghostbird/issues/6)
 
 ### v1.0.0 (Stable) - 2026 Q2
 
@@ -160,7 +164,6 @@ See also [a list of milestones][milestones].
 ### v1.x.x (Stable) - 2026 Q4
 
 * :white_large_square: [Edit Address and Subject fields](https://github.com/exteditor/ghostbird/issues/8)
-* :nest_with_eggs: [Continue i18n (Add more languages)](https://github.com/exteditor/ghostbird/issues/26)
 * :white_large_square: [Support text editors that lack a GhostText add-on (e.g., Notepad)*](https://github.com/exteditor/ghostbird/issues/25)
 
 > \*Requires protocol extension and server-side support. I intend to develop one by forking [GhostText-Any](https://github.com/newsch/GhostText-Any/).
@@ -261,6 +264,7 @@ If you've looked at the options above and still want to motivate the maintainer 
 [![Github Actions Status](https://github.com/exteditor/ghostbird/actions/workflows/build.yml/badge.svg)](https://github.com/exteditor/ghostbird/actions/workflows/build.yml)
 [![Reviewed by CodeRabbit](https://img.shields.io/coderabbit/prs/github/exteditor/ghostbird?utm_source=oss&utm_medium=github&utm_campaign=exteditor%2Fghostbird&color=FF570A&link=https%3A%2F%2Fcoderabbit.ai&label=CodeRabbit+Reviews&logo=coderabbit&logoSize=auto)](https://github.com/search?q=repo%3Aexteditor%2Fghostbird&type=pullrequests&s=created&o=desc)
 [![Covered by Codecov](https://codecov.io/github/exteditor/ghostbird/graph/badge.svg?token=NDWAK8NEC6)](https://app.codecov.io/github/exteditor/ghostbird/commits)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/exteditor/ghostbird)
 
 ## License
 
