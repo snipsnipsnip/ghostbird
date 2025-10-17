@@ -42,7 +42,7 @@
 
 * Try searching the GitHub pages like [discussion][discussion], [wiki][wiki], and [issue][issue] pages. Please post to the [discussion][discussion] or [issue][issue] page if you don't find anything relevant.
 
-### How do I switch between HTML mode and Plain Text mode?<a name="mode"></a>
+### How do I switch between HTML mode and Plain Text mode?<a id="mode"></a>
 
 > TL;DR: Set your preferred format in `Account Settings`>`Composition & Addressing`, then start a new message.
 
@@ -71,7 +71,7 @@
 * As for the icon, I'm planning to add an option to choose between icons so that you can switch them. Please upvote [the issue][chooseicon] if it bothers you.
 * New icons are welcome, of course, preferably in SVG.
 
-### Why not just fork the original GhostText add-on, or contribute to it?<a name="why"></a>
+### Why not just fork the original GhostText add-on, or contribute to it?<a id="why"></a>
 
 * I have a specific requirement to extend [the GhostText protocol][protocol] on both the client and server sides, which would allow configuration made in the client UI to be sent to the server. I think the original add-on, which is supposed to be simple, is not suitable for that purpose.
 * Thunderbird-specific changes also seem hard to incorporate without complicating the code. For example, the concepts of a compose window and address lines do not exist in browsers.

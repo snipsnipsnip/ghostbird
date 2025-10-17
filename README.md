@@ -187,7 +187,7 @@ See also [a list of milestones][milestones].
 
 If you like the idea, please:
 
-* [Star the repo](#repository-container-header).
+* [Star the repo](https://github.com/exteditor/ghostbird/#repository-container-header).
 * [Rate the add-on][review].
 * Feel free to open issues and submit pull requests. See [CONTRIBUTING.md](./CONTRIBUTING.md) to get started.
 * See our [milestones page][milestones] or [issues](https://github.com/exteditor/ghostbird/issues) for tasks you can contribute to, and use the [Discussions](https://github.com/exteditor/ghostbird/discussions) page for general discussions.
@@ -235,7 +235,7 @@ We need help with:
 
 Please consider the following options:
 
-* [Star the repo](#repository-container-header)
+* [Star the repo](https://github.com/exteditor/ghostbird/#repository-container-header)
 * [Rate the add-on][review]
 * [Donate to Thunderbird](https://www.thunderbird.net/en-US/donate/) (It's financially separate from Firefox)
 * [Donate to @fregante, the author of the original GhostText](https://github.com/sponsors/fregante)
