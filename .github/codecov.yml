@@ -1,10 +1,18 @@
-coverage:
-  status:
-    project:
-      src:
+comment:
+  layout: "header, components"
+
+component_management:
+  default_rules:
+    statuses:
+      - type: project
         informational: true
-        paths: ["src/**/*", "!src/test/**/*"]
-    patch:
-      src:
+      - type: patch
         informational: true
-        paths: ["src/**/*", "!src/test/**/*"]
+
+  individual_components:
+    - component_id: app
+      paths: ["src/app**"]
+    - component_id: ghosttext
+      paths: ["src/ghosttext**"]
+    - component_id: infra
+      paths: ["src/**", "!src/app**", "!src/ghosttext**", "!src/test/**", "!src/util/**"]
