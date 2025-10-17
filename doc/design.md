@@ -174,7 +174,7 @@ This is how user actions are handled:
 * [Barrelsby](https://github.com/bencoveney/barrelsby)  generates `index.ts`.
   * See [building.md](./building.md) for details on build script internals.
 
-## Structure of the code<a name="structure"></a>
+## Structure of the code<a id="structure"></a>
 
 The code loosely follows the [Ports and Adapters architecture](https://8thlight.com/insights/a-color-coded-guide-to-ports-and-adapters) and adheres to the [Dependency Inversion Principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle).
 * Interface implementations are preferred over class inheritance.
