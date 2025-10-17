@@ -1,14 +1,13 @@
 
 
+____
+
 * [ ] I agree that my contributions will be [dual-licensed under (MPL-2.0 OR GPL-3.0-or-later)](https://github.com/exteditor/ghostbird/blob/main/LICENSE).
 
-## What kind of change does this PR introduce?
+____
 
-- [ ] New feature
-- [ ] Bugfix
-- [ ] Documentation
-- [ ] Typo fix
-- [ ] Other
+<!-- This instructs let CodeRabbit generate summary -->
+@coderabbitai
 
 ## What is the current behavior?
 
