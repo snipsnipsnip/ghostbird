@@ -16,6 +16,8 @@ export class MenuHandler {
     // Compare the shown menu with menuItems and (re-)initialize the menu if necessary
     console.debug(info)
 
+    // We've tried more sophisticated logic here, but corner cases like users changing their UI language often
+    // make it fail, so we ended up with a simple check: We (re-)initialize the menu when the user first opens the menu.
     if (!this.buttonMenu.isInitialized()) {
       console.debug("Initializing menu")
       return this.buttonMenu.initItems(this.menuItems, info)

@@ -1,6 +1,7 @@
 import type { EmailEditorFactory, IComposeWindow, IGhostServerPort } from "src/ghosttext-adaptor"
 import type { GhostTextStarter } from "src/ghosttext-runner"
 
+/** Responsible for interacting with compose windows */
 export class ComposeActionNotifier {
   static isSingleton = true
   private readonly runners = new Map<number, IGhostServerPort>()
