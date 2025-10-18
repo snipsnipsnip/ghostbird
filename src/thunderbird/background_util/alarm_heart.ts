@@ -12,8 +12,8 @@ export class AlarmHeart implements IHeart {
    * Should be called after the onAlarm listener has been registered.
    * Due to MV3 restriction, the event listener must be registered at the toplevel.
    */
-  assumeReady(): void {
-    this.isListenerReady = true
+  ready(registeredCallback: (alarm: Alarm) => void): void {
+    this.isListenerReady = this.messenger.alarms.onAlarm.hasListener(registeredCallback)
   }
 
   startBeat(): () => void {

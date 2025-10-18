@@ -33,8 +33,5 @@ export const startupBackground = (consts: BackgroundConstants): WirelessInjector
 export function prepareBackgroundRouter(consts: BackgroundConstants): BackgroundEventRouter {
   let startup = startupBackground(consts)
 
-  // Set the ready flag that promises the alarm event handler is registered
-  consts.heart.assumeReady()
-
   return startup(BackgroundEventRouter)
 }
