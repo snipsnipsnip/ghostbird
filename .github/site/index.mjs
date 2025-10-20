@@ -5,6 +5,13 @@ mermaid.initialize({ startOnLoad: false });
 
 // see https://docsify.js.org/#/configuration
 
+const footer = `____
+
+Powered by [Docsify](https://docsify.js.org/)
+
+[▲ Back to Top](#)
+`;
+
 window.$docsify = {
   name: 'Ghostbird \u{1faba}\u{1f4eb}\u{1f47b}',
   repo: 'exteditor/ghostbird',
@@ -14,13 +21,17 @@ window.$docsify = {
   homepage: "homepage.md",
   coverpage: "coverpage.md",
   auto2top: true,
-  maxLevel: 2,
+  maxLevel: 3,
   themeColor: '#0b9dd6',
   routes: {
-    '/[-._/a-zA-Z]*[.][a-zA-Z]+': (route) => {
+    ['/README'](route) {
+      let url = `https://github.com/exteditor/ghostbird/blob/main/${encodeURIComponent(route.slice(1))}.md`
+      return `Redirecting to ${url}...\n\n<script>\nlocation.href = "${url}"${'</'}script>`
+    },
+    ['/[-._/a-zA-Z]*[.][a-zA-Z]+'](route) {
       let url = `https://github.com/exteditor/ghostbird/blob/main/${encodeURIComponent(route.slice(1))}`
       return `Redirecting to ${url}...\n\n<script>\nlocation.href = "${url}"${'</'}script>`
-    }
+    },
   },
   search: [
     '/',
@@ -43,6 +54,7 @@ window.$docsify = {
   },
   plugins: [
     (hook, _vm) => {
+      hook.beforeEach(html => html + footer);
       hook.doneEach(() => mermaid.run());
     },
   ],
