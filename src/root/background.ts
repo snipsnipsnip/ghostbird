@@ -4,6 +4,7 @@
  */
 
 import type { BackgroundEventRouter, MenuItem, MenuShownInfo } from "src/app-background"
+import type { Alarm } from "src/thunderbird"
 import { type LazyThen, makeLazyThen } from "src/util/lazy_then"
 
 console.info("starting", import.meta.url)
@@ -28,8 +29,15 @@ const prepareThen: LazyThen<BackgroundEventRouter> = makeLazyThen(async () => {
   ]
   let heart = new AlarmHeart(messenger)
 
+  // Set the ready flag that promises the alarm event handler is registered
+  heart.ready(onAlarm)
+
   return prepareBackgroundRouter({ messenger, heart, optionsSyncCtor, menuItems })
 })
+
+function onAlarm(alarm: Alarm): void {
+  console.debug("beep", alarm)
+}
 
 messenger.composeAction.onClicked.addListener((tab, _info): Promise<void> | void =>
   prepareThen((router) => router.handleComposeAction(tab)),
@@ -51,9 +59,7 @@ messenger.runtime.onMessage.addListener((msg, sender, sendResponse): Promise<voi
   }),
 )
 
-messenger.alarms.onAlarm.addListener((alarm) => {
-  console.debug("beep", alarm)
-})
+messenger.alarms.onAlarm.addListener(onAlarm)
 
 messenger.menus.onShown.addListener((info, tab) =>
   prepareThen((router) => {

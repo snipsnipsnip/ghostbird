@@ -62,9 +62,9 @@ Alternatively, you can:
 
 1. Launch your favorite text editor.
 2. Start the GhostText server in your text editor (e.g., with `:GhostTextStart` in Vim).
-3. Press the gray Ghostbird button <img src="./ext/gray.svg" width="24" height="24" border="1"> in the Thunderbird mail compose window. (The default shortcut is <kbd>^Ctrl</kbd>+<kbd>⇧Shift</kbd>+<kbd>H</kbd>)
-   * If the connection is successful, the button will turn blue <img src="./ext/blue.svg" width="24" height="24" border="1">.
-   * If the connection fails, the button will turn red <img src="./ext/red.svg" width="24" height="24" border="1">. Make sure that the GhostText server is listening. See [Troubleshooting page of original GhostText](https://ghosttext.fregante.com/troubleshooting/#unable-to-connect).
+3. Press the gray Ghostbird button <img alt="Gray button" src="./ext/gray.svg" width="24" height="24" border="1"> in the Thunderbird mail compose window. (The default shortcut is <kbd>^Ctrl</kbd>+<kbd>⇧Shift</kbd>+<kbd>H</kbd>)
+   * If the connection is successful, the button will turn blue <img alt="Blue button" src="./ext/blue.svg" width="24" height="24" border="1">.
+   * If the connection fails, the button will turn red <img alt="Red button" src="./ext/red.svg" width="24" height="24" border="1">. Make sure that the GhostText server is listening. See [Troubleshooting page of original GhostText](https://ghosttext.fregante.com/troubleshooting/#unable-to-connect).
 4. Write your email in the text editor.
 5. Close your text editor to stop Ghostbird.
 
@@ -268,13 +268,13 @@ If you've looked at the options above and still want to motivate the maintainer 
 
 ## License
 
-[![License: MPL-2.0](https://img.shields.io/badge/license-MPL--2.0-00d230?logo=mozilla)](./LICENSE.mpl)
-[![License: GPLv3](https://img.shields.io/badge/license-GPLv3-bd0000?logo=gplv3&logoSize=auto)](./LICENSE.gpl)<br>
+[![License: MPL-2.0](https://img.shields.io/badge/license-MPL--2.0-00d230?logo=mozilla)](https://www.mozilla.org/en-US/MPL/2.0/)
+[![License: GPLv3](https://img.shields.io/badge/license-GPLv3-bd0000?logo=gplv3&logoSize=auto)](https://www.gnu.org/licenses/gpl-3.0.html)<br>
 Ghostbird is [dual-licensed under (MPL-2.0 OR GPL-3.0-or-later)](./LICENSE). See also [NOTICE](./ext/NOTICE.md).
 
 [proj]: https://github.com/exteditor/ghostbird/projects
 [milestones]: https://github.com/exteditor/ghostbird/milestones
-[tb]: https://thunderbird.net/
+[tb]: https://www.thunderbird.net/download/esr/
 [gt]: https://ghosttext.fregante.com/
 [helix]: https://github.com/rahji/helix-ghost
 [rels]: https://github.com/exteditor/ghostbird/releases
