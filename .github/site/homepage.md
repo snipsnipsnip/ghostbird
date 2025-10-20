@@ -5,7 +5,11 @@
 
 [![Download on AMO](https://raw.githubusercontent.com/thunderbird/webext-support/refs/heads/master/images/get-the-addon.svg)](#installation)
 
-Ghostbird is an Thunderbird add-on that lets you compose your emails in your favorite text editor - Vim, Neovim, VS Code, Sublime Text, Emacs, or any other editor with a GhostText add-on installed.
+Ghostbird is a Thunderbird add-on that lets you compose your emails in your favorite text editor - Vim, Neovim, VS Code, Sublime Text, Emacs, or any other editor with a GhostText add-on installed.
+
+Please visit the website for the original browser add-on, [GhostText][gt] by Federico Brigante, to get the idea.
+
+Since synchronization uses the GhostText protocol, your text editor needs to have a GhostText server function. This means you need to install a plugin on your text editor's side to listen for connections from Thunderbird.
 
 ## Requirements
 
