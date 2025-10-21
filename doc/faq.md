@@ -106,7 +106,7 @@
 
 ### Why Yarn?
 
-* I love cats, and Yarn has [a cat logo](https://github.com/yarnpkg/assets).
+* I love cats, and Yarn has [a cat logo](https://github.com/yarnpkg/assets#yarn-assets).
 
 ### How do you build this add-on?
 
