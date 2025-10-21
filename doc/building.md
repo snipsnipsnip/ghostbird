@@ -53,7 +53,7 @@ js & copied_ext_files & messages & manifest --> web_ext[["web-ext"]] --> xpi["Ma
     - Compiling bundled JavaScript files into `dist/ext/`.
 - Running `yarn build-xpi` creates a zip archive named `dist/ghostbird-{version}.xpi`.
    - [The `web-ext` tool](https://github.com/mozilla/web-ext#web-ext) does the actual work.
-- The usual `yarn build` runs both of the above after running the linter and tests.
+- The usual `yarn build`, which is used by the CI, runs both of the above after running the linter and tests.
 - `yarn watch` is an alias for `yarn build-js --watch`, which runs the build continuously.
 
 ## Build modes
@@ -111,5 +111,5 @@ The build script assumes four use cases, each using a different source of versio
 
 - Building with `ext/manifest.json` should produce identical results to one from CI in terms of file names and their contents.
 - However, they will have different timestamps and file order, meaning Ghostbird builds are not strictly reproducible.
-- It would be possible to wipe `mtime`s to produce strictly identical zips, but this was considered pointless as AMO repackages the zip when signing the add-on anyway.
+- It would be possible to wipe `mtime`s to produce strictly identical zips, but this was considered pointless as ~~AMO repackages the zip when signing the add-on anyway.~~ **Edit:** It turns out Firefox add-ons are repackaged while Thunderbird add-ons are not, so there may be a point to this after all. PRs welcome.
 - See [the issue page for the `web-ext` tool](https://github.com/mozilla/web-ext/issues/2381#issuecomment-1075667618) for details.

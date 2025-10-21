@@ -87,12 +87,12 @@
 
 ### Why not use External Editor Revived as a base?
 
-(For those who don't know: [External Editor Revived by @Frederick888](https://github.com/Frederick888/external-editor-revived) is an add-on for Thunderbird that lets you edit email text in an external text editor, which works in recent Thunderbird versions and is actively maintained)
+(For those who don't know: [External Editor Revived by @Frederick888](https://github.com/Frederick888/external-editor-revived) is an add-on for Thunderbird that lets you edit email text in an external text editor, which works in recent Thunderbird versions and is well-maintained)
 
 * I started working on Ghostbird while mostly offline. Had I known about ERR's existence, Ghostbird wouldn't exist now!
 * ERR works using [Native Messaging](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Native_messaging), which is the only way to launch external process in recent Thunderbird API. It requires a companion app to be installed and registered as a Native Messaging Host. See [ERR's Wiki pages](https://github.com/Frederick888/external-editor-revived/wiki) for details.
 * Reasons to continue developing Ghostbird? I think GhostText's live updating functionality is pretty (for now; there is no fundamental reason ERR can't do the same).
-* That said, I think you should try ERR before using Ghostbird, which is still in alpha, as ERR is more mature and already on [AMO][revived].
+* That said, I think you should try ERR before using Ghostbird, which is still in beta, as ERR is more mature and already listed on [AMO][revived] as a stable extension.
 
   [![External Editor Revived](https://raw.githubusercontent.com/thunderbird/webext-support/refs/heads/master/images/get-the-addon.svg)][revived]
 
