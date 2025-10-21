@@ -1,5 +1,5 @@
 
-![logo](./ext/blue.svg)
+![logo](ext/blue.svg)
 
 # Ghostbird
 

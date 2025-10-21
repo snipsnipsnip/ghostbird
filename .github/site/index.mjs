@@ -1,21 +1,48 @@
 import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.0/+esm";
 import "https://cdn.jsdelivr.net/npm/docsify@4.13.1/+esm";
 
+// @ts-check
+
 mermaid.initialize({ startOnLoad: false });
 
-// see https://docsify.js.org/#/configuration
+/**
+ * Build a URL to a GitHub resource
+ * @param {string} type The type of resource ('blob' or 'tree')
+ * @param {string} path Absolute path (/ points to the repository root) to the resource
+ * @returns {string} The URL to the resource
+ */
+const urlFor = (type, path) => `https://github.com/exteditor/ghostbird/${type}/main/${encodeURIComponent(path.slice(1))}`;
 
-const footer = `____
+/**
+ * Build a Markdown text that redirects to a URL
+ * @param {string} url The URL to redirect to
+ * @returns {string} a Markdown text
+ */
+const redirectTo = (url) => `Redirecting to ${url}...\n\n<script>\nlocation.href = "${url}"${'</'}script>`;
 
-Powered by [Docsify](https://docsify.js.org/)
+/**
+ * Add a footer to the Markdown text
+ * @param {string} text The Markdown text
+ * @returns {string} Markdown text with footer added
+ */
+const addFooter = (text, vm) => `${text}
 
-[▲ Back to Top](#)
+____
+
+[▲ Back to Top](#top)
+<div align="right">
+Last Update: <a href="${urlFor('blob', vm.route.file)}">{docsify-updated}</a><br>
+Powered by <a href="https://docsify.js.org/">Docsify</a>
+</div>
 `;
+
+// see https://docsify.js.org/#/configuration
 
 window.$docsify = {
   name: 'Ghostbird \u{1faba}\u{1f4eb}\u{1f47b}',
   repo: 'exteditor/ghostbird',
   logo: 'ext/blue.svg',
+  formatUpdated: '{YYYY}-{MM}-{DD}',
   relativePath: true,
   executeScript: true,
   homepage: "homepage.md",
@@ -25,12 +52,16 @@ window.$docsify = {
   themeColor: '#0b9dd6',
   routes: {
     ['/README'](route) {
-      let url = `https://github.com/exteditor/ghostbird/blob/main/${encodeURIComponent(route.slice(1))}.md`
-      return `Redirecting to ${url}...\n\n<script>\nlocation.href = "${url}"${'</'}script>`
+      let url = urlFor('blob', `${route}.md`)
+      return redirectTo(url)
     },
-    ['/[-._/a-zA-Z]*[.][a-zA-Z]+'](route) {
-      let url = `https://github.com/exteditor/ghostbird/blob/main/${encodeURIComponent(route.slice(1))}`
-      return `Redirecting to ${url}...\n\n<script>\nlocation.href = "${url}"${'</'}script>`
+    ['/[-._/a-zA-Z]*[.][a-zA-Z]+$'](route) {
+      let url = urlFor('blob', route)
+      return redirectTo(url)
+    },
+    ['/[-._/a-zA-Z]+/$'](route) {
+      let url = urlFor('tree', route)
+      return redirectTo(url)
     },
   },
   search: [
@@ -53,8 +84,8 @@ window.$docsify = {
     }
   },
   plugins: [
-    (hook, _vm) => {
-      hook.beforeEach(html => html + footer);
+    (hook, vm) => {
+      hook.beforeEach((text) => addFooter(text, vm));
       hook.doneEach(() => mermaid.run());
     },
   ],
