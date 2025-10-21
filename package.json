@@ -12,7 +12,9 @@
   "engines": {
     "thunderbird": ">= 128"
   },
-  "homepage": "https://github.com/exteditor/ghostbird/",
+  "homepage": "https://exteditor.github.io/ghostbird/",
+  "bugs": "https://github.com/exteditor/ghostbird/issues/",
+  "funding": "https://give.thunderbird.net/",
   "repository": {
     "type": "git",
     "url": "github:exteditor/ghostbird"

@@ -174,6 +174,8 @@ This is how user actions are handled:
 * [Barrelsby](https://github.com/bencoveney/barrelsby)  generates `index.ts`.
   * See [building.md](./building.md) for details on build script internals.
 
+* We rely on GitHub Actions for CI and releases.
+
 ## Structure of the code<a id="structure"></a>
 
 The code loosely follows the [Ports and Adapters architecture](https://8thlight.com/insights/a-color-coded-guide-to-ports-and-adapters) and adheres to the [Dependency Inversion Principle](https://en.wikipedia.org/wiki/Dependency_inversion_principle).
@@ -188,21 +190,21 @@ The code loosely follows the [Ports and Adapters architecture](https://8thlight.
 
 The source code is located in the `src/` directory. The main files are:
 
-- `src/root/background.ts`: A background script that manages the WebSocket connection to the GhostText server and relays messages between the compose script and the server. Bundled as `background.js`.
-- `src/root/compose.ts`: A compose script that adds a button to the mail compose window. Bundled as `compose.js`.
-- `src/root/options.ts`: An options page for configuring settings such as the server URL and text editor to use. Bundled as `options.js` and used by `ext/options.html`.
+- [`src/root/background.ts`][backgroundts]: A background script that manages the WebSocket connection to the GhostText server and relays messages between the compose script and the server. Bundled as `background.js`.
+- [`src/root/compose.ts`][composets]: A compose script that adds a button to the mail compose window. Bundled as `compose.js`.
+- [`src/root/options.ts`][optionsts]: An options page for configuring settings such as the server URL and text editor to use. Bundled as `options.js` and used by `ext/options.html`.
 
 Other directories are:
 
-- `src/app-background/`: Infrastructure of `background.ts` that handles Thunderbird events.
-- `src/app-compose/`: Infrastructure of `compose.ts` that handles Thunderbird events.
-- `src/app-options/`: Infrastructure of `options.ts` that handles Thunderbird events.
-- `src/ghosttext-session/`: Main module of the add-on implementing the protocol.
-- `src/ghosttext-runner/`: Facilitator that works together with `ghosttext-session` which feeds events into it and execute decisions made.
-- `src/ghosttext-adaptor/`: Helpers of `ghosttext-runner`.
-- `src/test/`: Test code.
-- `src/thunderbird/`: Wrapper of the Thunderbird MailExtension API.
-- `src/util/`: Utility modules used by multiple modules.
+- [`src/app-background/`](../src/app-background/): Infrastructure of [`background.ts`][backgroundts] that handles Thunderbird events.
+- [`src/app-compose/`](../src/app-compose/): Infrastructure of [`compose.ts`][composets] that handles Thunderbird events.
+- [`src/app-options/`](../src/app-options/): Infrastructure of [`options.ts`][optionsts] that handles Thunderbird events.
+- [`src/ghosttext-session/`](../src/ghosttext-session/): Main module of the add-on implementing the protocol.
+- [`src/ghosttext-runner/`](../src/ghosttext-runner/): Facilitator that works together with `ghosttext-session` by feeding events into it and execute decisions made.
+- [`src/ghosttext-adaptor/`](../src/ghosttext-adaptor/): Helpers of `ghosttext-runner`.
+- [`src/test/`](../src/test/): Test code.
+- [`src/thunderbird/`](../src/thunderbird/): Wrapper of the Thunderbird MailExtension API.
+- [`src/util/`](../src/util/): Utility modules used by multiple modules.
 
 ### Module Dependencies
 
@@ -274,7 +276,7 @@ options_api & background_api & compose_api -.->|indirectly calls| thunderbird
 
 * `api.ts` defines subsets of the Thunderbird API used by the module in the folder.
 * These interfaces are implemented by `thunderbird/` modules.
-* This is to isolate the impact of future Thunderbird API changes to `src/thunderbird/` modules only.
+* This is to isolate the impact of future Thunderbird API changes to `thunderbird/` modules only.
 
 ```mermaid
 flowchart TB
@@ -299,7 +301,7 @@ ghostbird_runner -->|uses| ghostbird_session
 
 TL;DR: `root` module contains entry point and the [Composition Root][ploeh].
 
-* `root/startup/startup_{background,compose,options}.ts` is used at the toplevel modules, namely `background.ts`, `compose.ts`, and `options.ts`. It initializes classes.
+* [`root/startup/startup_*.ts`][startupdir] are used at the toplevel modules, namely [`background.ts`][backgroundts], [`compose.ts`][composets], and [`options.ts`][optionsts]. It initializes classes.
 * All the non-root classes in the codebase are either:
   * A) instantiated by `startup*()`, or
   * B) instantiated directly with `new` operator by instances of (A).
@@ -317,7 +319,7 @@ TL;DR: `root` module contains entry point and the [Composition Root][ploeh].
 * A class may define `static aliases: string[] | string` to have the other name.
   * Name clashes will result in error at startup, except ones passed to classes with `wantArray = true`.
 * Use of automatic instantiation must be restricted to `root/` to make the code easier to follow.
-* `test/startup.test.ts` contains tests to verify that all classes registered can be instantiated successfully.
+* [`test/startup.test.ts`](../src/test/startup.test.ts) contains tests to verify that all classes registered can be instantiated successfully.
 * See [FAQ](./faq-architectural.md) for some design decisions and justification.
 
 ```mermaid
@@ -358,3 +360,7 @@ instantiate_class --> need_instance
 [ploeh]: https://blog.ploeh.dk/2019/06/17/composition-root-location/
 [wiki]: https://github.com/exteditor/ghostbird/wiki
 [so]: https://stackoverflow.com/q/73206468/188256
+[startupdir]: ../src/root/startup/
+[backgroundts]: ../src/root/background.ts
+[composets]: ../src/root/compose.ts
+[optionsts]: ../src/root/options.ts
