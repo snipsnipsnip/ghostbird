@@ -1,11 +1,8 @@
-
-![logo](ext/blue.svg)
-
 # Ghostbird
 
-> Compose email in your favorite text editor
+> Compose email using your favorite text editor in Thunderbird
 >
-> <video alt="logo" src="https://github.com/user-attachments/assets/150ef991-10b8-45e2-bb2c-690f1b45a7ea" controls muted style="max-width: min(30rem, 90vw)">
+> <video alt="logo" src="https://github.com/user-attachments/assets/150ef991-10b8-45e2-bb2c-690f1b45a7ea" controls muted style="max-width: min(600px, 90vw)">
 
 [GitHub](https://github.com/exteditor/ghostbird/#readme)
 [Codeberg](https://codeberg.org/exteditor/ghostbird#readme)
