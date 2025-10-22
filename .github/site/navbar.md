@@ -1,0 +1,10 @@
+- &#x1f4c2; Pages
+  - [&#x1faba; README](/)
+  - [&#x2753; FAQ](/doc/faq)
+  - [&#x1f4c4; BUILDING](/BUILDING)
+  - [&#x1f4c4; CONTRIBUTING](/CONTRIBUTING)
+  - [&#x1f4c4; doc/building](/doc/building)
+  - [&#x1f4c4; doc/design](/doc/design)
+  - [&#x1f4c4; doc/testing](/doc/testing)
+  - [&#x1f4c4; doc/faq-architectural](/doc/faq-architectural)
+- [&#x1f30d; Translation](https://translate.kagi.com/exteditor.github.io/ghostbird/)

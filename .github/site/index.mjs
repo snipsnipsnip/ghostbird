@@ -49,6 +49,8 @@ window.$docsify = {
   executeScript: true,
   homepage: "homepage.md",
   coverpage: "coverpage.md",
+  loadNavbar: "navbar.md",
+  mergeNavbar: true,
   auto2top: true,
   maxLevel: 3,
   themeColor: '#0b9dd6',
