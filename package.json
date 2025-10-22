@@ -81,12 +81,12 @@
     "jsdom": "^26.1.0",
     "rolldown": "latest",
     "toposort-class": "^1.0.1",
-    "tsdown": "^0.15.5",
+    "tsdown": "^0.15.9",
     "typedoc": "^0.28.12",
     "typedoc-plugin-mdn-links": "^5.0.9",
     "typescript": "^5.9.3",
     "vitest": "^3.2.4",
-    "web-ext": "^8.10.0"
+    "web-ext": "^9.0.0"
   },
   "peerDependencies": {
     "@vitest/ui": "*"
