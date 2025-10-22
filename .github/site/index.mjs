@@ -11,7 +11,7 @@ mermaid.initialize({ startOnLoad: false });
  * @param {string} path Absolute path (/ points to the repository root) to the resource
  * @returns {string} The URL to the resource
  */
-const urlFor = (type, path) => `https://github.com/exteditor/ghostbird/${type}/main/${encodeURIComponent(path.slice(1))}`;
+const urlFor = (type, path) => `https://github.com/exteditor/ghostbird/${type}/main/${encodeURIComponent(path.replace(/^[/]+/, ''))}`;
 
 /**
  * Build a Markdown text that redirects to a URL
@@ -31,8 +31,10 @@ ____
 
 [▲ Back to Top](#top)
 <div align="right">
-Last Update: <a href="${urlFor('blob', vm.route.file)}">{docsify-updated}</a><br>
-Powered by <a href="https://docsify.js.org/">Docsify</a>
+
+Last Update: [{docsify-updated}](${urlFor('blob', vm.route.file)})<br>
+Powered by [Docsify](https://docsify.js.org/)
+
 </div>
 `;
 
