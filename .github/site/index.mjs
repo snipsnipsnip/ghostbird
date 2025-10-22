@@ -53,18 +53,9 @@ window.$docsify = {
   maxLevel: 3,
   themeColor: '#0b9dd6',
   routes: {
-    ['/README'](route) {
-      let url = urlFor('blob', `${route}.md`)
-      return redirectTo(url)
-    },
-    ['/[-._/a-zA-Z]*[.][a-zA-Z]+$'](route) {
-      let url = urlFor('blob', route)
-      return redirectTo(url)
-    },
-    ['/[-._/a-zA-Z]+/$'](route) {
-      let url = urlFor('tree', route)
-      return redirectTo(url)
-    },
+    '/README': (route) => redirectTo(urlFor('blob', `${route}.md`)),
+    '/[-._/a-zA-Z]*[.][a-zA-Z]+$': (route) => redirectTo(urlFor('blob', route)),
+    '/[-._/a-zA-Z]+/$': (route) => redirectTo(urlFor('tree', route)),
   },
   search: [
     '/',
