@@ -11,7 +11,7 @@ mermaid.initialize({ startOnLoad: false });
  * @param {string} path Absolute path (/ points to the repository root) to the resource
  * @returns {string} The URL to the resource
  */
-const urlFor = (type, path) => `https://github.com/exteditor/ghostbird/${type}/main/${encodeURIComponent(path.slice(1))}`;
+const urlFor = (type, path) => `https://github.com/exteditor/ghostbird/${type}/main/${encodeURIComponent(path.replace(/^[/]+/, ''))}`;
 
 /**
  * Build a Markdown text that redirects to a URL
@@ -31,8 +31,10 @@ ____
 
 [▲ Back to Top](#top)
 <div align="right">
-Last Update: <a href="${urlFor('blob', vm.route.file)}">{docsify-updated}</a><br>
-Powered by <a href="https://docsify.js.org/">Docsify</a>
+
+Last Update: [{docsify-updated}](${urlFor('blob', vm.route.file)})<br>
+Powered by [Docsify](https://docsify.js.org/)
+
 </div>
 `;
 
@@ -47,22 +49,15 @@ window.$docsify = {
   executeScript: true,
   homepage: "homepage.md",
   coverpage: "coverpage.md",
+  loadNavbar: "navbar.md",
+  mergeNavbar: true,
   auto2top: true,
   maxLevel: 3,
   themeColor: '#0b9dd6',
   routes: {
-    ['/README'](route) {
-      let url = urlFor('blob', `${route}.md`)
-      return redirectTo(url)
-    },
-    ['/[-._/a-zA-Z]*[.][a-zA-Z]+$'](route) {
-      let url = urlFor('blob', route)
-      return redirectTo(url)
-    },
-    ['/[-._/a-zA-Z]+/$'](route) {
-      let url = urlFor('tree', route)
-      return redirectTo(url)
-    },
+    '/README': (route) => redirectTo(urlFor('blob', `${route}.md`)),
+    '/[-._/a-zA-Z]*[.][a-zA-Z]+$': (route) => redirectTo(urlFor('blob', route)),
+    '/[-._/a-zA-Z]+/$': (route) => redirectTo(urlFor('tree', route)),
   },
   search: [
     '/',

@@ -101,7 +101,7 @@ const esmConfig = {
     // Generate _locales/*/messages.json
     generateLocaleMessages({ path: "./locales.toml" }),
     // Upload bundle size info to Codecov
-    isRelease && codecov({ env, bundleName: "background" }),
+    isRelease ? codecov({ env, bundleName: "background" }) : null,
   ],
 } satisfies Options
 
@@ -115,7 +115,7 @@ const iifeConfig = {
   format: "iife",
   plugins: [
     // Upload bundle size info to Codecov
-    isRelease && codecov({ env, bundleName: "compose" }),
+    isRelease ? codecov({ env, bundleName: "compose" }) : null,
   ],
 } satisfies Options
 

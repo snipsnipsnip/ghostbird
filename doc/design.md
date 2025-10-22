@@ -299,25 +299,26 @@ ghostbird_runner -->|uses| ghostbird_session
 
 ### About `startup_*.ts`
 
-TL;DR: `root` module contains entry point and the [Composition Root][ploeh].
+TL;DR: `root/` module contains entry point and the [Composition Root][ploeh].
 
-* [`root/startup/startup_*.ts`][startupdir] are used at the toplevel modules, namely [`background.ts`][backgroundts], [`compose.ts`][composets], and [`options.ts`][optionsts]. It initializes classes.
+* Each of [`root/startup/startup_*.ts`][startupdir] is used in corresponding top-level module, namely [`background.ts`][backgroundts], [`compose.ts`][composets], and [`options.ts`][optionsts]. These modules initialize classes.
 * All the non-root classes in the codebase are either:
   * A) instantiated by `startup*()`, or
-  * B) instantiated directly with `new` operator by instances of (A).
+  * B) instantiated directly using the `new` operator by instances of (A).
 * All (A) classes have a property `static isSingleton: boolean`.
 * `startup*()` returns a factory on steroids; it scans classes that have a `static isSingleton` property and instantiates them.
-  * Instantiated classes are passed to the constructors of dependent classes, which must also define `static isSingleton`.
-* `static isSingleton: boolean` indicates whether and how the class should be instantiated:
+  * The instantiated classes are passed to the constructors of dependent classes, which must also define `static isSingleton`.
+* `static isSingleton: boolean` indicates how the class should be instantiated:
   * If `true`, only one instance is created and shared.
   * If `false`, a new instance is created each time it is needed.
-  * If `undefined` or the property is missing, the class is not instantiated automatically. Attempting to request it from automatically instantiated classes will result in an error.
-* If a class wants to use another class, it should have a constructor parameter and a property having the same name as the class name (case-insensitive).
-* A class may also have `static wantArray = true` to allow duplicate entries:
-  * If `true`, each argument to the constructor will be an array of one or more instances that have the same name.
-  * If `false`, `undefined`, or the property is missing, each argument to the constructor will be an instance of the class that has the name uniquely.
-* A class may define `static aliases: string[] | string` to have the other name.
-  * Name clashes will result in error at startup, except ones passed to classes with `wantArray = true`.
+  * If the property is missing or contains any other value like `undefined`, the class is not instantiated automatically. Attempting to request it from a class that is automatically instantiated will result in an error.
+* If a class wants to use another class, that class should have a field and a constructor parameter with the same name as the exported class name (case-insensitive).
+  * That is, constructors are expected to be simple, like `constructor(foo) { this.foo = foo; }`
+* A class may also define `static wantArray = true` to allow duplicate entries:
+  * If `true`, each argument to the constructor will be an array of one or more instances that share the same name.
+  * If the property is missing or contains any other value like `undefined`, each argument to the constructor will be an instance of a class that uniquely matches that name.
+* A class may define `static aliases: string[] | string` to have alternative names.
+  * Name clashes will result in an error at startup, except for those passed to classes with `wantArray = true`.
 * Use of automatic instantiation must be restricted to `root/` to make the code easier to follow.
 * [`test/startup.test.ts`](../src/test/startup.test.ts) contains tests to verify that all classes registered can be instantiated successfully.
 * See [FAQ](./faq-architectural.md) for some design decisions and justification.

@@ -1,0 +1,7 @@
+{
+  "repo_notes": [
+    {
+      "content": "## Introduction\n\nGhostbird is a Thunderbird add-on (a MailExtension) that enables users to compose emails using their preferred external text editor (VS Code, Vim, Sublime Text, etc.) through the GhostText protocol. The extension acts as a bridge between Thunderbird's compose window and external editors, providing real-time text synchronization.\n\n## Points to describe\n\n* Use Case: Ghostbird deals with two external systems; Thunderbird and the GhostText Server (and the text editor behind it), both of which the user controls. We should note it when describing overview.\n* Code Structure: Ghostbird's modules can primarily executed in three contexts: Background Script, Compose Script, and Options Page, as in `design.md`. Also, they can be grouped into three layers: Infrastructure (`src/root/`, `src/thunderbird/`, `src/util/`), Application (`src/app-*`), Domain (`src/ghosttext-*`). We should first introduce each context and communications between these, then introduce internals focusing role of each layer.\n* Tooling: Aside of source code, the Ghostbird repo also contains documentation (`doc/*.md`), build tool (`package.json` for Yarn; `tools/tsdown_config.ts` for tsdown), CI configuration(`.github/workflow`), test harness (`src/test/*.ts` for Vitest), and WebExtension configuration (manifest template `manifest_template.json`, localization messages `locales.toml`, and assets such as `ext/blue.svg`)."
+    }
+  ]
+}
