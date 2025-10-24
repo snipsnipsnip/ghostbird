@@ -11,14 +11,32 @@ mermaid.initialize({ startOnLoad: false });
  * @param {string} path Absolute path (/ points to the repository root) to the resource
  * @returns {string} The URL to the resource
  */
-const urlFor = (type, path) => `https://github.com/exteditor/ghostbird/${type}/main/${encodeURIComponent(path.replace(/^[/]+/, ''))}`;
+const urlFor = (type, path) => `https://github.com/exteditor/ghostbird/${encodeURIComponent(type)}/main/${encodeURIComponent(path.replace(/^[/]+/, ''))}`;
 
 /**
  * Build a Markdown text that redirects to a URL
  * @param {string} url The URL to redirect to
- * @returns {string} a Markdown text
+ * @returns {string} A Markdown text
  */
-const redirectTo = (url) => `Redirecting to ${url}...\n\n<script>\nlocation.href = "${url}"${'</'}script>`;
+const redirectTo = (url) => JSON.stringify({redirectTo: url});
+
+/**
+ * Does redirect if the text is an instruction for it.
+ * @param {string} text A Markdown text that may contain a redirect instruction
+ * @returns {string} Returns the `text` as-is if it doesn't contain redirect instruction
+ */
+function tryRedirect(text) {
+  try {
+    if (text.startsWith('{"redirectTo":"')) {
+      const { redirectTo } = JSON.parse(text);
+      location.replace(redirectTo);
+      return "Redirecting...";
+    }
+  } catch (e) {
+    console.warn("failed to parse the redirect instruction", e);
+  }
+  return text;
+}
 
 /**
  * Add a footer to the Markdown text
@@ -46,7 +64,7 @@ window.$docsify = {
   logo: 'ext/blue.svg',
   formatUpdated: '{YYYY}-{MM}-{DD}',
   relativePath: true,
-  executeScript: true,
+  executeScript: false,
   homepage: "homepage.md",
   coverpage: "coverpage.md",
   loadNavbar: "navbar.md",
@@ -56,6 +74,7 @@ window.$docsify = {
   themeColor: '#0b9dd6',
   routes: {
     '/README': (route) => redirectTo(urlFor('blob', `${route}.md`)),
+    '/LICENSE': (route) => redirectTo(urlFor('blob', route)),
     '/[-._/a-zA-Z]*[.][a-zA-Z]+$': (route) => redirectTo(urlFor('blob', route)),
     '/[-._/a-zA-Z]+/$': (route) => redirectTo(urlFor('tree', route)),
   },
@@ -80,6 +99,7 @@ window.$docsify = {
   },
   plugins: [
     (hook, vm) => {
+      hook.beforeEach((text) => tryRedirect(text));
       hook.beforeEach((text) => addFooter(text, vm));
       hook.doneEach(() => mermaid.run());
     },
