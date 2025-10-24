@@ -5,7 +5,7 @@ export class OptionsEventRouter {
 
   constructor(readonly optionsStore: IOptionsStore) {}
 
-  initOptions(elem: GhostbirdOptionsElement): Promise<void> {
+  initOptions(elem: GhostbirdOptionsElement): Promise<never> {
     return elem.startSync(this.optionsStore)
   }
 }

@@ -1,10 +1,10 @@
 /** @file Entrypoint of the options page */
 
-import { GhostbirdOptionsElement } from "src/app-options/ghostbird_options_element"
-import { OptionsEventRouter } from "src/app-options/options_event_router"
+import { GhostbirdOptionsElement, OptionsEventRouter } from "src/app-options"
 import { default as optionsSyncCtor } from "webext-options-sync"
 import { startupOptions } from "./startup/startup_options"
 
+/** Initialize the event router for the options page */
 function prepareRouter(): OptionsEventRouter {
   const startup = startupOptions({
     optionsSyncCtor,
@@ -12,17 +12,25 @@ function prepareRouter(): OptionsEventRouter {
   return startup(OptionsEventRouter)
 }
 
-console.log("starting", import.meta.url)
+/** Wait for the options page to be ready and start processing events */
+async function runRouterAsync(): Promise<never> {
+  await customElements.whenDefined("ghostbird-options")
 
-customElements.whenDefined("ghostbird-options").then(async () => {
   const router = prepareRouter()
   let [opt] = document.getElementsByTagName("ghostbird-options")
   if (!opt) {
     throw Error("unexpected html state")
   }
-  await router.initOptions(opt as GhostbirdOptionsElement)
-})
+
+  return router.initOptions(opt as GhostbirdOptionsElement)
+}
+
+console.info("starting", import.meta.url)
+
+const mainPromise: Promise<never> = runRouterAsync()
 
 customElements.define("ghostbird-options", GhostbirdOptionsElement)
 
-console.log("started", import.meta.url)
+console.info("started", import.meta.url)
+
+await mainPromise
