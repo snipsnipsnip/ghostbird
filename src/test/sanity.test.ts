@@ -30,9 +30,9 @@ describe(startupCompose, () => {
   it("should resolve ComposeEventRouter successfully", ({ expect }) => {
     let startup = startupCompose({
       messenger: Symbol("messenger") as unknown as typeof messenger,
-      body: Symbol("body"),
-      domParser: Symbol("domParser"),
-      selection: Symbol("selection"),
+      body: Symbol("body") as unknown as HTMLElement,
+      domParser: Symbol("domParser") as unknown as DOMParser,
+      selection: Symbol("selection") as unknown as Selection,
     })
     expect(startup(ComposeEventRouter)).instanceOf(ComposeEventRouter)
   })
