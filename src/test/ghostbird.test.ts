@@ -1,12 +1,11 @@
-import type { IButtonMenu, IComposeWindowDetector, IUiUtil } from "src/app-background"
+import type { IButtonMenu, IComposeWindowDetector, ITab, IUiUtil } from "src/app-background"
 import * as appBackground from "src/app-background"
 import { BackgroundEventRouter } from "src/app-background"
 import * as appCompose from "src/app-compose"
 import { ComposeEventRouter } from "src/app-compose"
 import type {
-  BackgroundMessage,
-  BodyState,
   ComposeDetails,
+  IGhostClientPort,
   IGhostServerPort,
   IManifestInfo,
   INotificationTray,
@@ -17,13 +16,49 @@ import type {
 import * as ghosttextAdaptor from "src/ghosttext-adaptor"
 import type { IHeart, IMessagePort } from "src/ghosttext-runner"
 import * as ghosttextRunner from "src/ghosttext-runner"
-import type { EditorChangeResponse } from "src/ghosttext-session"
+import type { EditorChangeResponse, UpdateRequest } from "src/ghosttext-session"
 import * as ghosttextSession from "src/ghosttext-session"
 import type { BackgroundCatalog, ComposeCatalog } from "src/root/startup"
 import { makeRegistry, type WirelessInjector, wireless } from "src/root/util"
 import { promisifyMessageChannel } from "src/thunderbird/util"
 import { describe, it, vi as jest } from "vitest"
 import type OptionsSync from "webext-options-sync"
+
+describe("Ghostbird", () => {
+  it("should send initial text to server when started from toolbar", async ({ expect }) => {
+    const sut = new Ghostbird()
+    sut.startFromToolbar({ id: 42 })
+    sut.composeBody.textContent = "hello"
+
+    await expect(sut.sendsToServer()).resolves.to.be.deep.equal({
+      text: "hello",
+      title: "subject",
+      url: "test-id.localhost",
+      selections: [{ start: 0, end: 0 }],
+      syntax: "",
+    })
+
+    await sut.closeSession()
+  })
+
+  it("should apply text from server to the compose body", async ({ expect }) => {
+    const sut = new Ghostbird()
+    sut.startFromToolbar({ id: 42 })
+    sut.composeBody.textContent = "hello"
+
+    await expect(sut.sendsToServer()).resolves.to.be.deep.equal({
+      text: "hello",
+      title: "subject",
+      url: "test-id.localhost",
+      selections: [{ start: 0, end: 0 }],
+      syntax: "",
+    })
+    sut.receives("hello, world")
+    await sut.closeSession()
+
+    expect(sut.composeBody.textContent).equals("hello, world")
+  })
+})
 
 /** Classes needed for the background router to work */
 type MockedThunderbirdCatalog = {
@@ -37,54 +72,20 @@ type MockedThunderbirdCatalog = {
   webClient: IWebClient
 }
 
-describe("Ghostbird", () => {
-  it("should send and receive texts and apply them to the compose body", async ({ expect }) => {
-    let [backgroundPort, composePort] = promisifyMessageChannel<BackgroundMessage, BodyState>(new MessageChannel())
-    let [clientWS, serverWS] = promisifyMessageChannel<string, string>(new MessageChannel())
-    let composeInjector = makeMockedComposeInjector()
-    let composeBody = composeInjector(Object, ["body"]) as unknown as HTMLBodyElement
-    let composeRouter = composeInjector(ComposeEventRouter)
-    let bgInjector = makeMockedBackgroundInjector(backgroundPort, clientWS)
-    let sut = bgInjector(BackgroundEventRouter)
-    composeBody.textContent = "hello"
-
-    const backgroundPromise = sut.handleComposeAction({ id: 42 })
-    const composePromise = composeRouter.handleConnect(composePort)
-    await expect(serverWS.waitReady()).resolves.toBeUndefined()
-    const responses: string[] = []
-    responses.push(serverWS.clearReceived() as string)
-    serverWS.send(
-      JSON.stringify({
-        text: "hello, world",
-        selections: [{ start: 5, end: 5 }],
-      } satisfies EditorChangeResponse),
-    )
-    serverWS.close()
-    let closePromise = Promise.all([backgroundPromise, composePromise]).then(() => {})
-
-    await expect(closePromise).resolves.toBeUndefined()
-    expect(responses.map((str) => typeof str === "string" && JSON.parse(str))).deep.equals([
-      {
-        text: "hello",
-        title: "subject",
-        url: "test-id.localhost",
-        selections: [{ start: 0, end: 0 }],
-        syntax: "",
-      },
-    ])
-    expect(composeBody.textContent).equals("hello, world")
-  })
-})
-
 function makeMockedBackgroundInjector(
-  composeWindowPort: IGhostServerPort,
-  webSocketPort: IMessagePort<string, string>,
+  mockedThunderbird: MockedThunderbirdCatalog,
 ): WirelessInjector<BackgroundCatalog> {
   let registry = makeRegistry({
     messenger: Symbol("messenger") as unknown as typeof globalThis.messenger,
     optionsSyncCtor: Symbol("optionsSyncCtor") as unknown as typeof OptionsSync,
-    menuItems: [],
-    ...makeMockedThunderbird(composeWindowPort, webSocketPort),
+    menuItems: [
+      {
+        icon: "",
+        id: "stop_ghostbird",
+        label: "stop",
+      },
+    ],
+    ...mockedThunderbird,
   } as unknown as BackgroundCatalog)
 
   return wireless([appBackground, ghosttextSession, ghosttextAdaptor, ghosttextRunner], registry)
@@ -101,6 +102,7 @@ function makeMockedComposeInjector(): WirelessInjector<ComposeCatalog> {
   return wireless([appCompose], registry)
 }
 
+/** Build a mock/stub of the Thunderbird API for testing purposes. */
 function makeMockedThunderbird(
   composeWindowPort: IMessagePort<object, object>,
   webSocketPort: IMessagePort<string, string>,
@@ -145,4 +147,61 @@ function makeMockedThunderbird(
     notificationTray: Symbol("notificationTray") as unknown as INotificationTray,
     uiUtil: Symbol("uiUtil") as unknown as IUiUtil,
   } satisfies MockedThunderbirdCatalog
+}
+
+class Ghostbird {
+  readonly composeBody: HTMLBodyElement
+  private readonly backgroundRouter: BackgroundEventRouter
+  private readonly composeRouter: ComposeEventRouter
+  private readonly serverSocket: IMessagePort<string, string>
+  private readonly backgroundToCompose: IGhostClientPort
+  private session: Promise<void> | undefined
+
+  constructor() {
+    let [backgroundToCompose, composeToBackground]: [IGhostClientPort, IGhostServerPort] = promisifyMessageChannel(
+      new MessageChannel(),
+    )
+    let [clientSocket, serverSocket] = promisifyMessageChannel<string, string>(new MessageChannel())
+    let composeInjector = makeMockedComposeInjector()
+    let mockedThunderbird = makeMockedThunderbird(composeToBackground, clientSocket)
+    let backgroundInjector = makeMockedBackgroundInjector(mockedThunderbird)
+
+    this.backgroundToCompose = backgroundToCompose
+    this.serverSocket = serverSocket
+    this.composeBody = composeInjector(Object, ["body"]) as unknown as HTMLBodyElement
+    this.composeRouter = composeInjector(ComposeEventRouter)
+    this.backgroundRouter = backgroundInjector(BackgroundEventRouter)
+  }
+
+  startFromToolbar(tab: ITab): void {
+    const backgroundPromise = this.backgroundRouter.handleComposeAction(tab)
+    const composePromise = this.composeRouter.handleConnect(this.backgroundToCompose)
+
+    if (this.session) {
+      throw Error("Session already started")
+    }
+
+    this.session = Promise.all([backgroundPromise, composePromise]).then(() => {})
+  }
+
+  receives(text: string): void {
+    this.serverSocket.send(
+      JSON.stringify({
+        text,
+        selections: [{ start: 0, end: 0 }],
+      } satisfies EditorChangeResponse),
+    )
+  }
+
+  async sendsToServer(): Promise<UpdateRequest | undefined> {
+    await this.serverSocket.waitReady()
+    const received = this.serverSocket.clearReceived()
+
+    return typeof received === "string" ? JSON.parse(received as string) : received
+  }
+
+  async closeSession(): Promise<void> {
+    this.serverSocket.close()
+    await this.session
+  }
 }
