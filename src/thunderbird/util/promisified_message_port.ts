@@ -2,9 +2,11 @@ import type { IMessagePort } from "src/ghosttext-runner"
 import { PromisifyingQueue } from "src/util/promisifying_queue"
 
 /**
- * Create a pair of PromisifiedMessagePort from a MessageChannel.
- * @template TRequest The type of messages which port1 can sends, and port2 expects to receive
- * @template TResponse The type of messages which port1 expects to receive, and port2 can send
+ * Creates a pair of promisified message ports from a MessageChannel.
+ *
+ * @template TRequest The type of messages the first returned port can send and the second expects to receive
+ * @template TResponse The type of messages the first returned port expects to receive and the second can send
+ * @returns A tuple `[IMessagePort<TRequest, TResponse>, IMessagePort<TResponse, TRequest>]` where the first element is a promisified port for sending `TRequest` and receiving `TResponse`, and the second element is a promisified port for sending `TResponse` and receiving `TRequest`
  */
 export function promisifyMessageChannel<TRequest extends object | string, TResponse extends object | string>({
   port1,
