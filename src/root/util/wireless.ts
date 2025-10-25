@@ -40,11 +40,12 @@ export type WirelessInjector<TCatalog> = <TCtor>(
  *
  * @param modules - Iterable of module objects to scan for startup classes and their metadata
  * @param registry - Registry used to resolve dependencies and that will receive the created injector under the key `"$injector"`
+ * @template TCatalog - The type that lists available dependencies in the registry
  * @returns A `WirelessInjector` function that, given a constructor and optional dependency keys, returns a resolved instance for the catalog
  */
 export function wireless<TCatalog>(
   modules: Iterable<Record<string, unknown>>,
-  registry: IRegistry<TCatalog>,
+  registry: IRegistry<Partial<TCatalog>>,
 ): WirelessInjector<TCatalog> {
   const wire = wired(listClasses(modules) as unknown as Iterable<IClassInfo<TCatalog>>, registry)
   const injector: WirelessInjector<TCatalog> = <TCtor>(ctor: TCtor, deps?: Iterable<KeyOf<TCatalog>>) =>

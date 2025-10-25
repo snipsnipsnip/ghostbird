@@ -16,4 +16,4 @@ export type OptionsCatalog = OptionsConstants & {
 
 /** Collects related classes and prepares the injector for options.js */
 export const startupOptions = (consts: OptionsConstants): WirelessInjector<OptionsCatalog> =>
-  wireless([thunderbirdOptions, appOptions], makeRegistry(consts as OptionsCatalog))
+  wireless([thunderbirdOptions, appOptions], makeRegistry<Partial<OptionsCatalog>>(consts))

@@ -5,6 +5,7 @@ import * as appCompose from "src/app-compose"
 import { ComposeEventRouter } from "src/app-compose"
 import type {
   ComposeDetails,
+  IComposeWindow,
   IGhostClientPort,
   IGhostServerPort,
   IManifestInfo,
@@ -18,7 +19,7 @@ import type { IHeart, IMessagePort } from "src/ghosttext-runner"
 import * as ghosttextRunner from "src/ghosttext-runner"
 import type { EditorChangeResponse, UpdateRequest } from "src/ghosttext-session"
 import * as ghosttextSession from "src/ghosttext-session"
-import type { BackgroundCatalog, ComposeCatalog } from "src/root/startup"
+import type { BackgroundCatalog, BackgroundConstants, ComposeCatalog, ComposeConstants } from "src/root/startup"
 import { makeRegistry, type WirelessInjector, wireless } from "src/root/util"
 import { promisifyMessageChannel } from "src/thunderbird/util"
 import { describe, it, vi as jest } from "vitest"
@@ -75,7 +76,7 @@ type MockedThunderbirdCatalog = {
 function makeMockedBackgroundInjector(
   mockedThunderbird: MockedThunderbirdCatalog,
 ): WirelessInjector<BackgroundCatalog> {
-  let registry = makeRegistry({
+  let registry = makeRegistry<Partial<BackgroundCatalog>>({
     messenger: Symbol("messenger") as unknown as typeof globalThis.messenger,
     optionsSyncCtor: Symbol("optionsSyncCtor") as unknown as typeof OptionsSync,
     menuItems: [
@@ -86,18 +87,18 @@ function makeMockedBackgroundInjector(
       },
     ],
     ...mockedThunderbird,
-  } as unknown as BackgroundCatalog)
+  } satisfies MockedThunderbirdCatalog & BackgroundConstants)
 
   return wireless([appBackground, ghosttextSession, ghosttextAdaptor, ghosttextRunner], registry)
 }
 
 function makeMockedComposeInjector(): WirelessInjector<ComposeCatalog> {
-  let registry = makeRegistry({
+  let registry = makeRegistry<Partial<ComposeCatalog>>({
     messenger: Symbol("messenger") as unknown as typeof globalThis.messenger,
     body: document.body,
-    selection: getSelection(),
+    selection: getSelection() as Selection,
     domParser: new DOMParser(),
-  } as unknown as ComposeCatalog)
+  } satisfies ComposeConstants)
 
   return wireless([appCompose], registry)
 }
@@ -119,11 +120,11 @@ function makeMockedThunderbird(
           isPlainText: true,
           subject: "subject",
           body: "this initial text will be ignored",
-        } as ComposeDetails),
+        } satisfies ComposeDetails),
         setDetails: jest.fn(),
         openPort: jest.fn().mockReturnValue(composeWindowPort),
         setIcon: jest.fn(),
-      }),
+      } satisfies IComposeWindow),
     },
     storedOptionsLoader: {
       load: jest.fn().mockResolvedValue({

@@ -228,11 +228,12 @@ class Wire<TCatalog> implements IWire<TCatalog>, IResolver<TCatalog> {
  * @param registry A map used for caching registrations
  * @param aliasCollector A map that collects (possibly duplicated) aliases and populate them as dependencies
  * @param nameForDuplicatesOf A function to generate names for duplicate aliases
+ * @template TCatalog - The type that lists available dependencies in the registry
  * @returns A DI container
  */
 export function wire<TCatalog>(
   classes: Iterable<Readonly<IClassInfo<TCatalog>>>,
-  registry: IRegistry<TCatalog>,
+  registry: IRegistry<Partial<TCatalog>>,
   aliasCollector: IAliasMap<TCatalog>,
   nameForDuplicatesOf: (alias: string) => string,
 ): IWire<TCatalog> {
@@ -243,5 +244,5 @@ export function wire<TCatalog>(
   for (let entry of aliasCollector.makeAliasEntries()) {
     registry.set(...(entry as [KeyOf<TCatalog>, ResolveQuery<TCatalog, KeyOf<TCatalog>>]))
   }
-  return new Wire(nameForDuplicatesOf, registry, new Map())
+  return new Wire(nameForDuplicatesOf, registry as unknown as IRegistry<TCatalog>, new Map())
 }
