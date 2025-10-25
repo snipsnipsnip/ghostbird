@@ -11,11 +11,12 @@ export const defaultNameForDuplicatesOf = (alias: string): string => `${alias}[]
  * Initialize wire with a default `AliasMap` class. Creates a factory from the collected class constructors and their parameters.
  * @param classes Class constructors with some metadata to instruct its construction
  * @param registry A map used for caching registrations
+ * @template TCatalog - The type that lists available dependencies in the registry
  * @returns A DI container
  */
 export function wired<TCatalog>(
   classes: Iterable<Readonly<IClassInfo<TCatalog>>>,
-  registry: IRegistry<TCatalog>,
+  registry: IRegistry<Partial<TCatalog>>,
 ): IWire<TCatalog> {
   return wire(classes, registry, new AliasMap<TCatalog>(defaultNameForDuplicatesOf), defaultNameForDuplicatesOf)
 }

@@ -20,4 +20,4 @@ export type ComposeCatalog = ComposeConstants & {
 
 /** Collects related classes and prepares the injector for compose.js */
 export const startupCompose = (consts: ComposeConstants): WirelessInjector<ComposeCatalog> =>
-  wireless([thunderbirdCompose, appCompose], makeRegistry(consts as ComposeCatalog))
+  wireless([thunderbirdCompose, appCompose], makeRegistry<Partial<ComposeCatalog>>(consts))
