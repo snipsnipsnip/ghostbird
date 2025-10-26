@@ -97,7 +97,7 @@ const esmConfig = {
     // Run tsc
     !isRelease && typecheckWithTsc(),
     // Generate manifest.json
-    generateManifest({ env: isRelease ? (env as Record<string, string>) : {} }),
+    generateManifest(isRelease ? { env } : undefined),
     // Generate _locales/*/messages.json
     generateLocaleMessages({ path: "./locales.toml" }),
     // Upload bundle size info to Codecov

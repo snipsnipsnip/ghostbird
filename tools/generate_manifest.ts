@@ -5,10 +5,10 @@ import pkg from "../package.json"
 
 type VersionInfo = { version: string; sha?: string | undefined }
 
-export type Options = { env?: undefined | Record<string, string> }
+export type Options = { env: Record<string, string | undefined> }
 
 /** Generates manifest.json from the template file */
-export const generateManifest = ({ env }: Options = {}): Plugin => ({
+export const generateManifest = (opts: Options = { env: {} }): Plugin => ({
   name: "generate_manifest",
   async generateBundle(): Promise<void> {
     // Developer may place their own manifest.json to reproduce builds
@@ -19,7 +19,7 @@ export const generateManifest = ({ env }: Options = {}): Plugin => ({
     }
 
     this.info("Generating manifest.json")
-    let versionInfo = await getVersionInfo(env).catch((e) => {
+    let versionInfo = await getVersionInfo(opts).catch((e) => {
       this.warn(e)
       this.warn(
         "Generating dummy version; Build from a Git clone or place your ext/manifest.json to use the real one instead",
@@ -52,15 +52,15 @@ function makeManifestJson({ version, sha }: VersionInfo): string {
 }
 
 /** Make the version number to include in manifest.json */
-async function getVersionInfo(envInfo: undefined | Record<string, string>): Promise<VersionInfo> {
+async function getVersionInfo(opts: Options): Promise<VersionInfo> {
   // Use version info from CI environment if available
   // Use Git if not
-  return tryGetVersionInfoFromEnv(envInfo) ?? getVersionInfoFromGit()
+  return tryGetVersionInfoFromEnv(opts) ?? getVersionInfoFromGit()
 }
 
 /** Get version info from GitHub Actions env variables if available */
-function tryGetVersionInfoFromEnv(envInfo: Record<string, string> | undefined): VersionInfo | undefined {
-  let { GITHUB_REF_NAME: refName, GITHUB_SHA: sha, GITHUB_REF_TYPE: refType } = envInfo ?? {}
+function tryGetVersionInfoFromEnv({ env }: Options): VersionInfo | undefined {
+  let { GITHUB_REF_NAME: refName, GITHUB_SHA: sha, GITHUB_REF_TYPE: refType } = env
 
   if (!refName || !sha || !refType) {
     return
