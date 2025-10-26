@@ -21,7 +21,8 @@ subgraph "tsdown"
   test_sanity[[test_sanity.ts]]
   tsc[[typecheck_with_tsc.ts]]
   rolldown[["Rolldown<br>(tsdown built-in)"]]
-  tsdown_builtin[["copy plugin<br>(tsdown built-in)"]]
+  replace_plugin[["replace plugin<br>(Rolldown built-in)"]]
+  copy[["copy plugin<br>(tsdown built-in)"]]
   generate_locale_messages[[generate_locale_messages.ts]]
   generate_manifest[[generate_manifest.ts]]
   codecov[[codecov.ts]]
@@ -31,9 +32,9 @@ index_ts --o barrelsby
 index_ts --> ts
 ts --> test_sanity & tsc -.-> fail((build failure))
 tsc --> tsc_cache["tsc cache<br>build/"]
-ts --> rolldown --> js["Bundled js files<br>dist/ext/js/*.js"]
+ts --> rolldown & replace_plugin --> js["Bundled js files<br>dist/ext/js/*.js"]
 ts --> codecov -.-> codecovio((Web service<br>codecov.io))
-ext_files --> tsdown_builtin --> copied_ext_files["Assets<br>dist/ext/*"]
+ext_files --> copy --> copied_ext_files["Assets<br>dist/ext/*"]
 locales --> generate_locale_messages --> messages["Localized messages<br>dist/ext/_locales/*/messages.json"]
 manifest_template & version --> generate_manifest --> manifest["MailExtension Manifest<br>dist/ext/manifest.json"]
 
@@ -43,14 +44,15 @@ js & copied_ext_files & messages & manifest --> web_ext[["web-ext"]] --> xpi["Ma
 ## Overview
 
 - Running `yarn build-js` starts [the `tsdown` tool](https://tsdown.dev/), which performs several tasks.
-    - Generating `index.ts` (barrel exports).
-    - Running sanity tests.
-    - Performing a type check.
-    - Generating `manifest.json` from the template file.
-    - Generating localized `messages.json` files.
-    - Adjusting source maps.
-    - Copying static assets from `ext/` into `dist/ext/`.
-    - Compiling bundled JavaScript files into `dist/ext/`.
+  - Generating `index.ts` (barrel exports).
+  - Running sanity tests.
+  - Performing a type check.
+  - Generating `manifest.json` from the template file.
+  - Generating localized `messages.json` files.
+  - Preprocessing source files.
+  - Adjusting source maps.
+  - Copying static assets from `ext/` into `dist/ext/`.
+  - Compiling bundled JavaScript files into `dist/ext/`.
 - Running `yarn build-xpi` creates a zip archive named `dist/ghostbird-{version}.xpi`.
    - [The `web-ext` tool](https://github.com/mozilla/web-ext#web-ext) does the actual work.
 - The usual `yarn build`, which is used by the CI, runs both of the above after running the linter and tests.
@@ -67,10 +69,19 @@ js & copied_ext_files & messages & manifest --> web_ext[["web-ext"]] --> xpi["Ma
 
 ### Output differences
 
-The output of development and release builds is identical except for the source maps and version number calculation.
+The outputs of development and release builds are different in a few ways:
+
+#### Source maps
 
 - In a development build, source maps have absolute paths to source files to make debuggers happy.
 - In a release build, source maps have relative paths to source files that share a common parent directory so that they look organized in the Thunderbird debugger.
+
+#### Log output
+
+- In a release build, `console.log()` are removed.
+- In a development build, `console.log()` are left in place.
+
+Other log levels like `console.info` are not removed in either case.
 
 ## Rollup plugins
 
@@ -86,6 +97,13 @@ The build script uses several custom plugins, each serving a different purpose:
 1. [`tools/generate_locale_messages.ts`](../tools/generate_locale_messages.ts) generates [message files](https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/Internationalization) from the definition in [`locales.toml`](../locales.toml).
 1. [`tools/codecov.ts`](../tools/codecov.ts) uploads bundle size information to Codecov for analysis.
    - This is only active during a release build and an API key is available.
+
+### Built-in plugins
+
+It also uses some functionality that come with `tsdown` or `rolldown`:
+
+1. The `copy` option copies non-TypeScript files from `ext/` to `dist/ext/`.
+2. The `replacePlugin` is used to modify logging.
 
 ### Version number calculation in `generate_manifest.ts`
 
