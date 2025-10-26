@@ -11,19 +11,22 @@ import tsconfig from "../tsconfig.json" with { type: "json" }
 export const barrelsby = (opts: Arguments = {}): Plugin => ({
   name: "barrelsby",
   buildStart(this: PluginContext): Promise<void> {
-    this.info("Generating index.ts")
-    const args = Object.assign({}, tsconfig.barrelsby, opts)
-    Barrelsby(args)
-
-    // We don't want src/index.ts
-    return rm(join(args.directory, args.name)).catch((e) => {
-      this.warn(`Failed to remove ${args.directory}/${args.name}: ${e}`)
-    })
+    return runBarrelsby(this, opts)
   },
 })
 
+export function runBarrelsby(log: Pick<Console, "info" | "warn">, opts: Arguments): Promise<void> {
+  log.info("Generating index.ts")
+  const args = Object.assign({}, tsconfig.barrelsby, opts)
+  Barrelsby(args)
+
+  // We don't want src/index.ts
+  return rm(join(args.directory, args.name)).catch((e) => {
+    log.warn(`Failed to remove ${args.directory}/${args.name}: ${e}`)
+  })
+}
+
 // This runs at `yarn install`
 if (argv[1] === fileURLToPath(import.meta.url)) {
-  const { buildStart } = barrelsby() as unknown as { buildStart(): void }
-  buildStart.apply(console)
+  await runBarrelsby(console, {})
 }

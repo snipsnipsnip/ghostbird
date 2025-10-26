@@ -24,6 +24,7 @@
 import { existsSync } from "node:fs"
 import { join } from "node:path"
 import { env } from "node:process"
+import { replacePlugin } from "rolldown/experimental"
 import type { Options, UserConfig } from "tsdown"
 import { barrelsby } from "./barrelsby"
 import { codecov } from "./codecov"
@@ -66,6 +67,21 @@ const commonConfig = {
     intro: "'use strict';",
     sourcemapPathTransform: isRelease ? makeRelativeSourcePath : makeAbsoluteSourcePath,
     chunkFileNames,
+    plugins: [
+      // Adjust console logs
+      replacePlugin(
+        {
+          "console.log(": isRelease ? ";(" : 'console.log("[Ghostbird]",',
+          "console.debug(": 'console.debug("[Ghostbird]",',
+          "console.info(": 'console.info("[Ghostbird]",',
+          "console.warn(": 'console.warn("[Ghostbird]",',
+          "console.error(": 'console.error("[Ghostbird]",',
+        },
+        {
+          delimiters: ["\\b", '(?!"\\[Ghostbird\\])'],
+        },
+      ),
+    ],
     advancedChunks: {
       groups: [
         // Separate library files
@@ -97,7 +113,7 @@ const esmConfig = {
     // Run tsc
     !isRelease && typecheckWithTsc(),
     // Generate manifest.json
-    generateManifest({ env: isRelease ? (env as Record<string, string>) : {} }),
+    generateManifest(isRelease ? { env } : undefined),
     // Generate _locales/*/messages.json
     generateLocaleMessages({ path: "./locales.toml" }),
     // Upload bundle size info to Codecov
