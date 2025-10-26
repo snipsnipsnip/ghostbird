@@ -93,6 +93,7 @@ function checkDependencyUsage(expect: ExpectStatic, registry: Map<string, AnyEnt
     if (!body) {
       throw Error(`Failed to parse the entry. Is it a ES class? [${name}]`)
     }
+    expect(ctor).to.have.lengthOf(deps.length)
     for (let dep of deps) {
       expect.soft(body).includes(`this.${dep}`, `class ${name} should use this.${dep}`)
     }
