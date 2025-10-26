@@ -2,8 +2,7 @@ import type { IComposeWindow } from "src/ghosttext-adaptor"
 import type { CommandId, IUiUtil } from "./api"
 import type { ComposeActionNotifier } from "./compose_action_notifier"
 
-/** Handles execution of commands in the context a compose tab */
-
+/** Dispatches commands from the toolbar button, an item in the context menu, or keyboard shortcuts */
 export class CommandHandler {
   static isSingleton = true
   constructor(
@@ -11,7 +10,12 @@ export class CommandHandler {
     private readonly uiUtil: IUiUtil,
   ) {}
 
-  /** Executes a command in the context of a compose tab */
+  /**
+   * Runs commands to the appropriate handlers
+   * @param command The command to run
+   * @param composeTab The tab to run the command on
+   * @returns A promise that resolves when the command is done
+   */
   runCommand(command: CommandId, composeTab: IComposeWindow): Promise<void> {
     switch (command) {
       case "start_ghostbird":
