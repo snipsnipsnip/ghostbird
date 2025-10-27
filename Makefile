@@ -9,8 +9,9 @@ CP=cp
 
 all: test xpi doc archive
 
-archive: build/
-	$(GIT) archive --output="build/src-$$($(GIT) describe --always --long --tags).zip" HEAD
+archive: xpi
+	NAME=$$(basename dist/*.xpi .xpi)-src
+	$(GIT) archive --output=dist/${NAME}.zip --prefix=${NAME}/ext/ --add-file=dist/ext/manifest.json --prefix=${NAME}/ HEAD
 
 build: xpi
 
