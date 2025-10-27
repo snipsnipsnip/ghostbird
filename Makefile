@@ -7,11 +7,7 @@ GIT=git
 YARN=corepack yarn
 CP=cp
 
-all: test xpi doc archive
-
-archive: xpi
-	NAME=$$(basename dist/*.xpi .xpi)-src
-	$(GIT) archive --output=dist/${NAME}.zip --prefix=${NAME}/ext/ --add-file=dist/ext/manifest.json --prefix=${NAME}/ HEAD
+all: test xpi
 
 build: xpi
 

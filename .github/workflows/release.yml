@@ -46,7 +46,7 @@ jobs:
       run: corepack yarn exec web-ext lint --pretty --output=json
 
     - name: Create a source zip
-      run: make archive
+      run: corepack yarn run archive
 
     - run: npx changelogithub@13.16.0 --assets 'dist/*.xpi' --assets 'dist/*.zip'
       env:
